@@ -1,0 +1,14 @@
+[
+  {
+    "id": 16,
+    "name": "Netflix",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/cp2NX8p4BcXtODNpRiZ2wdKU5SgYnZw6YOe8eXG7.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 987,
+    "name": "YouTube Premium",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/IqlRKARSkWZ6nqZojR87BRtsmj1ENatSahX6i3BV.png?auto=format,compress&w=240"
+  }
+]

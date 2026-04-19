@@ -1,0 +1,407 @@
+{
+  "_note": "HAND-CURATED Amazon Fresh ASINs for prod /cart. To fill: presenter goes to amazon.com (in a logged-in browser located in a Fresh delivery ZIP), searches each item, copies the ASIN from the URL (B followed by 9 alphanumeric), and pastes it below. Leave this file with items:[] if you haven't curated yet — scripts/seed_catalog_prod.py will seed only the validated pool.",
+  "_how_to_find_asin": "Go to https://www.amazon.com/alm/storefront → search → click a product → the URL has '.../dp/B0XXXXXXXX/'. That B0... is the ASIN.",
+  "_warning": "Do NOT invent ASINs. Knot prod /cart will reject fake ones with HTTP 400.",
+  "items": [
+    {
+      "external_id": "B0CS4QLXLW",
+      "name": "Amazon Grocery, Premium Chunk Chicken Breast, 5 Oz",
+      "category": "protein",
+      "tags": [
+        "chicken"
+      ],
+      "price_usd": 2.12,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71Sh1uaQqWL._AC_UL320_.jpg",
+      "_scraped_search": "boneless skinless chicken breast 1lb",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0B64J2841",
+      "name": "Laura's Lean Ground Beef, 96% Lean 4% Fat, Heart-Healthy, All-Natural, Antibiotic-Free, 8 x 1 lb Packages, Frozen",
+      "category": "protein",
+      "tags": [
+        "turkey"
+      ],
+      "price_usd": 115.0,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71RgTyxmfJL._AC_UL320_.jpg",
+      "_scraped_search": "ground turkey 93% lean 1lb",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B000RUQSQI",
+      "name": "Bumble Bee Canned Pink Salmon, 14.75 oz Can - Premium Wild Caught Salmon with Skin & Bones - 18g Protein per Serving - MSC Certified Sustainable Seafood, Non-GM",
+      "category": "protein",
+      "tags": [
+        "salmon",
+        "fish"
+      ],
+      "price_usd": 4.24,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81j2woa3t0L._AC_UL320_.jpg",
+      "_scraped_search": "atlantic salmon fillet fresh",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B00AN6E1W4",
+      "name": "Bumble Bee Tiny Canned Shrimp, 6 oz Can (Pack of 1) - Served in Water, Cooked, Peeled, Deveined - 22g Protein per Serving - Gluten Free",
+      "category": "protein",
+      "tags": [
+        "shrimp"
+      ],
+      "price_usd": 3.68,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81CeWqp6mqL._AC_UL320_.jpg",
+      "_scraped_search": "frozen peeled deveined shrimp",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B000LKZ86K",
+      "name": "Mori-Nu Silken Tofu Extra Firm | Smooth and Creamy | Low Fat, Gluten-Free, Dairy-Free, Vegan, Made with Non-GMO soybeans, KSA Kosher Parve | Shelf-Stable | 10.9",
+      "category": "protein",
+      "tags": [
+        "tofu",
+        "vegan"
+      ],
+      "price_usd": 33.51,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/51ZQg78FyyL._AC_UL320_.jpg",
+      "_scraped_search": "firm organic tofu 14oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B07TL6CDMX",
+      "name": "Goya Foods Chick Peas, Garbanzo Beans, 15.5 Ounce (Pack of 8)",
+      "category": "protein",
+      "tags": [
+        "chickpeas",
+        "vegan"
+      ],
+      "price_usd": 10.16,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71RI+DmIIZL._AC_UL320_.jpg",
+      "_scraped_search": "canned chickpeas garbanzo 15oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B01N1O1TF8",
+      "name": "BUSH'S BEST 15 oz Canned Black Beans, Source of Plant Based Protein and Fiber, Low Fat, Gluten Free, (Pack of 12)",
+      "category": "protein",
+      "tags": [
+        "black beans",
+        "vegan"
+      ],
+      "price_usd": 15.48,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81vMwAunu-L._AC_UL320_.jpg",
+      "_scraped_search": "canned black beans 15oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B08CK8FDGG",
+      "name": "Noka Superfood Fruit Smoothie Pouches Variety Pack, Healthy Snacks with Flax Seed, Plant Protein and Prebiotic Fiber, Vegan and Gluten Free Snacks, Made in USA,",
+      "category": "protein",
+      "tags": [
+        "eggs"
+      ],
+      "price_usd": 28.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81qv1AvJoIL._AC_UL320_.jpg",
+      "_scraped_search": "large eggs 12 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0842D8JVS",
+      "name": "Spicy Premium Fermented Kimchi Napa Cabbage [ FUN SIZE Pouch Pack of 8] - [Original] – (Gluten Free / KETO / Vegan) | 0 Fat/ 0 Sugar/ 0 Cholesterol | Long Shelf",
+      "category": "veggie",
+      "tags": [
+        "napa",
+        "cabbage",
+        "배추"
+      ],
+      "price_usd": 12.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61vd2NkWjOL._AC_UL320_.jpg",
+      "_scraped_search": "fresh napa cabbage",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B01DU0FMTA",
+      "name": "Farmers Market Locally Grown Organic, Broccoli, 1 pound",
+      "category": "veggie",
+      "tags": [
+        "broccoli"
+      ],
+      "price_usd": 21.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81v0J+NZJYL._AC_UL320_.jpg",
+      "_scraped_search": "fresh broccoli crowns 1lb",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B00B0M5TXU",
+      "name": "ZUCCHINI SQUASH GREEN FRESH PRODUCE FRUIT VEGETABLES PER POUND",
+      "category": "veggie",
+      "tags": [
+        "zucchini"
+      ],
+      "price_usd": 18.5,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/31o--Pv3Y0L._AC_UL320_.jpg",
+      "_scraped_search": "zucchini squash fresh 2 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074J6FCXS",
+      "name": "365 by Whole Foods Market, Organic Whole Peeled Tomatoes, 28 oz",
+      "category": "veggie",
+      "tags": [
+        "tomato"
+      ],
+      "price_usd": 2.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61V-V4+6fML._AC_UL320_.jpg",
+      "_scraped_search": "vine tomatoes 1lb",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B07VYPBMWR",
+      "name": "Amazon Grocery, Minced Onion, 2.85 Oz",
+      "category": "veggie",
+      "tags": [
+        "onion"
+      ],
+      "price_usd": 1.38,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61-jPzMCMlL._AC_UL320_.jpg",
+      "_scraped_search": "yellow onions 2lb bag",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B003UCG6DK",
+      "name": "Badia Minced Garlic, 8 oz",
+      "category": "veggie",
+      "tags": [
+        "garlic"
+      ],
+      "price_usd": 2.79,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61UgaQMiw8L._AC_UL320_.jpg",
+      "_scraped_search": "fresh garlic bulbs 3 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074H73HNY",
+      "name": "365 by Whole Foods Market, Hearts Of Palm Salad Cut, 14.1 Ounce",
+      "category": "veggie",
+      "tags": [
+        "romaine",
+        "lettuce"
+      ],
+      "price_usd": 3.29,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/51oVV0wu2qL._AC_UL320_.jpg",
+      "_scraped_search": "romaine hearts 3 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0CBQ9C8G4",
+      "name": "Large Hass Avacado",
+      "category": "veggie",
+      "tags": [
+        "avocado"
+      ],
+      "price_usd": 10.75,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/41WN1vO522L._AC_UL320_.jpg",
+      "_scraped_search": "hass avocado 4 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0189VC0LI",
+      "name": "CASABLANCA MARKET Moroccan Preserved Lemons – Authentic Moroccan Preserved Lemons in Jar – Whole Non-GMO Preserved Lemon – Preserved Lemons for Couscous or Tagi",
+      "category": "veggie",
+      "tags": [
+        "lemon"
+      ],
+      "price_usd": 14.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/716FPd1RPrS._AC_UL320_.jpg",
+      "_scraped_search": "fresh lemons 3 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B000WCYD7C",
+      "name": "Farmers Market Foods Potato Swt Puree Org 15 OZ",
+      "category": "veggie",
+      "tags": [
+        "sweet potato"
+      ],
+      "price_usd": 3.68,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/810+yFPjIZL._AC_UL320_.jpg",
+      "_scraped_search": "sweet potatoes 3lb",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074H6X4KG",
+      "name": "365 by Whole Foods Market, Organic Roasted Red Peppers, 16 Ounce",
+      "category": "veggie",
+      "tags": [
+        "bell pepper"
+      ],
+      "price_usd": 6.29,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71XQYsC9iTL._AC_UL320_.jpg",
+      "_scraped_search": "bell peppers mixed 3 count",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B09WTZRV6Z",
+      "name": "Graza Drizzle Extra Virgin Olive Oil, Finishing Oil - High Polyphenol Early Harvest EVOO Finishing Oil in a Squeeze Bottle - Single Origin Olive Oils from Spain",
+      "category": "herb",
+      "tags": [
+        "cilantro"
+      ],
+      "price_usd": 15.19,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71bj9A2104L._AC_UL320_.jpg",
+      "_scraped_search": "fresh cilantro bunch",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B07GBJ2D23",
+      "name": "BEN'S ORIGINAL Ready Rice Jasmine Rice, Easy Dinner Side, 8.5 OZ Pouch (Pack of 6)",
+      "category": "grain",
+      "tags": [
+        "basmati",
+        "rice"
+      ],
+      "price_usd": 9.98,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/718vfRxU49L._AC_UL320_.jpg",
+      "_scraped_search": "basmati rice 2lb bag",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074H6G7GX",
+      "name": "365 by Whole Foods Market, Organic Spaghetti, 16 Ounce",
+      "category": "grain",
+      "tags": [
+        "linguine",
+        "pasta"
+      ],
+      "price_usd": 2.02,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/51bLvtKX5bL._AC_UL320_.jpg",
+      "_scraped_search": "linguine pasta 16oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0D1W1KRYT",
+      "name": "Hero Classic Hamburger Buns - Burger Buns | Net Low Carb Buns | High Fiber, 0g Net Carbs, 0g Sugar & 90 Calories Per Serving Burger Rolls (16 Buns, Pack of 2)",
+      "category": "grain",
+      "tags": [
+        "bun",
+        "bread"
+      ],
+      "price_usd": 35.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81rDzclXn6L._AC_UL320_.jpg",
+      "_scraped_search": "brioche hamburger buns 6 pack",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B07L9GVGPM",
+      "name": "Atlas 1 LT Cold Press Extra Virgin Olive Oil with Polyphenol Rich from Morocco | Newly Harvested Unprocessed from One Single Family Farm | Moroccan Organic EVOO",
+      "category": "pantry",
+      "tags": [
+        "olive oil"
+      ],
+      "price_usd": 27.94,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71Sy-5xacYL._AC_UL320_.jpg",
+      "_scraped_search": "extra virgin olive oil 17oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B08H2H1FZM",
+      "name": "Soeos Soy Sauce Low Sodium, 16.2oz (480ml) 1 Pack, USDA Organic Soy Sauce, Premium Quality Dark Soy Sauce, Pure Ingredients, Marinade for Meat & Vegetables, Bla",
+      "category": "pantry",
+      "tags": [
+        "soy sauce"
+      ],
+      "price_usd": 9.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/81MvX170xhL._AC_UL320_.jpg",
+      "_scraped_search": "low sodium soy sauce 16oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074J6TM2V",
+      "name": "Whole Foods Market, Basil Pesto, 6.5 Ounce",
+      "category": "pantry",
+      "tags": [
+        "pesto"
+      ],
+      "price_usd": 3.99,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61v+SVztKkL._AC_UL320_.jpg",
+      "_scraped_search": "basil pesto jar 6oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B0CTNN5HWR",
+      "name": "Califia Farms - Organic Unsweetened Coconut Milk, 48 Oz, Dairy Free, Vegan, Plant Based, Non GMO, Low Calorie, USDA Organic",
+      "category": "pantry",
+      "tags": [
+        "coconut milk"
+      ],
+      "price_usd": 5.81,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71kXw8rG6IL._AC_UL320_.jpg",
+      "_scraped_search": "full fat coconut milk 13.5oz can",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B00OZYNGUS",
+      "name": "Viva Naturals Organic Chia Seeds, 2 lb, 32 Oz – Plant-Based Omega-3 and Vegan Protein, Gluten Free & Non-GMO, Perfect for Smoothies, Salads & Chia Pudding",
+      "category": "dairy",
+      "tags": [
+        "yogurt"
+      ],
+      "price_usd": 11.49,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71GP7EgnqvL._AC_UL320_.jpg",
+      "_scraped_search": "plain greek yogurt 32oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B09W7DRHNZ",
+      "name": "Flora Grated Parmesan Cheese, Aged Over 10 Months, Authentic Italian Old World Flavor, Premium Grated Parmesan for Pasta, Pizza, Salads and More, 8 oz",
+      "category": "dairy",
+      "tags": [
+        "parmesan"
+      ],
+      "price_usd": 10.9,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/61OskoP3GyL._AC_UL320_.jpg",
+      "_scraped_search": "shaved parmesan cheese 8oz",
+      "_source": "rainforest"
+    },
+    {
+      "external_id": "B074JD6HH5",
+      "name": "365 by Whole Foods Market, Feta Crumbles, 6 oz",
+      "category": "dairy",
+      "tags": [
+        "feta"
+      ],
+      "price_usd": 4.79,
+      "unit": "each",
+      "image_url": "https://m.media-amazon.com/images/I/71nf0MtF0fL._AC_UL320_.jpg",
+      "_scraped_search": "crumbled feta cheese 8oz",
+      "_source": "rainforest"
+    }
+  ]
+}

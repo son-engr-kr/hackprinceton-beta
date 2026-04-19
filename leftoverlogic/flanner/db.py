@@ -56,3 +56,5 @@ def plans() -> Collection:            return get_db().plans
 def cart_operations() -> Collection:  return get_db().cart_operations
 def webhook_events() -> Collection:   return get_db().webhook_events
 def adherence() -> Collection:        return get_db().adherence
+def pantry() -> Collection:           return get_db().pantry
+def photo_logs() -> Collection:       return get_db().photo_logs

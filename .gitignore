@@ -76,6 +76,8 @@ leftoverlogic/webhooks.jsonl
 leftoverlogic/adherence.jsonl
 leftoverlogic/analyzed_*.json
 leftoverlogic/*.log
+# iMessage photo cache (receipts / food pics forwarded from Messages.app)
+leftoverlogic/assets/incoming/
 
 # Secrets (defense in depth)
 *.pem

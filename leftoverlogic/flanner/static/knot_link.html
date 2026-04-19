@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Flanner — Link your Amazon</title>
+<script src="https://unpkg.com/knotapi-js@next"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: ui-rounded, -apple-system, "SF Pro Rounded", system-ui, sans-serif;
+    max-width: 620px;
+    margin: 48px auto;
+    padding: 0 20px;
+    color: #4A3F45;
+    background: #FFF5EC;
+  }
+  h1 { margin-bottom: 8px; }
+  .sub { color: #775; margin-top: 0; }
+  .mode {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 2px solid #4A3F45;
+    font-weight: 600;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+  .mode.dev  { background: #B5E48C; }
+  .mode.prod { background: #FFB4A2; }
+  button {
+    display: block;
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    background: #FFD166;
+    border: 3px solid #4A3F45;
+    border-radius: 12px;
+    cursor: pointer;
+    margin: 10px 0;
+    box-shadow: 3px 3px 0 #4A3F45;
+    transition: transform 0.08s;
+  }
+  button:hover { transform: translate(-1px, -1px); }
+  button:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #4A3F45; }
+  button.primary { background: #FF477E; color: white; }
+  button.secondary { background: #D6C8FF; }
+  input[type="text"] {
+    padding: 10px 12px;
+    border: 2px solid #4A3F45;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    width: 100%;
+  }
+  pre {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #4A3F45;
+    font-size: 12px;
+    max-height: 340px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .row { display: flex; gap: 8px; align-items: center; margin: 10px 0; }
+  .row > button { margin: 0; flex: 0 0 auto; }
+  .row > input { flex: 1; }
+  .warn {
+    background: #FFE5D9;
+    border-left: 4px solid #FF477E;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  label { font-size: 13px; font-weight: 600; display: block; margin: 8px 0 4px; }
+</style>
+</head>
+<body>
+<h1>Link your Amazon <span id="mode-chip" class="mode">…</span></h1>
+<p class="sub">Knot Link will open Amazon's real OAuth. After you sign in, our backend can add items to your cart.</p>
+
+<div class="warn" id="prod-warn" style="display:none">
+  ⚠ <b>Production mode.</b> You are about to link a real Amazon account.
+  Nothing will be charged — we stop before <code>/cart/checkout</code>.
+</div>
+
+<label>External user id (pick anything; defaults below)</label>
+<input id="external-user-id" type="text" />
+
+<div class="row">
+  <button id="btn-amazon" class="primary">Link Amazon (id 44)</button>
+  <button id="btn-amazon-web" class="secondary">Link Amazon Web (id 2330)</button>
+</div>
+<div class="row">
+  <button id="btn-doordash">Link DoorDash</button>
+  <button id="btn-ubereats">Link Uber Eats</button>
+</div>
+
+<h3>Log</h3>
+<pre id="log">[ready — pick a merchant button]</pre>
+
+<script>
+  const API = (new URLSearchParams(location.search)).get("api") || "http://127.0.0.1:8000";
+  const log = (m) => { document.getElementById("log").textContent += "\n" + m; };
+  const logJson = (m, obj) => log(m + "\n" + JSON.stringify(obj, null, 2));
+  let sessionCfg = null; // populated from /api/health + /api/knot/session
+
+  async function bootstrap() {
+    const r = await fetch(API + "/api/health");
+    const h = await r.json();
+    const chip = document.getElementById("mode-chip");
+    chip.textContent = h.knot_mode.toUpperCase();
+    chip.className = "mode " + h.knot_mode;
+    document.getElementById("prod-warn").style.display = h.knot_mode === "prod" ? "block" : "none";
+    document.getElementById("external-user-id").value = h.demo_user;
+    log("✓ api=" + API + " mode=" + h.knot_mode + " mongo=" + h.mongo);
+  }
+
+  async function link(merchantId) {
+    const uid = document.getElementById("external-user-id").value.trim() || null;
+    log("→ requesting session (merchant=" + merchantId + " uid=" + uid + ")");
+    const r = await fetch(API + "/api/knot/session", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      // NOTE: `link` is what docs say for full Shopping-including flow,
+      // but for merchant 44 (Amazon) in our prod project, `link` returns
+      // 400 at merchants/44/config. Our project is likely only approved
+      // for transaction_link in prod. Using transaction_link so the modal
+      // at least loads + we still get AUTHENTICATED for history reads.
+      // For real cart-write prod demo, project needs Shopping product
+      // enabled by Knot support.
+      body: JSON.stringify({type: "transaction_link", external_user_id: uid}),
+    });
+    if (!r.ok) { log("✗ session failed: " + r.status + " " + await r.text()); return; }
+    const cfg = await r.json();
+    sessionCfg = cfg;
+    logJson("✓ got session", cfg);
+
+    const confirmed = new Set();
+    async function confirmLink(info) {
+      const key = `${info.merchant_id}-${cfg.session_id}`;
+      if (confirmed.has(key)) return;
+      confirmed.add(key);
+      try {
+        const resp = await fetch(API + "/api/knot/confirm-link", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            external_user_id: cfg.external_user_id,
+            merchant_id: info.merchant_id,
+            merchant_name: info.merchant_name || null,
+            session_id: cfg.session_id,
+          }),
+        });
+        logJson("✓ confirm-link", await resp.json());
+        log("→ safety guard will now let /cart go through for merchant=" + info.merchant_id);
+      } catch (e) {
+        log("⚠ confirm-link failed: " + e.message);
+      }
+    }
+
+    const knotapi = new window.KnotapiJS.default();
+    knotapi.open({
+      sessionId: cfg.session_id,
+      clientId: cfg.client_id,
+      environment: cfg.knot_mode === "prod" ? "production" : "development",
+      merchantIds: [merchantId],
+      onSuccess: async (d) => {
+        logJson("✅ onSuccess", d);
+        // Fallback in case onEvent didn't catch AUTHENTICATED (rare)
+        await confirmLink({
+          merchant_id: (d && d.merchantId) || merchantId,
+          merchant_name: (d && (d.merchantName || d.merchant)) || null,
+        });
+      },
+      onError: (code, msg, meta) => log("❌ onError " + JSON.stringify({code, msg, meta})),
+      onExit:  (last) => log("✖ onExit " + JSON.stringify(last || null)),
+      onEvent: async (ev, details) => {
+        // Knot emits ev as an OBJECT in prod, a string in old docs — handle both.
+        const evObj = (typeof ev === "object" && ev !== null) ? ev : {event: String(ev)};
+        const evName = evObj.event || ev;
+        log("ℹ event=" + (evName) + "  merchant=" + (evObj.merchant || "") + "  details=" + JSON.stringify(details || evObj.metaData || null));
+        if (evName === "AUTHENTICATED") {
+          // Primary path: auth succeeded → record link immediately,
+          // don't wait for user to manually close the modal.
+          await confirmLink({
+            merchant_id: evObj.merchantId || merchantId,
+            merchant_name: evObj.merchant || null,
+          });
+        }
+      },
+    });
+  }
+
+  document.getElementById("btn-amazon").onclick      = () => link(44);
+  document.getElementById("btn-amazon-web").onclick  = () => link(2330);
+  document.getElementById("btn-doordash").onclick    = () => link(19);
+  document.getElementById("btn-ubereats").onclick    = () => link(36);
+
+  bootstrap().catch(e => log("bootstrap failed: " + e.message));
+</script>
+</body>
+</html>

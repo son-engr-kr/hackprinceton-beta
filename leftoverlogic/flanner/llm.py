@@ -61,6 +61,11 @@ Rules:
 - Deduplicate shopping_list (same external_id appears at most once).
 - Prefer reusing ingredients across meals to keep shopping_list short (≤ 12 items ideal).
 - When budget_usd is present, aim for totals.estimated_cost_usd between 0.80·budget_usd and 1.00·budget_usd — do NOT exceed budget_usd under any circumstance.
+- When `calendar_events` is present, each event has an `impact` tag mapped to a day (Mon–Fri). Adjust that day's meal accordingly:
+    - `skip_dinner`  → that day eats out. Set meal `title` to "(eating out — <event summary>)", `prep_minutes` to 0, `estimated_kcal` to 0, `ingredients` to [], `mirrors` to the event summary. Do NOT add ingredients for this meal to shopping_list.
+    - `busy_evening` → keep prep_minutes ≤ 15, pick the simplest possible meal (one-pan, stir-fry, sandwich, salad). Add a short note.
+    - `travel`       → same treatment as skip_dinner. Set title to "(travel — <event summary>)".
+- Do not fabricate calendar events; only react to the ones supplied. If `calendar_events` is absent or empty, plan all 5 days normally.
 """
 
 
@@ -71,6 +76,7 @@ def _build_user_payload(
     feedback_history: list[str],
     catalog: list[dict],
     budget_usd: float | None,
+    calendar_events: list[dict] | None = None,
 ) -> str:
     payload: dict[str, Any] = {
         "past_orders_sample": past_orders,
@@ -79,6 +85,8 @@ def _build_user_payload(
     }
     if budget_usd is not None:
         payload["budget_usd"] = budget_usd
+    if calendar_events:
+        payload["calendar_events"] = calendar_events
     return json.dumps(payload, ensure_ascii=False)
 
 
@@ -98,6 +106,141 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[s : e + 1])
 
 
+# ─── Receipt & food health advice ─────────────────────────────────────
+
+RECEIPT_ADVISOR_PROMPT = """You are a friendly, non-judgmental nutrition advisor commenting on a user's grocery receipt. The user just bought these items.
+
+Write ONE short paragraph (2-3 sentences max, ~300 characters) that:
+  1. Calls out ONE positive choice (a specific healthy item, or a good pattern like "lots of fresh produce")
+  2. Optionally adds ONE gentle note on something to watch (portion, sodium, added sugar) — only if warranted
+  3. Ends warmly, like a friend checking in
+
+Style rules:
+- Plain English, no markdown, no emoji, no bullets
+- Mention items by their common short name ("zucchini", not "Zucchini Squash FRESH PRODUCE")
+- Never preachy — assume the user knows the basics
+- If the receipt is mostly healthy, only add positive commentary (skip rule 2)
+- Start directly with the observation — no "You bought…" preamble
+"""
+
+FOOD_ADVISOR_PROMPT = """You are a friendly, non-judgmental nutrition advisor. The user just logged a meal they ate, with an estimated calorie count and ingredient list.
+
+Write ONE short paragraph (2 sentences max, ~200 characters) that:
+  1. Acknowledges the meal warmly
+  2. Adds a concrete, actionable note based on the kcal + ingredients (e.g. "good protein-veggie balance", "dinner on the heavy side — a veggie-forward lunch tomorrow would balance it")
+
+Style rules:
+- Plain English, no markdown, no emoji, no bullets
+- Never preachy
+- Start directly with the observation — no "Okay" / "Great" / "You ate…" preamble
+"""
+
+
+def advise_receipt(items: list[dict]) -> str | None:
+    """Return 2-3 sentence nutrition commentary on a grocery receipt. None on error."""
+    if not items:
+        return None
+    # Compact the item list so the prompt stays small
+    lines = []
+    for it in items[:30]:
+        name = (it.get("name") or "").strip()
+        if not name:
+            continue
+        qty = it.get("qty")
+        unit = it.get("unit") or ""
+        bit = f"{qty}{unit}".strip() if qty else ""
+        lines.append(f"- {name}" + (f"  ({bit})" if bit else ""))
+    user_msg = "\n".join(lines)
+    return _advisor_call(RECEIPT_ADVISOR_PROMPT, user_msg)
+
+
+def advise_food(dish: str, kcal: int | None, ingredients: list[dict]) -> str | None:
+    """Return a 2-sentence note on a logged meal. None on error."""
+    ing_names = ", ".join((i.get("name") or "?") for i in (ingredients or [])[:8])
+    user_msg = f"Dish: {dish}\nEstimated kcal: {kcal or 'unknown'}\nIngredients: {ing_names}"
+    return _advisor_call(FOOD_ADVISOR_PROMPT, user_msg)
+
+
+def _advisor_call(system_prompt: str, user_msg: str) -> str | None:
+    """Gemma-only (AI Studio). Small output, best-effort — never raises.
+
+    Advisor text replies (receipt commentary, food commentary) deliberately
+    skip K2: same Gemma pipeline drives the vision parse immediately before,
+    so reusing that client keeps the UX consistent and avoids an extra K2
+    network hop on the iMessage-reply hot path.
+    """
+    if not config.GEMINI_API_KEY:
+        return None
+    try:
+        from google import genai
+        client = genai.Client(api_key=config.GEMINI_API_KEY)
+        resp = client.models.generate_content(
+            model=config.AI_STUDIO_MODEL,
+            contents=[system_prompt + "\n\n" + user_msg],
+        )
+        return (_strip_think_tags(resp.text).strip()) or None
+    except Exception as e:
+        print(f"   ⚠ advisor Gemma failed: {type(e).__name__}: {e}")
+        return None
+
+
+# ─── Food decomposition (K2 reasoning) ─────────────────────────────────
+
+DECOMPOSE_PROMPT = """You are Flanner's pantry reasoner. Given a dish name, the number of portions eaten, and the user's Amazon Fresh catalog, list the ingredients consumed.
+
+Rules (violating any = your output is rejected):
+1. Every ingredient MUST be a catalog item. Use the catalog's exact `external_id` and `name`.
+2. If the dish has an ingredient not in the catalog, pick the closest catalog substitute and note it in `notes`.
+3. `qty` is the AMOUNT CONSUMED in the stated `unit` for the given portions. A single serving of grilled chicken breast is ~150g; a poke bowl has ~150g rice; a burger bun is 1 each. Scale with `portions`.
+4. Include 3-8 ingredients. Omit trivial items (salt, oil) unless the dish is mostly that ingredient.
+5. Estimate total kcal for the consumed portion.
+
+Return STRICT JSON only:
+{
+  "dish_name": "<echoed>",
+  "portions": <echoed float>,
+  "ingredients": [
+    {
+      "external_id": "<catalog ASIN>",
+      "name": "<catalog name>",
+      "qty": <number>,
+      "unit": "g" | "ml" | "each",
+      "notes": "<optional substitution note>"
+    }
+  ],
+  "estimated_kcal": <int>,
+  "rationale": "<one short sentence>"
+}
+"""
+
+
+def decompose_food(dish_name: str, portions: float, catalog: list[dict]) -> dict:
+    """Given a dish and catalog, return the consumed ingredients (K2-primary).
+
+    Same K2-first, Gemini-fallback chain as plan generation. Mock is skipped
+    here because a plausible decomposition without an LLM is basically
+    guessing and would pollute the pantry with garbage.
+    """
+    payload = {
+        "dish_name": dish_name,
+        "portions": portions,
+        "available_catalog": catalog,
+    }
+    user_msg = json.dumps(payload, ensure_ascii=False)
+
+    # Gemma 4 (AI Studio) — same model as vision/advisor/plan.
+    # Prompt is prepended (Gemma has no system_instruction) and parsed
+    # from raw text (Gemma has no response_mime_type JSON mode).
+    from google import genai
+
+    client = genai.Client(api_key=config.GEMINI_API_KEY)
+    resp = client.models.generate_content(
+        model=config.AI_STUDIO_MODEL,
+        contents=[DECOMPOSE_PROMPT + "\n\n" + user_msg],
+    )
+    return _extract_json(_strip_think_tags(resp.text))
+
+
 # ─── K2 (primary) ──────────────────────────────────────────────────────
 
 def call_k2(
@@ -105,6 +248,7 @@ def call_k2(
     feedback_history: list[str],
     catalog: list[dict],
     budget_usd: float | None,
+    calendar_events: list[dict] | None = None,
 ) -> dict:
     """K2 Think V2 via OpenAI-compatible /chat/completions (single-shot, no stream)."""
     if not config.K2_API_KEY:
@@ -115,7 +259,9 @@ def call_k2(
             {"role": "system", "content": PLAN_SYSTEM_PROMPT},
             {
                 "role": "user",
-                "content": _build_user_payload(past_orders, feedback_history, catalog, budget_usd),
+                "content": _build_user_payload(
+                    past_orders, feedback_history, catalog, budget_usd, calendar_events
+                ),
             },
         ],
         "temperature": 0.4,
@@ -135,36 +281,35 @@ def call_k2(
 
 # ─── Gemini (fallback) ─────────────────────────────────────────────────
 
-def call_gemini(
+def call_gemma(
     past_orders: dict,
     feedback_history: list[str],
     catalog: list[dict],
     budget_usd: float | None,
+    calendar_events: list[dict] | None = None,
 ) -> dict:
-    """Vertex AI Gemini fallback. Uses ADC (`gcloud auth application-default login`).
+    """Gemma 3 fallback via AI Studio (free tier, open-weight).
 
-    TODO(local-gemma): swap this body to Ollama Gemma 4 once weights are on
-    the demo machine. Same PLAN_SYSTEM_PROMPT, same JSON schema — only the
-    transport changes.
+    Gemma doesn't support `system_instruction` or structured-JSON output
+    mode, so we merge the prompt into the user content and parse raw
+    text with the same _extract_json helper K2 uses.
     """
     from google import genai
     from google.genai import types
 
-    client = genai.Client(
-        vertexai=True,
-        project=config.GCP_PROJECT_ID,
-        location=config.GCP_LOCATION,
+    if not config.GEMINI_API_KEY:
+        raise RuntimeError("GEMINI_API_KEY not set (AI Studio key required for Gemma)")
+
+    client = genai.Client(api_key=config.GEMINI_API_KEY)
+    user_payload = _build_user_payload(
+        past_orders, feedback_history, catalog, budget_usd, calendar_events
     )
     resp = client.models.generate_content(
-        model=config.GEMINI_MODEL,
-        contents=[_build_user_payload(past_orders, feedback_history, catalog, budget_usd)],
-        config=types.GenerateContentConfig(
-            system_instruction=PLAN_SYSTEM_PROMPT,
-            response_mime_type="application/json",
-            temperature=0.4,
-        ),
+        model=config.AI_STUDIO_MODEL,
+        contents=[PLAN_SYSTEM_PROMPT + "\n\n" + user_payload],
+        config=types.GenerateContentConfig(temperature=0.4),
     )
-    return json.loads(resp.text)
+    return _extract_json(_strip_think_tags(resp.text))
 
 
 # ─── Mock (last resort, offline demo path) ─────────────────────────────

@@ -80,6 +80,7 @@ def save_plan(
                 ),
                 "estimated_kcal_per_day": plan.get("totals", {}).get("estimated_kcal_per_day"),
             },
+            "calendar_events": plan.get("_calendar_events") or [],
             "status": "proposed",
             "accepted_at": None,
             "created_at": _now(),
@@ -152,7 +153,11 @@ def log_cart_op(
 # ─── adherence ─────────────────────────────────────────────────────────
 
 def save_adherence_entry(entry: dict, space_id: str | None = None) -> None:
-    """Entry shape matches checkin.record_reply output + contextual fields."""
+    """Entry shape matches checkin.record_reply output + contextual fields.
+
+    Includes optional photo-sourced fields (photo_log_id, consumed_ingredients,
+    estimated_kcal) when present in `entry`.
+    """
     try:
         latest = latest_accepted_plan(space_id)
         doc = {
@@ -167,6 +172,17 @@ def save_adherence_entry(entry: dict, space_id: str | None = None) -> None:
             "classified_by": entry.get("classified_by", "gemini"),
             "created_at": _now(),
         }
+        # Optional: photo-sourced extras
+        if entry.get("photo_log_id") is not None:
+            pid = entry["photo_log_id"]
+            try:
+                doc["photo_log_id"] = ObjectId(pid) if isinstance(pid, str) else pid
+            except Exception:
+                doc["photo_log_id"] = pid
+        if entry.get("consumed_ingredients"):
+            doc["consumed_ingredients"] = entry["consumed_ingredients"]
+        if entry.get("estimated_kcal") is not None:
+            doc["estimated_kcal"] = entry["estimated_kcal"]
         db.adherence().insert_one(doc)
     except Exception as e:
         print(f"   ⚠ persist.save_adherence_entry failed: {type(e).__name__}: {e}")
@@ -183,3 +199,35 @@ def recent_adherence(n: int = 7, user_id: str | None = None) -> list[dict]:
         return list(cur)
     except Exception:
         return []
+
+
+# ─── photo_logs ────────────────────────────────────────────────────────
+
+def log_photo(
+    kind: str,
+    image_path: str | None,
+    parsed: dict,
+    confidence: float | None = None,
+    vision_raw: str | None = None,
+    space_id: str | None = None,
+    applied: bool = True,
+) -> str | None:
+    """Record a vision analysis. Returns the inserted _id so downstream
+    pantry/adherence writes can link back via `photo_log_id`."""
+    try:
+        doc = {
+            "user_id": config.EXTERNAL_USER_ID,
+            "space_id": space_id or config.DEMO_SPACE,
+            "kind": kind,
+            "image_path": image_path,
+            "vision_raw": vision_raw,
+            "parsed": parsed,
+            "confidence": confidence,
+            "applied": applied,
+            "created_at": _now(),
+        }
+        result = db.photo_logs().insert_one(doc)
+        return str(result.inserted_id)
+    except Exception as e:
+        print(f"   ⚠ persist.log_photo failed: {type(e).__name__}: {e}")
+        return None

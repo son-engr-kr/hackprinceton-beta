@@ -23,8 +23,91 @@ def auth_header() -> str:
     ).decode()
 
 
+def create_session(session_type: str, external_user_id: str | None = None) -> tuple[int, dict | str]:
+    """POST /session/create — required first step of the Knot Link OAuth flow.
+
+    In prod, session_type must be 'transaction_link' (the only session type
+    that grants access to Amazon/Amazon Web shopping merchants — probed live,
+    see knot-prod.md §3). 'subscription_manager' also works but we don't use
+    it. 'shopping' is NOT a valid session type.
+    """
+    body: dict = {"type": session_type}
+    if external_user_id:
+        body["external_user_id"] = external_user_id
+    r = requests.post(
+        f"{config.KNOT_BASE_URL}/session/create",
+        headers={"Authorization": auth_header(), "Content-Type": "application/json"},
+        json=body,
+        timeout=20,
+    )
+    try:
+        return r.status_code, r.json()
+    except ValueError:
+        return r.status_code, r.text
+
+
+def list_merchants(merchant_type: str) -> tuple[int, list[dict] | str]:
+    """POST /merchant/list. Normalizes the prod-vs-dev response shape.
+
+    Dev returns {merchants: [...]}, prod returns a flat [...]. Callers get
+    the flat list either way.
+    """
+    r = requests.post(
+        f"{config.KNOT_BASE_URL}/merchant/list",
+        headers={"Authorization": auth_header(), "Content-Type": "application/json"},
+        json={"type": merchant_type},
+        timeout=15,
+    )
+    try:
+        body = r.json()
+    except ValueError:
+        return r.status_code, r.text
+    if isinstance(body, list):
+        return r.status_code, body
+    if isinstance(body, dict) and isinstance(body.get("merchants"), list):
+        return r.status_code, body["merchants"]
+    return r.status_code, body
+
+
+def is_user_linked(external_user_id: str, merchant_id: int) -> bool:
+    """True if the user has an AUTHENTICATED webhook on record for this merchant.
+
+    In prod we check this BEFORE calling /cart; dev is permissive because the
+    sandbox user `leftoverlogic-dev-user-001` doesn't need OAuth to work.
+    """
+    try:
+        from . import db as _db
+        user = _db.users().find_one({"external_user_id": external_user_id})
+        if not user:
+            return False
+        for m in user.get("linked_merchants", []) or []:
+            if m.get("merchant_id") == merchant_id and m.get("status") == "active":
+                return True
+        return False
+    except Exception:
+        return False
+
+
 def add_to_cart(products: list[dict]) -> tuple[int, dict | str]:
-    """POST /cart. Products: [{'external_id': '<ASIN>'}]."""
+    """POST /cart. Products: [{'external_id': '<ASIN>'}].
+
+    In prod mode, we refuse to send the request unless the user has a
+    linked Amazon account (AUTHENTICATED webhook seen). This prevents the
+    pipeline from wastefully hitting /cart only to get USER_NOT_FOUND,
+    and makes the failure diagnostic instead of confusing.
+    """
+    if config.KNOT_MODE == "prod" and not is_user_linked(
+        config.EXTERNAL_USER_ID, config.MERCHANT_AMAZON
+    ):
+        return 0, {
+            "error_type": "PRECONDITION",
+            "error_code": "USER_NOT_LINKED",
+            "error_message": (
+                f"{config.EXTERNAL_USER_ID} has not linked Amazon via Knot Link yet. "
+                f"Open /static/knot_link.html → Link Amazon → then retry."
+            ),
+        }
+
     body = {
         "external_user_id": config.EXTERNAL_USER_ID,
         "merchant_id": config.MERCHANT_AMAZON,

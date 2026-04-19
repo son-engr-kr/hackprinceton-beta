@@ -69,6 +69,20 @@ def main() -> None:
     db.adherence().create_index([("plan_id", ASCENDING)], name="by_plan")
     db.adherence().create_index([("status", ASCENDING)], name="by_status")
 
+    # pantry — one doc per (user, ingredient)
+    db.pantry().create_index(
+        [("user_id", ASCENDING), ("ingredient_key", ASCENDING)],
+        unique=True,
+        name="user_ingredient_unique",
+    )
+    db.pantry().create_index([("user_id", ASCENDING), ("qty", DESCENDING)], name="user_by_qty")
+
+    # photo_logs — OCR / vision audit
+    db.photo_logs().create_index(
+        [("user_id", ASCENDING), ("created_at", DESCENDING)], name="user_recent"
+    )
+    db.photo_logs().create_index([("kind", ASCENDING)], name="by_kind")
+
     for coll in (
         "users",
         "transactions",
@@ -77,6 +91,8 @@ def main() -> None:
         "cart_operations",
         "webhook_events",
         "adherence",
+        "pantry",
+        "photo_logs",
     ):
         idx = list(db.get_db()[coll].list_indexes())
         print(f"  {coll:<18} → {len(idx)} indexes  ({', '.join(i['name'] for i in idx)})")

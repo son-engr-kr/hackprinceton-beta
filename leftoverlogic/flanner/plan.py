@@ -4,7 +4,7 @@ functions that the TS orchestrator calls through cli.py.
 
 Responsibilities, in order:
   1. Parse budget from feedback_history (free text)
-  2. Call llm.call_k2 → llm.call_gemini → llm.generate_mock (priority chain)
+  2. Call llm.call_k2 → llm.call_gemma → llm.generate_mock (priority chain)
   3. Post-validate: catalog constraint, mirrors coerce, budget trim
   4. Persist to Mongo, stash _plan_id for downstream linking
   5. On order placement: send to Knot + log cart_operations + mark plan accepted
@@ -19,6 +19,7 @@ import re
 
 from . import catalog as catalog_mod
 from . import config
+from . import gcal
 from . import knot
 from . import llm
 from . import persist
@@ -124,23 +125,50 @@ def _generate_real(
     feedback_history: list[str],
     catalog_items: list[dict],
     budget_usd: float | None,
+    calendar_events: list[dict] | None = None,
 ) -> dict:
-    """K2 primary → Gemini fallback. Raises if both fail."""
-    if config.K2_API_KEY:
-        try:
-            print(f"   🧠 K2 → {config.K2_MODEL}")
-            plan = llm.call_k2(past_orders, feedback_history, catalog_items, budget_usd)
-            plan["_model"] = "k2-think-v2"
-            return plan
-        except Exception as e:
-            print(f"   ⚠ K2 failed ({type(e).__name__}: {e}) — falling back to Gemini")
-            plan = llm.call_gemini(past_orders, feedback_history, catalog_items, budget_usd)
-            plan["_model"] = "gemini-fallback"
-            return plan
-    print(f"   🤖 Vertex AI → {config.GEMINI_MODEL} (K2_API_KEY not set)")
-    plan = llm.call_gemini(past_orders, feedback_history, catalog_items, budget_usd)
-    plan["_model"] = "gemini"
+    """Gemma 4 (AI Studio) — single-model plan path.
+
+    Full pipeline (vision, advisor, plan, decompose) now runs on the same
+    AI_STUDIO_MODEL so the demo story is simple: one model, one API key.
+    K2 wiring (call_k2) is kept in llm.py as dead code in case we need
+    to fall back, but the hot path skips it.
+    """
+    print(f"   🤖 AI Studio → {config.AI_STUDIO_MODEL}")
+    plan = llm.call_gemma(
+        past_orders, feedback_history, catalog_items, budget_usd, calendar_events
+    )
+    plan["_model"] = config.AI_STUDIO_MODEL
     return plan
+
+
+def _load_calendar_events() -> list[dict]:
+    """Return calendar events for the presenter.
+
+    Order of preference:
+      1. Real Google Calendar (if user OAuth'd in)
+      2. Mock events (always shown in demo so K2's calendar-aware
+         behavior is visible even without OAuth)
+      3. Empty list (no calendar context — K2 plans normally)
+
+    `FORCE_CAL_MOCK=1` forces path 2 regardless of OAuth state; useful
+    when the presenter doesn't want their real events in the prompt.
+    `FORCE_NO_CAL=1` forces path 3.
+    """
+    import os as _os
+    if _os.environ.get("FORCE_NO_CAL", "").lower() in ("1", "true", "yes"):
+        return []
+    if _os.environ.get("FORCE_CAL_MOCK", "").lower() in ("1", "true", "yes"):
+        return gcal.mock_events()
+    try:
+        real = gcal.upcoming_events(config.EXTERNAL_USER_ID)
+    except Exception as e:
+        print(f"   ⚠ gcal fetch failed: {type(e).__name__}: {e} — using mock")
+        return gcal.mock_events()
+    if real:
+        return real
+    # Not linked yet — fall back to mock so the demo narrative still lands.
+    return gcal.mock_events()
 
 
 def generate(feedback_history: list[str], space_id: str | None = None) -> dict:
@@ -155,13 +183,21 @@ def generate(feedback_history: list[str], space_id: str | None = None) -> dict:
     if budget_usd is not None:
         print(f"   💰 budget detected: ${budget_usd:.2f}")
 
+    calendar_events = _load_calendar_events()
+    if calendar_events:
+        print(f"   📅 calendar: {len(calendar_events)} event(s) affecting meals")
+        for ev in calendar_events[:5]:
+            print(f"      · {ev.get('impact'):14s} {(ev.get('summary') or '')[:50]}")
+
     if config.FORCE_MOCK:
         print("   ℹ FORCE_MOCK=True — skipping LLM, using catalog-backed mock")
         plan = llm.generate_mock(feedback_history, catalog_items)
     else:
         print(f"   (catalog: {len(catalog_items)} items)")
         try:
-            plan = _generate_real(past_orders, feedback_history, catalog_items, budget_usd)
+            plan = _generate_real(
+                past_orders, feedback_history, catalog_items, budget_usd, calendar_events
+            )
             if not plan.get("shopping_list"):
                 print("   ⚠ LLM returned empty shopping_list — falling back to mock")
                 plan = llm.generate_mock(feedback_history, catalog_items)
@@ -180,6 +216,11 @@ def generate(feedback_history: list[str], space_id: str | None = None) -> dict:
             print(f"   ✂ trimmed ${total_before:.2f} → ${total_after:.2f} to fit ${budget_usd:.2f}")
         plan["_budget_usd"] = budget_usd
 
+    # Stash calendar events on the plan so persist can store them alongside
+    # the meals (useful for the frontend "why this day is empty" tooltip).
+    if calendar_events:
+        plan["_calendar_events"] = calendar_events
+
     # Persist + thread _id through for downstream linking
     round_num = len(feedback_history) + 1
     plan_id = persist.save_plan(plan, feedback_history, round_num, space_id=space_id)
@@ -191,16 +232,48 @@ def generate(feedback_history: list[str], space_id: str | None = None) -> dict:
 
 # ─── Order placement ───────────────────────────────────────────────────
 
+def _pantry_diff(shopping: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split shopping_list into (needed, already_in_pantry).
+
+    An item is considered "in pantry" if we have a row with qty > 0 for that
+    external_id (meaning we bought it, photographed a receipt, etc. — the
+    photo pipeline populates these).
+    """
+    try:
+        from . import db as _db
+        rows = list(_db.pantry().find({"user_id": config.EXTERNAL_USER_ID, "qty": {"$gt": 0}}))
+    except Exception:
+        rows = []
+    stocked = {r.get("ingredient_key") for r in rows if r.get("ingredient_key")}
+    needed: list[dict] = []
+    have: list[dict] = []
+    for item in shopping:
+        if item.get("external_id") in stocked:
+            have.append(item)
+        else:
+            needed.append(item)
+    return needed, have
+
+
 def place_order(plan: dict) -> tuple[int, int]:
     """Send plan.shopping_list[].external_id to Knot /cart + /cart/checkout.
+
+    Pantry-aware: only items NOT already in pantry are sent. Demos the
+    Flanner promise — "we only order what you don't already have."
 
     Also logs two cart_operations rows (cart + checkout) linked to the plan's
     persisted _id, and marks the plan status=accepted.
     """
     shopping = plan.get("shopping_list") or []
+    needed, have = _pantry_diff(shopping)
+    if have:
+        print(f"   🥫 pantry hit: {len(have)} ingredient(s) already in stock, skipping them")
+        for h in have[:5]:
+            print(f"      · {h.get('name','?')[:50]} (have)")
+
     seen: set[str] = set()
     products: list[dict] = []
-    for entry in shopping:
+    for entry in needed:
         ext_id = entry.get("external_id")
         if not ext_id or ext_id in seen:
             continue
@@ -210,21 +283,33 @@ def place_order(plan: dict) -> tuple[int, int]:
             break
 
     if not products:
-        print("   ⚠ plan had no shopping_list — falling back to sync_amazon.json picks")
-        products = knot.pick_amazon_fallback_products()
-    if not products:
-        print("   ❌ no ASINs to order")
-        return 0, 0
+        print("   ✓ everything already in pantry — nothing to order")
+        persist.mark_plan_status(plan.get("_plan_id"), "accepted")
+        return {
+            "cart_http": 202,
+            "checkout_http": 0,
+            "ordered_items": [],
+            "skipped_items": have,
+            "total_cost": 0.0,
+            "all_in_pantry": True,
+        }
 
-    print(f"   → /cart payload: {len(products)} product(s)")
+    print(f"   → shopping_list needed: {len(products)} item(s) after pantry diff")
     for p in products:
         print(f"      [{p['external_id']}]  {p.get('name') or ''}")
 
     plan_id = plan.get("_plan_id")
-    cart_request = {"products": [{"external_id": p["external_id"]} for p in products]}
 
-    c1, r1 = knot.add_to_cart(products)
-    print(f"   POST /cart → HTTP {c1}")
+    # Send top-N as a single batch /cart call. Empirically verified:
+    # Knot accepts 3+ items in one request when we're not bombarding
+    # /cart with rapid sequential calls. Each /cart REPLACES the merchant
+    # cart, so batching is the only way to land multiple items at once.
+    top_n = products[: min(len(products), 3)]
+    cart_request = {"products": [{"external_id": p["external_id"]} for p in top_n]}
+    c1, r1 = knot.add_to_cart(top_n)
+    print(f"   POST /cart → HTTP {c1}  ({len(top_n)} products)")
+    for p in top_n:
+        print(f"      → [{p['external_id']}] {p.get('name','')[:50]}")
     if isinstance(r1, dict):
         print("   " + json.dumps(r1, indent=2).replace("\n", "\n   "))
     persist.log_cart_op(
@@ -255,4 +340,25 @@ def place_order(plan: dict) -> tuple[int, int]:
     persist.mark_plan_status(plan_id, "accepted")
     if plan_id:
         print(f"   ✓ plan {plan_id} → accepted")
-    return c1, c2
+
+    # Enrich ordered_items with prices from the original shopping_list so the
+    # formatter can show "$X.XX" next to each item.
+    shopping_by_asin = {s.get("external_id"): s for s in (plan.get("shopping_list") or [])}
+    ordered_items = []
+    for p in top_n:
+        src = shopping_by_asin.get(p["external_id"], {})
+        ordered_items.append({
+            "external_id": p["external_id"],
+            "name": p.get("name") or src.get("name"),
+            "estimated_price_usd": src.get("estimated_price_usd"),
+        })
+    total_cost = sum(float(i.get("estimated_price_usd") or 0) for i in ordered_items)
+
+    return {
+        "cart_http": c1,
+        "checkout_http": c2,
+        "ordered_items": ordered_items,
+        "skipped_items": have,
+        "total_cost": round(total_cost, 2),
+        "all_in_pantry": False,
+    }

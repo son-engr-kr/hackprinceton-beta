@@ -30,7 +30,7 @@ import contextlib
 import json
 import sys
 
-from . import checkin, format, intent, persist, plan
+from . import catalog, checkin, format, intent, llm, pantry as pantry_mod, persist, plan, vision
 
 
 @contextlib.contextmanager
@@ -64,9 +64,16 @@ def cmd_generate(body: dict) -> dict:
 def cmd_order(body: dict) -> dict:
     p = body.get("plan") or {}
     with _stdout_to_stderr():
-        cart_http, checkout_http = plan.place_order(p)
-        message = format.order_confirmation(cart_http, checkout_http)
-    return {"cart_http": cart_http, "checkout_http": checkout_http, "message": message}
+        result = plan.place_order(p)
+        message = format.order_confirmation(result)
+    return {
+        "cart_http": result.get("cart_http"),
+        "checkout_http": result.get("checkout_http"),
+        "ordered_items": result.get("ordered_items"),
+        "skipped_items": result.get("skipped_items"),
+        "total_cost": result.get("total_cost"),
+        "message": message,
+    }
 
 
 def cmd_parse(body: dict) -> dict:
@@ -106,6 +113,105 @@ def cmd_plan_status(body: dict) -> dict:
     return {"ok": True, "plan_id": plan_id, "status": status}
 
 
+def cmd_photo(body: dict) -> dict:
+    """Process an image file (receipt or food).
+
+    body: {image_path, space_id?, hint?: "food"|"receipt"}
+    Returns: {kind, ack_message, parsed, photo_log_id, pantry_deltas}
+    """
+    import pathlib
+    image_path = body.get("image_path")
+    if not image_path:
+        return {"ok": False, "error": "image_path required"}
+    space_id = body.get("space_id")
+
+    with _stdout_to_stderr():
+        p = pathlib.Path(image_path)
+        if not p.exists():
+            return {"ok": False, "error": f"image not found: {image_path}"}
+        img_bytes = p.read_bytes()
+        mime = body.get("mime_type") or None
+        print(f"   👁  vision.analyze ({len(img_bytes)} bytes, mime={mime})")
+        parsed = vision.analyze(img_bytes, mime_type=mime, source_path=str(p))
+        kind = parsed.get("kind", "unclear")
+        confidence = parsed.get("confidence")
+        print(f"   🔍 kind={kind} confidence={confidence}")
+
+        photo_log_id = persist.log_photo(
+            kind=kind,
+            image_path=str(p),
+            parsed=parsed,
+            confidence=confidence,
+            space_id=space_id,
+            applied=(kind in ("food", "receipt")),
+        )
+
+        deltas: list[dict] = []
+        ack = ""
+
+        if kind == "receipt":
+            items = parsed.get("items") or []
+            deltas = pantry_mod.add_from_receipt(items, photo_log_id=photo_log_id)
+            print(f"   🩺 requesting health advice on {len(items)} item(s)")
+            advice = llm.advise_receipt(items)
+            if advice:
+                print(f"      → {advice[:80]}")
+            ack = format.photo_ack_receipt(parsed, deltas, advice=advice)
+
+        elif kind == "food":
+            dish = parsed.get("dish_name") or "unknown dish"
+            portions = float(parsed.get("portions") or 1.0)
+            print(f"   🧠 decomposing '{dish}' ({portions}x) via K2")
+            try:
+                decomp = llm.decompose_food(dish, portions, catalog.load())
+                ingredients = decomp.get("ingredients") or []
+            except Exception as e:
+                print(f"   ⚠ K2 decompose failed: {type(e).__name__}: {e}")
+                ingredients = []
+                decomp = {}
+
+            if ingredients:
+                deltas = pantry_mod.deduct_from_food(ingredients, photo_log_id=photo_log_id)
+
+            kcal = decomp.get("estimated_kcal") or parsed.get("estimated_kcal")
+            checkin.record(
+                {
+                    "ts": None,
+                    "day": checkin.today_dow(),
+                    "meal_title": dish,
+                    "reply": f"(photo) {dish}",
+                    "status": "cooked",
+                    "reason": None,
+                    "consumed_ingredients": ingredients,
+                    "estimated_kcal": kcal,
+                    "photo_log_id": photo_log_id,
+                },
+                space_id=space_id,
+            )
+
+            print(f"   🩺 requesting health advice on meal")
+            food_advice = llm.advise_food(dish, kcal, ingredients)
+            if food_advice:
+                print(f"      → {food_advice[:80]}")
+            ack = format.photo_ack_food(dish, portions, ingredients, kcal, decomp, advice=food_advice)
+
+        else:
+            ack = format.photo_ack_unclear(confidence)
+
+    return {
+        "kind": kind,
+        "ack": ack,
+        "parsed": parsed,
+        "photo_log_id": photo_log_id,
+        "pantry_deltas": deltas,
+    }
+
+
+def cmd_pantry(body: dict) -> dict:
+    with _stdout_to_stderr():
+        return {"stock": pantry_mod.current_stock(limit=int(body.get("limit") or 50))}
+
+
 HANDLERS = {
     "generate":       cmd_generate,
     "order":          cmd_order,
@@ -114,6 +220,8 @@ HANDLERS = {
     "checkin_record": cmd_checkin_record,
     "adherence":      cmd_adherence,
     "plan_status":    cmd_plan_status,
+    "photo":          cmd_photo,
+    "pantry":         cmd_pantry,
 }
 
 
