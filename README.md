@@ -12,7 +12,7 @@ exact ingredients you need, one tap from done.
 [![Live app](https://img.shields.io/badge/🌐_Live-flanner.health-B5E48C?style=for-the-badge)](https://flanner.health)
 [![Backend](https://img.shields.io/badge/🔧_API-Cloud_Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://flanner-api-318799600047.us-central1.run.app/api/health)
 
-**HackPrinceton Spring 2026** · **Knot** sponsor track
+**HackPrinceton Spring 2026** · **Healthcare** track
 
 </div>
 
@@ -433,7 +433,8 @@ body: { reply, meal_title?, day?, space_id? }
 - **Event**: HackPrinceton Spring 2026 · Princeton University · Apr 17–19, 2026
 - **Submission**: 2026-04-19 08:00 ET
 - **Judging**: 2026-04-19 09:30–14:00 ET
-- **Target tracks**:
+- **Primary track**: 🏥 **Healthcare** — delivery-driven diet → home-cooked swap for measurable sodium / calorie / protein impact
+- **Sponsor tracks targeted**:
   - 🪢 **Knot** ($500) — production-grade delivery + cart integration
   - 📨 **Photon** ($400 + $400 credits) — real iMessage orchestration via spectrum-ts
 
