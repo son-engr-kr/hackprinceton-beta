@@ -352,7 +352,7 @@ def place_order(plan: dict) -> tuple[int, int]:
             "name": p.get("name") or src.get("name"),
             "estimated_price_usd": src.get("estimated_price_usd"),
         })
-    total_cost = sum(float(i.get("estimated_price_usd") or 0) for i in ordered_items)
+    total_cost = sum(float(str(i.get("estimated_price_usd") or 0)) for i in ordered_items)
 
     return {
         "cart_http": c1,

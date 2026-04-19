@@ -43,6 +43,10 @@ export default function ImpactPage() {
     { calories: 0, protein: 0, carbs: 0, fat: 0 },
   );
 
+  const proteinPct = Math.round(
+    ((planMacrosWeek.protein * 4) / (delMacros.protein / 6 || 1)) * 100 - 100,
+  );
+
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <div>
@@ -84,7 +88,7 @@ export default function ImpactPage() {
           tint="bg-sunny/30"
           iconTint="bg-sunny text-charcoal"
           label="Protein quality"
-          value={`+${Math.round((planMacrosWeek.protein * 4) / (delMacros.protein / 6) * 100 - 100)}%`}
+          value={`${proteinPct >= 0 ? "+" : ""}${proteinPct}%`}
           delay={0.2}
           footer={`${Math.round(delMacros.protein / 6)}g → ${Math.round(planMacrosWeek.protein * 4)}g / month · lean sources`}
         />

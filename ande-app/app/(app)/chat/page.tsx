@@ -17,6 +17,7 @@ export default function ChatPage() {
   const [currentText, setCurrentText] = useState("");
   const [scriptIdx, setScriptIdx] = useState(0);
   const [advanceTrigger, setAdvanceTrigger] = useState(0);
+  const [input, setInput] = useState("");
   const script = DAILY_CHECKIN_SCRIPT;
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +72,29 @@ export default function ChatPage() {
     api
       .postCheckin({
         reply: choice,
+        meal_title: lastGemmaMeal(turns, script),
+        day: todayDow(),
+      })
+      .then(() => reloadAdherence())
+      .catch(() => {
+        /* ignore — demo falls back to mock script */
+      });
+  };
+
+  const onSend = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    setTurns((t) => [...t, { role: "user", text: trimmed }]);
+    setInput("");
+    // If current gemma turn had choices, skip over the scripted user reply (like onChoice).
+    // Otherwise advance by one.
+    const atChoicePoint =
+      scriptIdx < script.length && script[scriptIdx]?.role === "gemma" && !!script[scriptIdx]?.choices;
+    setScriptIdx((n) => n + (atChoicePoint ? 2 : 1));
+    setAdvanceTrigger((x) => x + 1);
+    api
+      .postCheckin({
+        reply: trimmed,
         meal_title: lastGemmaMeal(turns, script),
         day: todayDow(),
       })
@@ -148,16 +172,24 @@ export default function ChatPage() {
             </AnimatePresence>
           </div>
 
-          {/* Fake input */}
+          {/* Input */}
           <div className="px-5 py-3 border-t border-charcoal/10 flex items-center gap-2 shrink-0">
             <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  onSend(input);
+                }
+              }}
               className="flex-1 px-3 py-2 rounded-full bg-charcoal/5 text-sm focus:outline-none focus:ring-2 focus:ring-hotpink/40"
-              placeholder="Type a reply… (use the choices above in the demo)"
-              disabled
+              placeholder="Type a reply…"
             />
             <button
-              disabled
-              className="w-9 h-9 rounded-full bg-charcoal/10 text-charcoal/40 flex items-center justify-center"
+              onClick={() => onSend(input)}
+              disabled={!input.trim()}
+              className="w-9 h-9 rounded-full bg-hotpink text-cream flex items-center justify-center disabled:bg-charcoal/10 disabled:text-charcoal/40"
             >
               <Send size={14} />
             </button>
