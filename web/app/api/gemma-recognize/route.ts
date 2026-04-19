@@ -2,13 +2,15 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-// Gemma multimodal recognition via the Gemini API. The client sends a
-// base64-encoded image; this route forwards it to Google's endpoint and
-// extracts a structured JSON payload from the model's reply.
+// Gemma multimodal recognition via the Google AI Studio API
+// (generativelanguage.googleapis.com). The client sends a base64-encoded
+// image; this route forwards it to Google's endpoint and extracts a
+// structured JSON payload from the model's reply.
 //
-// Model choice: gemma-3-27b-it is available through the Gemini API and
-// accepts inline image bytes. If it fails (e.g. the key isn't enabled for
-// that model) we fall back to gemini-2.5-flash which is also multimodal.
+// Model choice: Gemma 4 31B is the primary — accepts inline image bytes
+// and is the larger instruction-tuned open-weight model on AI Studio.
+// Gemma 3 27B is the secondary fallback (proven reliable for vision
+// tasks). No Gemini fallback — this is a Gemma-only pathway by design.
 
 type RecognizeRequest = {
   mimeType: string;
@@ -35,7 +37,10 @@ const SYSTEM_PROMPT = `You are a nutrition-recognition assistant. Given a photo 
 
 No prose, no markdown, no code fences. JSON only.`;
 
-const MODELS = ["gemma-3-27b-it", "gemini-2.5-flash"] as const;
+// Gemma 3 27B is the primary — most reliable clean-JSON output on AI Studio.
+// Gemma 4 31B is a secondary fallback (larger, but verbose reasoning-style
+// output sometimes breaks strict JSON extraction).
+const MODELS = ["gemma-3-27b-it", "gemma-4-31b-it"] as const;
 
 async function callGemini(model: string, apiKey: string, body: RecognizeRequest) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
@@ -52,9 +57,11 @@ async function callGemini(model: string, apiKey: string, body: RecognizeRequest)
           ],
         },
       ],
+      // NOTE: responseMimeType is a Gemini-only feature — Gemma returns
+      // 400 INVALID_ARGUMENT if we send it. We handle JSON extraction
+      // client-side via extractJson() instead.
       generationConfig: {
         temperature: 0.2,
-        responseMimeType: "application/json",
       },
     }),
   });
@@ -66,11 +73,25 @@ async function callGemini(model: string, apiKey: string, body: RecognizeRequest)
 }
 
 function extractJson(response: unknown): RecognizeResult {
-  // Gemini response: candidates[0].content.parts[].text → JSON string
-  const cands = (response as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> }).candidates;
-  const text = cands?.[0]?.content?.parts?.map((p) => p.text ?? "").join("") ?? "";
+  // AI Studio response: candidates[0].content.parts[].text → JSON string
+  // Gemma 4 uses "thought" parts for reasoning — skip those.
+  const cands = (response as {
+    candidates?: Array<{
+      content?: { parts?: Array<{ text?: string; thought?: boolean }> };
+    }>;
+  }).candidates;
+  const parts = cands?.[0]?.content?.parts ?? [];
+  const text = parts
+    .filter((p) => !p.thought)
+    .map((p) => p.text ?? "")
+    .join("");
   if (!text) throw new Error("empty response");
-  const cleaned = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "");
+  // Strip markdown fences, then find the first {...} block in case the
+  // model wrapped JSON in prose.
+  let cleaned = text.trim().replace(/^```json\s*/i, "").replace(/```\s*$/i, "");
+  const first = cleaned.indexOf("{");
+  const last = cleaned.lastIndexOf("}");
+  if (first > 0 && last > first) cleaned = cleaned.slice(first, last + 1);
   const parsed = JSON.parse(cleaned) as Partial<RecognizeResult>;
   return {
     name: String(parsed.name ?? "Unknown meal"),

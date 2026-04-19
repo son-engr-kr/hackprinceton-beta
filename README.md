@@ -91,7 +91,7 @@ All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart
 | DB | MongoDB Atlas (`mirrormeal`, cluster0, SRV) |
 | LLM — plan / reasoning | **K2 Think V2** via `api.k2think.ai/v1` (MBZUAI-IFM/K2-Think-v2) |
 | LLM — vision / recognition | **Gemini 2.5 Flash** (`google-genai` SDK) |
-| LLM — local check-in | Gemma 4 (`gemma4:e4b-it-q4_K_M` on Ollama, local only) |
+| LLM — check-in / vision | Gemma 4 31B + Gemma 3 27B via Google AI Studio API (`generativelanguage.googleapis.com`) |
 | Delivery / cart | **Knot API** — `TransactionLink` + `AgenticShopping` (prod) |
 | iMessage | Photon `spectrum-ts` + `@photon-ai/imessage-kit` (Mac-only, not Cloud Run) |
 | Product search | Rainforest API (Amazon ASIN discovery) |

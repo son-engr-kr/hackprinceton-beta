@@ -88,9 +88,9 @@ export default function SettingsPage() {
             active={planModel === "gemma"}
             onClick={() => setPlanModel("gemma")}
             title="Gemma 4"
-            tag="local"
-            line1="ollama · gemma4:e4b-it-q4_K_M"
-            line2="Offline-capable · private"
+            tag="AI Studio"
+            line1="gemma-4-31b-it · fallback gemma-3-27b-it"
+            line2="Open-weight · Google AI Studio"
           />
         </div>
         <div className="text-[11px] text-charcoal/50 mt-3 leading-relaxed">

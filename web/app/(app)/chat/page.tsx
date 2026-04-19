@@ -133,11 +133,11 @@ export default function ChatPage() {
               <div className="text-sm font-bold">Gemma 4</div>
               <div className="text-[10px] text-charcoal/50 flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-mint" />
-                local · Ollama · ~1.2s / response
+                Google AI Studio · ~1s / response
               </div>
             </div>
             <div className="text-[10px] px-2 py-0.5 rounded-full bg-charcoal/5 font-mono">
-              gemma4:e4b-it-q4_K_M
+              gemma-4-31b-it
             </div>
           </div>
 

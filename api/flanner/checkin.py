@@ -71,9 +71,8 @@ Examples:
 
 
 def classify_reply(reply: str) -> dict:
-    """Keyword fast path → Gemini for ambiguous text.
+    """Keyword fast path → Gemma (AI Studio) for ambiguous text.
 
-    TODO(local-gemma): route the LLM path through Ollama Gemma once it's set up.
     Keyword path handles ~90% of replies without a round-trip.
     """
     reply = (reply or "").strip()
@@ -88,21 +87,26 @@ def classify_reply(reply: str) -> dict:
     if any(k in low for k in ("doordash", "uber eats", "delivery", "ordered", "takeout")):
         return {"status": "delivery", "reason": reply[:80]}
 
+    if not config.GEMINI_API_KEY:
+        return {"status": "unclear", "reason": "no LLM key"}
+
     try:
         from google import genai
         from google.genai import types
 
-        client = genai.Client(vertexai=True, project=config.GCP_PROJECT_ID, location=config.GCP_LOCATION)
+        from .llm import _extract_json, _strip_think_tags
+
+        client = genai.Client(api_key=config.GEMINI_API_KEY)
         resp = client.models.generate_content(
-            model=config.GEMINI_MODEL,
-            contents=[reply],
-            config=types.GenerateContentConfig(
-                system_instruction=_CLASSIFY_PROMPT,
-                response_mime_type="application/json",
-                temperature=0.1,
-            ),
+            model=config.AI_STUDIO_MODEL,
+            # Gemma doesn't support system_instruction — prepend to contents instead
+            contents=[_CLASSIFY_PROMPT, reply],
+            config=types.GenerateContentConfig(temperature=0.1),
         )
-        return json.loads(resp.text)
+        parsed = _extract_json(_strip_think_tags(resp.text))
+        if isinstance(parsed, dict):
+            return parsed
+        return {"status": "unclear", "reason": "non-object classify output"}
     except Exception as e:
         return {"status": "unclear", "reason": f"classify error: {type(e).__name__}"}
 
