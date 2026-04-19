@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import { Brain, CalendarDays, CreditCard, Cpu, RotateCcw } from "lucide-react";
 import { useAndeStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import {
+  useCalendarStatus,
+  useDeliveryStats,
+  useLinkedMerchants,
+  useUser,
+} from "@/lib/hooks";
+import { API_BASE, DEMO_USER_ID } from "@/lib/api";
 
 const GOALS = [
   { id: "weight_loss", label: "Weight loss",   sub: "Optimize calories" },
@@ -28,6 +35,22 @@ export default function SettingsPage() {
   const dietary = useAndeStore((s) => s.dietary);
   const setDietary = useAndeStore((s) => s.setDietary);
   const setOnboardingComplete = useAndeStore((s) => s.setOnboardingComplete);
+
+  const { data: user } = useUser();
+  const { data: linked } = useLinkedMerchants();
+  const { data: calendar } = useCalendarStatus();
+  const { records } = useDeliveryStats();
+
+  const knotLinkTx = linked?.merchants?.find(
+    (m) =>
+      (m.name ?? "").toLowerCase().includes("doordash") ||
+      (m.name ?? "").toLowerCase().includes("uber") ||
+      (m.name ?? "").toLowerCase().includes("grubhub"),
+  );
+  const knotLinkShop = linked?.merchants?.find(
+    (m) => (m.name ?? "").toLowerCase().includes("amazon"),
+  );
+  const calendarConnected = !!calendar?.is_linked;
 
   const toggleDiet = (d: string) => {
     setDietary(dietary.includes(d) ? dietary.filter((x) => x !== d) : [...dietary, d]);
@@ -128,10 +151,51 @@ export default function SettingsPage() {
           Connections
         </div>
         <div className="space-y-2">
-          <ConnectionRow icon={CreditCard} title="Knot TransactionLink" sub="Chase ••4721 · 287 orders" status="connected" />
-          <ConnectionRow icon={CreditCard} title="Knot AgenticShopping" sub="Amazon Fresh · merchant_id=59" status="connected" />
-          <ConnectionRow icon={CalendarDays} title="Google Calendar" sub="hylbert@gmail.com" status="connected" />
-          <ConnectionRow icon={Cpu} title="Ollama (local)" sub="gemma4:e4b-it-q4_K_M" status="connected" />
+          <ConnectionRow
+            icon={CreditCard}
+            title="Knot TransactionLink"
+            sub={
+              knotLinkTx
+                ? `${knotLinkTx.name ?? "linked"} · ${records.length || 0} orders`
+                : `${records.length || 0} orders · demo seed`
+            }
+            status={knotLinkTx ? "connected" : "pending"}
+          />
+          <ConnectionRow
+            icon={CreditCard}
+            title="Knot AgenticShopping"
+            sub={
+              knotLinkShop
+                ? `Amazon · merchant_id=${knotLinkShop.merchant_id}`
+                : "not linked"
+            }
+            status={knotLinkShop ? "connected" : "pending"}
+          />
+          <ConnectionRow
+            icon={CalendarDays}
+            title="Google Calendar"
+            sub={
+              calendarConnected
+                ? `events ${calendar?.events_count ?? 0}`
+                : (
+                  <a
+                    href={`${API_BASE}/api/calendar/connect?user_id=${DEMO_USER_ID}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-hotpink hover:underline"
+                  >
+                    connect →
+                  </a>
+                )
+            }
+            status={calendarConnected ? "connected" : "pending"}
+          />
+          <ConnectionRow
+            icon={Cpu}
+            title="Flanner backend"
+            sub={user ? `user ${user.external_user_id}` : "not reachable"}
+            status={user ? "connected" : "pending"}
+          />
         </div>
       </motion.section>
 
@@ -177,7 +241,7 @@ function ConnectionRow({
   icon: Icon, title, sub, status,
 }: {
   icon: React.ComponentType<{ size?: number; className?: string }>;
-  title: string; sub: string; status: "connected" | "pending";
+  title: string; sub: React.ReactNode; status: "connected" | "pending";
 }) {
   return (
     <div className="flex items-center gap-3 py-2">

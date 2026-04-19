@@ -40,6 +40,7 @@ import { useK2Plan, type K2PlanState } from "@/lib/k2/useK2Plan";
 import type { ToolCall } from "@/lib/k2/tools";
 import { flaggedStock } from "@/lib/mock/stock";
 import { playCompletionChime, playPhaseTick } from "@/lib/audio";
+import { useLatestPlan } from "@/lib/hooks";
 import { useAndeStore } from "@/lib/store";
 import { cn, formatCurrency } from "@/lib/utils";
 
@@ -1000,7 +1001,9 @@ function StageExtract() {
 
 function StageOutput() {
   useStageDone("output", true);
-  const cart = useMemo(() => weeklyCart(), []);
+  const { cartLines, plan } = useLatestPlan();
+  const mockCart = useMemo(() => weeklyCart(), []);
+  const cart = cartLines?.length ? cartLines : mockCart;
   const pantryKeys = useMemo(() => new Set(PANTRY.map((p) => p.ingredientKey)), []);
   const { shoppable, pantryItems } = useMemo(() => {
     const shoppable = cart.filter((l) => !pantryKeys.has(l.ingredientKey));
@@ -1154,6 +1157,11 @@ function StageOutput() {
         </motion.div>
         <div className="text-[11px] text-charcoal/60 mt-1">
           {shoppable.length} SKU · {itemCount} items · {pantryItems.length} pantry excluded
+          {plan && (
+            <span className="ml-1 font-mono text-charcoal/30">
+              · plan {plan._id.slice(-6)}
+            </span>
+          )}
         </div>
         <div className="mt-4 flex items-center gap-3">
           <span className="flex items-center justify-center overflow-hidden shrink-0">

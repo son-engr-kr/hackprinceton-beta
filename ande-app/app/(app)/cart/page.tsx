@@ -1,17 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Check, CheckCircle2, ShoppingCart, Truck, Wallet } from "lucide-react";
-import { weeklyCart, weeklyPlan } from "@/lib/mock/recipes";
-import { PANTRY } from "@/lib/mock/pantry";
+import { weeklyCart, weeklyPlan, type CartLine } from "@/lib/mock/recipes";
 import { INGREDIENTS } from "@/lib/mock/ingredients";
-import { topFoods, totalSpent, recordsInLastDays } from "@/lib/mock/delivery-history";
-import { FOODS } from "@/lib/mock/foods";
 import { AssetImage } from "@/components/AssetImage";
 import { useAndeStore } from "@/lib/store";
 import { formatCurrency, cn } from "@/lib/utils";
+import { useDeliveryStats, useLatestPlan, usePantry } from "@/lib/hooks";
+import { api } from "@/lib/api";
 
 const CATEGORY_LABELS: Record<string, string> = {
   produce: "Fresh Produce",
@@ -19,45 +18,91 @@ const CATEGORY_LABELS: Record<string, string> = {
   dairy: "Dairy & Eggs",
   grain: "Pantry Staples",
   pantry: "Pantry Staples",
+  other: "Other",
 };
 
 const DELIVERY_SLOTS = [
-  { id: "tue_am",  label: "Tue 4/21", slot: "9 AM – 11 AM", fee: 0 },
-  { id: "tue_pm",  label: "Tue 4/21", slot: "5 PM – 7 PM",  fee: 0 },
-  { id: "wed_am",  label: "Wed 4/22", slot: "9 AM – 11 AM", fee: 0 },
+  { id: "tue_am", label: "Tue 4/21", slot: "9 AM – 11 AM", fee: 0 },
+  { id: "tue_pm", label: "Tue 4/21", slot: "5 PM – 7 PM", fee: 0 },
+  { id: "wed_am", label: "Wed 4/22", slot: "9 AM – 11 AM", fee: 0 },
 ];
 
 export default function CartPage() {
-  const cart = useMemo(() => weeklyCart(), []);
-  const plan = useMemo(() => weeklyPlan(), []);
+  const { plan, meals, cartLines, totalCost, loading, error } = useLatestPlan();
+  const { rows: pantryRows } = usePantry();
+  const { topFoods, total: deliveryTotal, records } = useDeliveryStats();
+
+  const mockCart = useMemo(() => weeklyCart(), []);
+  const mockPlan = useMemo(() => weeklyPlan(), []);
+  const cart: CartLine[] = cartLines?.length ? cartLines : mockCart;
+  const planMealCount = meals?.length ?? mockPlan.length;
+
   const cartStatus = useAndeStore((s) => s.cartStatus);
   const setCartStatus = useAndeStore((s) => s.setCartStatus);
   const [slot, setSlot] = useState("tue_am");
-  const [quantities, setQuantities] = useState<Record<string, number>>(
-    () => Object.fromEntries(cart.map((l) => [l.ingredientKey, l.qty])),
+  const [quantities, setQuantities] = useState<Record<string, number>>({});
+  const [orderErr, setOrderErr] = useState<string | undefined>(undefined);
+  const [orderBusy, setOrderBusy] = useState(false);
+
+  // initialize qty when cart lines change
+  useEffect(() => {
+    setQuantities(Object.fromEntries(cart.map((l) => [l.ingredientKey, l.qty])));
+  }, [cart]);
+
+  const pantryKeys = useMemo(
+    () => new Set(pantryRows.map((p) => p.key)),
+    [pantryRows],
   );
 
-  // Pantry already has these — annotate
-  const pantryKeys = new Set(PANTRY.map((p) => p.ingredientKey));
+  const unitPriceFor = (line: CartLine) => {
+    const mockPrice = INGREDIENTS[line.ingredientKey]?.unitPrice;
+    if (typeof mockPrice === "number") return mockPrice;
+    // Derive per-unit price from backend line (cost is total for its qty)
+    return line.qty ? line.cost / line.qty : 0;
+  };
 
   const subtotal = cart.reduce(
-    (s, l) => s + (quantities[l.ingredientKey] ?? l.qty) * (INGREDIENTS[l.ingredientKey]?.unitPrice ?? 0),
+    (s, l) => s + (quantities[l.ingredientKey] ?? l.qty) * unitPriceFor(l),
     0,
   );
   const tax = subtotal * 0.0625;
   const total = subtotal + tax;
+  const planCost = plan ? totalCost ?? total : total;
 
-  // Comparison with 30-day delivery spend
-  const delivery30 = totalSpent(recordsInLastDays(30));
-  const weeklyDeliveryAvg = delivery30 / 4;
+  // 30-day delivery spend — if we have real records, compute last 30 days
+  const now = Date.now();
+  const last30 = records.filter((r) => {
+    const t = new Date(r.date).getTime();
+    return now - t <= 30 * 24 * 60 * 60 * 1000;
+  });
+  const delivery30 = last30.reduce((s, r) => s + r.price, 0) || deliveryTotal / 6;
+  const weeklyDeliveryAvg = delivery30 / 4 || 1;
   const savedVsDelivery = weeklyDeliveryAvg - total;
 
-  // Group by category
-  const groups = cart.reduce<Record<string, typeof cart>>((acc, line) => {
-    const g = line.category;
+  const groups = cart.reduce<Record<string, CartLine[]>>((acc, line) => {
+    const g = line.category || "other";
     (acc[g] ??= []).push(line);
     return acc;
   }, {});
+
+  const placeOrder = async () => {
+    setOrderErr(undefined);
+    if (!plan?._id) {
+      // No real plan → show the demo confirmation anyway
+      setCartStatus("confirmed");
+      return;
+    }
+    setOrderBusy(true);
+    try {
+      await api.orderPlan(plan._id);
+      setCartStatus("confirmed");
+    } catch (e) {
+      setOrderErr(e instanceof Error ? e.message : String(e));
+      setCartStatus("confirmed"); // still show UI feedback for demo
+    } finally {
+      setOrderBusy(false);
+    }
+  };
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -68,6 +113,15 @@ export default function CartPage() {
         <div className="flex-1">
           <div className="text-xs font-bold uppercase tracking-wider text-charcoal/50">
             Amazon Fresh · Knot AgenticShopping
+            <span className="ml-2 text-[10px] font-mono text-charcoal/30">
+              {loading
+                ? "loading…"
+                : plan
+                  ? `plan ${plan._id.slice(-6)} · ${plan.status}`
+                  : error
+                    ? "mock fallback"
+                    : "mock"}
+            </span>
           </div>
           <h1 className="text-3xl font-bold">Cart</h1>
         </div>
@@ -88,16 +142,20 @@ export default function CartPage() {
       >
         <Wallet size={28} strokeWidth={3} />
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-bold uppercase tracking-wider">Projected savings this week</div>
+          <div className="text-[11px] font-bold uppercase tracking-wider">
+            Projected savings this week
+          </div>
           <div className="text-2xl font-bold font-mono">
             {formatCurrency(savedVsDelivery)}
             <span className="text-sm text-charcoal/60 ml-2 font-sans">
-              (delivery {formatCurrency(weeklyDeliveryAvg)} → home-cooked {formatCurrency(total)})
+              (delivery {formatCurrency(weeklyDeliveryAvg)} → home-cooked{" "}
+              {formatCurrency(total)})
             </span>
           </div>
         </div>
         <div className="text-sm text-charcoal/70">
-          {plan.length} meals · <span className="font-mono font-bold">{cart.length}</span> ingredients
+          {planMealCount} meals ·{" "}
+          <span className="font-mono font-bold">{cart.length}</span> ingredients
         </div>
       </motion.div>
 
@@ -116,16 +174,21 @@ export default function CartPage() {
                   <div className="text-xs font-bold uppercase tracking-wider text-charcoal/50">
                     {CATEGORY_LABELS[cat] ?? cat}
                   </div>
-                  <div className="text-sm font-bold">{lines.length} ingredients</div>
+                  <div className="text-sm font-bold">
+                    {lines.length} ingredients
+                  </div>
                 </div>
               </div>
               <div className="divide-y divide-charcoal/10">
                 {lines.map((line) => {
-                  const ing = INGREDIENTS[line.ingredientKey];
+                  const unitPrice = unitPriceFor(line);
                   const qty = quantities[line.ingredientKey] ?? line.qty;
                   const alreadyHave = pantryKeys.has(line.ingredientKey);
                   return (
-                    <div key={line.ingredientKey} className="flex items-center gap-3 py-3">
+                    <div
+                      key={line.ingredientKey}
+                      className="flex items-center gap-3 py-3"
+                    >
                       <div className="w-12 h-12 rounded-xl bg-charcoal/5 flex items-center justify-center shrink-0">
                         <AssetImage
                           category="ingredient"
@@ -136,7 +199,9 @@ export default function CartPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <div className="font-semibold text-sm">{line.name}</div>
+                          <div className="font-semibold text-sm truncate">
+                            {line.name}
+                          </div>
                           {alreadyHave && (
                             <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-mint text-charcoal font-bold">
                               PANTRY
@@ -144,16 +209,36 @@ export default function CartPage() {
                           )}
                         </div>
                         <div className="text-xs text-charcoal/50">
-                          {formatCurrency(ing?.unitPrice ?? 0)} / {line.unit}
+                          {formatCurrency(unitPrice)} / {line.unit}
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
-                        <QtyButton onClick={() => setQuantities((q) => ({ ...q, [line.ingredientKey]: Math.max(0, qty - 1) }))}>−</QtyButton>
-                        <div className="w-8 text-center text-sm font-bold font-mono tabular-nums">{qty}</div>
-                        <QtyButton onClick={() => setQuantities((q) => ({ ...q, [line.ingredientKey]: qty + 1 }))}>+</QtyButton>
+                        <QtyButton
+                          onClick={() =>
+                            setQuantities((q) => ({
+                              ...q,
+                              [line.ingredientKey]: Math.max(0, qty - 1),
+                            }))
+                          }
+                        >
+                          −
+                        </QtyButton>
+                        <div className="w-8 text-center text-sm font-bold font-mono tabular-nums">
+                          {qty}
+                        </div>
+                        <QtyButton
+                          onClick={() =>
+                            setQuantities((q) => ({
+                              ...q,
+                              [line.ingredientKey]: qty + 1,
+                            }))
+                          }
+                        >
+                          +
+                        </QtyButton>
                       </div>
                       <div className="w-20 text-right font-mono text-sm tabular-nums font-bold">
-                        {formatCurrency(qty * (ing?.unitPrice ?? 0))}
+                        {formatCurrency(qty * unitPrice)}
                       </div>
                     </div>
                   );
@@ -193,9 +278,7 @@ export default function CartPage() {
                     <div className="font-semibold">{s.label}</div>
                     <div className="text-[11px] text-charcoal/60">{s.slot}</div>
                   </div>
-                  {slot === s.id && (
-                    <Check size={16} className="text-hotpink" />
-                  )}
+                  {slot === s.id && <Check size={16} className="text-hotpink" />}
                 </button>
               ))}
             </div>
@@ -215,6 +298,11 @@ export default function CartPage() {
             <Row label="Delivery" value="FREE" mint />
             <div className="divider my-3" />
             <Row label="Total" value={formatCurrency(total)} bold />
+            {plan && (
+              <div className="text-[10px] font-mono text-charcoal/40 mt-1">
+                plan est {formatCurrency(planCost)}
+              </div>
+            )}
 
             <div className="mt-4 flex items-center justify-center gap-3">
               <img
@@ -227,10 +315,10 @@ export default function CartPage() {
               </span>
             </div>
             <motion.button
-              onClick={() => setCartStatus("confirmed")}
+              onClick={placeOrder}
               whileTap={{ scale: 0.97 }}
               whileHover={{ y: -2 }}
-              disabled={cartStatus === "confirmed"}
+              disabled={cartStatus === "confirmed" || orderBusy}
               className={cn(
                 "mt-3 w-full py-4 rounded-full font-bold chunky shadow-pop flex items-center justify-center gap-3",
                 cartStatus === "confirmed"
@@ -242,6 +330,8 @@ export default function CartPage() {
                 <>
                   <CheckCircle2 size={20} /> Order placed
                 </>
+              ) : orderBusy ? (
+                <span className="text-base">Placing order…</span>
               ) : (
                 <span className="text-base">Order</span>
               )}
@@ -254,10 +344,17 @@ export default function CartPage() {
                   animate={{ opacity: 1, height: "auto" }}
                   className="mt-3 p-3 rounded-xl bg-mint/20 text-xs"
                 >
-                  <div className="font-bold">Knot AgenticShopping → Amazon Fresh</div>
+                  <div className="font-bold">
+                    Knot AgenticShopping → Amazon Fresh
+                  </div>
                   <div className="text-charcoal/60 mt-0.5">
                     Tue 4/21 9-11 AM · Order #AF-2026-04871
                   </div>
+                  {orderErr && (
+                    <div className="text-[11px] text-hotpink mt-1">
+                      backend: {orderErr}
+                    </div>
+                  )}
                   <Link
                     href="/chat"
                     className="mt-2 inline-flex items-center gap-1 text-hotpink font-semibold"
@@ -269,8 +366,9 @@ export default function CartPage() {
             </AnimatePresence>
 
             <div className="mt-4 text-[10px] text-charcoal/50 leading-relaxed">
-              Knot session ID: sess_04h3k2 · Payment card: Chase ••4721 · Amazon
-              Fresh merchant_id=59
+              {plan
+                ? `plan_id=${plan._id} · ${plan.model ?? "k2"} · Amazon Fresh merchant_id=59`
+                : "Knot session ID: sess_04h3k2 · Payment card: Chase ••4721 · Amazon Fresh merchant_id=59"}
             </div>
           </motion.section>
 
@@ -283,10 +381,22 @@ export default function CartPage() {
             <div className="text-xs font-bold uppercase tracking-wider text-charcoal/50 mb-3">
               Last 30 days delivery → this week home-cooked
             </div>
-            <Compare label="Avg weekly delivery" value={formatCurrency(weeklyDeliveryAvg)} color="bg-hotpink" full />
-            <Compare label="Home-cooked weekly" value={formatCurrency(total)} color="bg-mint" pct={total / weeklyDeliveryAvg} />
+            <Compare
+              label="Avg weekly delivery"
+              value={formatCurrency(weeklyDeliveryAvg)}
+              color="bg-hotpink"
+              full
+            />
+            <Compare
+              label="Home-cooked weekly"
+              value={formatCurrency(total)}
+              color="bg-mint"
+              pct={total / Math.max(weeklyDeliveryAvg, 1)}
+            />
             <div className="mt-3 text-[11px] text-charcoal/60">
-              Same meal count · sodium −58% · CO₂ −5.3 kg (no delivery packaging)
+              {topFoods[0]?.foodKey
+                ? `Top 30-day delivery: ${topFoods[0].foodKey} · ${topFoods[0].count}×`
+                : "Same meal count · sodium −58% · CO₂ −5.3 kg"}
             </div>
           </motion.section>
         </div>
@@ -295,7 +405,13 @@ export default function CartPage() {
   );
 }
 
-function QtyButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function QtyButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
@@ -306,16 +422,47 @@ function QtyButton({ children, onClick }: { children: React.ReactNode; onClick: 
   );
 }
 
-function Row({ label, value, bold, mint }: { label: string; value: string; bold?: boolean; mint?: boolean }) {
+function Row({
+  label,
+  value,
+  bold,
+  mint,
+}: {
+  label: string;
+  value: string;
+  bold?: boolean;
+  mint?: boolean;
+}) {
   return (
-    <div className={cn("flex justify-between items-center py-1.5 text-sm", bold && "text-base font-bold")}>
+    <div
+      className={cn(
+        "flex justify-between items-center py-1.5 text-sm",
+        bold && "text-base font-bold",
+      )}
+    >
       <span className={cn(!bold && "text-charcoal/60")}>{label}</span>
-      <span className={cn("font-mono tabular-nums", mint && "text-mint font-bold")}>{value}</span>
+      <span
+        className={cn("font-mono tabular-nums", mint && "text-mint font-bold")}
+      >
+        {value}
+      </span>
     </div>
   );
 }
 
-function Compare({ label, value, color, pct = 1, full }: { label: string; value: string; color: string; pct?: number; full?: boolean }) {
+function Compare({
+  label,
+  value,
+  color,
+  pct = 1,
+  full,
+}: {
+  label: string;
+  value: string;
+  color: string;
+  pct?: number;
+  full?: boolean;
+}) {
   const width = full ? "100%" : `${Math.max(5, pct * 100)}%`;
   return (
     <div className="mb-2">

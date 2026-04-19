@@ -1,33 +1,36 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, animate as fmAnimate } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Heart, Droplet, Flame, Wheat } from "lucide-react";
-import {
-  DELIVERY_HISTORY,
-  totalSodium,
-} from "@/lib/mock/delivery-history";
 import { FOODS } from "@/lib/mock/foods";
 import { weeklyPlan } from "@/lib/mock/recipes";
+import { useAdherence, useDeliveryStats } from "@/lib/hooks";
 
 export default function ImpactPage() {
   const plan = weeklyPlan();
+  const { records, totalSodium: deliverySodium, using } = useDeliveryStats();
+  const { rate } = useAdherence(30);
 
-  const sodiumDel = totalSodium(DELIVERY_HISTORY) / 6;
+  const sodiumDel = deliverySodium / 6;
   const sodiumPlan = plan.reduce((s, r) => s + r.sodium, 0) * 4;
-  const sodiumReducedPct = Math.max(0, 1 - sodiumPlan / sodiumDel);
+  const sodiumReducedPct = Math.max(0, 1 - sodiumPlan / (sodiumDel || 1));
 
-  const delMacros = DELIVERY_HISTORY.reduce(
-    (acc, r) => {
-      const f = FOODS[r.foodKey];
-      if (!f) return acc;
-      acc.calories += f.calories;
-      acc.protein += f.macros.protein;
-      acc.carbs += f.macros.carbs;
-      acc.fat += f.macros.fat;
-      return acc;
-    },
-    { calories: 0, protein: 0, carbs: 0, fat: 0 },
+  const delMacros = useMemo(
+    () =>
+      records.reduce(
+        (acc, r) => {
+          const f = FOODS[r.foodKey];
+          if (!f) return acc;
+          acc.calories += f.calories;
+          acc.protein += f.macros.protein;
+          acc.carbs += f.macros.carbs;
+          acc.fat += f.macros.fat;
+          return acc;
+        },
+        { calories: 0, protein: 0, carbs: 0, fat: 0 },
+      ),
+    [records],
   );
   const planMacrosWeek = plan.reduce(
     (acc, r) => {
@@ -51,6 +54,9 @@ export default function ImpactPage() {
         </h1>
         <p className="text-charcoal/60 text-sm mt-1">
           Estimated health impact if the last 30 days of delivery got replaced by the Flanner plan.
+          <span className="ml-2 text-[10px] font-mono uppercase tracking-wider text-charcoal/30">
+            · {using} · adherence {rate.cooked}/{rate.total || 0}
+          </span>
         </p>
       </div>
 

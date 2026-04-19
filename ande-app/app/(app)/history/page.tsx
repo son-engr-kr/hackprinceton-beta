@@ -2,17 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  DELIVERY_HISTORY,
-  topRestaurants,
-  topFoods,
-  totalSpent,
-} from "@/lib/mock/delivery-history";
 import { RESTAURANTS } from "@/lib/mock/restaurants";
 import { FOODS } from "@/lib/mock/foods";
 import { AssetImage } from "@/components/AssetImage";
 import { formatCurrency, cn } from "@/lib/utils";
 import { TrendingUp } from "lucide-react";
+import { useDeliveryStats } from "@/lib/hooks";
 
 type CategoryRestaurant = {
   restaurantId: string;
@@ -22,41 +17,39 @@ type CategoryRestaurant = {
   spent: number;
 };
 
-function topRestaurantsForFood(foodKey: string, n = 3): CategoryRestaurant[] {
-  const agg = new Map<string, { count: number; spent: number }>();
-  for (const r of DELIVERY_HISTORY) {
-    if (r.foodKey !== foodKey) continue;
-    const cur = agg.get(r.restaurantId) ?? { count: 0, spent: 0 };
-    agg.set(r.restaurantId, { count: cur.count + 1, spent: cur.spent + r.price });
-  }
-  return Array.from(agg.entries())
-    .map(([restaurantId, { count, spent }]) => {
-      const rest = RESTAURANTS[restaurantId];
-      return {
-        restaurantId,
-        name: rest?.name ?? restaurantId,
-        neighborhood: rest?.neighborhood ?? "",
-        count,
-        spent,
-      };
-    })
-    .sort((a, b) => b.count - a.count)
-    .slice(0, n);
-}
-
 export default function HistoryPage() {
   const [filter, setFilter] = useState<string>("all");
   const [hoverKey, setHoverKey] = useState<string | null>(null);
-  const total = totalSpent();
-  const restaurants = topRestaurants(20);
-  const foods = topFoods(8);
+  const { records, total, topFoods, topRestaurants, using, loading } =
+    useDeliveryStats();
+  const restaurants = topRestaurants.slice(0, 20);
+  const foods = topFoods.slice(0, 8);
+
+  const topRestaurantsForFood = (foodKey: string, n = 3): CategoryRestaurant[] => {
+    const agg = new Map<string, { count: number; spent: number }>();
+    for (const r of records) {
+      if (r.foodKey !== foodKey) continue;
+      const cur = agg.get(r.restaurantId) ?? { count: 0, spent: 0 };
+      agg.set(r.restaurantId, { count: cur.count + 1, spent: cur.spent + r.price });
+    }
+    return Array.from(agg.entries())
+      .map(([restaurantId, { count, spent }]) => {
+        const rest = RESTAURANTS[restaurantId];
+        return {
+          restaurantId,
+          name: rest?.name ?? restaurantId,
+          neighborhood: rest?.neighborhood ?? "",
+          count,
+          spent,
+        };
+      })
+      .sort((a, b) => b.count - a.count)
+      .slice(0, n);
+  };
 
   const filtered = useMemo(
-    () =>
-      filter === "all"
-        ? DELIVERY_HISTORY
-        : DELIVERY_HISTORY.filter((r) => r.foodKey === filter),
-    [filter],
+    () => (filter === "all" ? records : records.filter((r) => r.foodKey === filter)),
+    [filter, records],
   );
 
   return (
@@ -67,8 +60,11 @@ export default function HistoryPage() {
         </div>
         <h1 className="text-3xl font-bold mt-1">Order history</h1>
         <p className="text-charcoal/60 mt-1 text-sm">
-          DoorDash · Uber Eats · Grubhub combined — {DELIVERY_HISTORY.length} orders,{" "}
+          DoorDash · Uber Eats · Grubhub combined — {records.length} orders,{" "}
           {formatCurrency(total)}
+          <span className="ml-2 text-[10px] font-mono uppercase tracking-wider text-charcoal/30">
+            · {loading ? "loading…" : using}
+          </span>
         </p>
       </div>
 
@@ -180,9 +176,15 @@ export default function HistoryPage() {
             <div className="text-xs text-charcoal/60">delivery spend per month</div>
           </div>
           <div className="divider my-3" />
-          <Stat label="Avg order price" value={formatCurrency(total / DELIVERY_HISTORY.length)} />
-          <Stat label="Monthly order count" value={`${Math.round(DELIVERY_HISTORY.length / 6)}`} />
-          <Stat label="Most-frequented spot" value={RESTAURANTS[restaurants[0]?.restaurantId ?? ""]?.name ?? "-"} />
+          <Stat
+            label="Avg order price"
+            value={formatCurrency(records.length ? total / records.length : 0)}
+          />
+          <Stat label="Monthly order count" value={`${Math.round(records.length / 6)}`} />
+          <Stat
+            label="Most-frequented spot"
+            value={RESTAURANTS[restaurants[0]?.restaurantId ?? ""]?.name ?? "-"}
+          />
         </motion.section>
       </div>
 

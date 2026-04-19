@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Cpu, Send, Sparkles } from "lucide-react";
-import { DAILY_CHECKIN_SCRIPT, PAST_CHECKINS, type ChatTurn } from "@/lib/mock/chat";
+import { DAILY_CHECKIN_SCRIPT, type ChatTurn } from "@/lib/mock/chat";
 import { AssetImage } from "@/components/AssetImage";
 import { cn } from "@/lib/utils";
+import { useAdherence } from "@/lib/hooks";
+import { api } from "@/lib/api";
 
 // How many ms per rendered character in Gemma's bubbles (typewriter feel)
 const TYPE_MS = 18;
@@ -58,11 +60,24 @@ export default function ChatPage() {
     }
   }, [turns, currentText]);
 
+  const { rows: adherenceRows, rate: adherenceRate, reload: reloadAdherence, loading: adherenceLoading } =
+    useAdherence(10);
+
   const onChoice = (choice: string) => {
-    // Advance past gemma turn + inject user choice + continue
     setTurns((t) => [...t, { role: "user", text: choice }]);
     setScriptIdx((n) => n + 2);
     setAdvanceTrigger((x) => x + 1);
+    // Fire-and-forget: record the user's reply as a real check-in
+    api
+      .postCheckin({
+        reply: choice,
+        meal_title: lastGemmaMeal(turns, script),
+        day: todayDow(),
+      })
+      .then(() => reloadAdherence())
+      .catch(() => {
+        /* ignore — demo falls back to mock script */
+      });
   };
 
   const lastTurn = turns[turns.length - 1];
@@ -158,25 +173,38 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="space-y-2.5 overflow-y-auto">
-            {PAST_CHECKINS.map((c) => (
-              <div key={c.date} className="flex items-start gap-2.5">
-                <div
-                  className={cn(
-                    "w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0",
-                    c.adherence
-                      ? "bg-mint/30 border-mint"
-                      : "bg-hotpink/10 border-hotpink",
-                  )}
-                >
-                  {c.adherence ? "✓" : "✗"}
+            {adherenceLoading && adherenceRows.length === 0 && (
+              <div className="text-xs text-charcoal/40">loading…</div>
+            )}
+            {adherenceRows.map((c) => {
+              const ok = c.status === "cooked";
+              const icon = c.status === "delivery" ? "⇢" : ok ? "✓" : "✗";
+              return (
+                <div key={c.id} className="flex items-start gap-2.5">
+                  <div
+                    className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold shrink-0",
+                      ok
+                        ? "bg-mint/30 border-mint"
+                        : "bg-hotpink/10 border-hotpink",
+                    )}
+                  >
+                    {icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[10px] font-mono text-charcoal/50">
+                      {c.date} · {c.day ?? "—"}
+                    </div>
+                    <div className="text-xs truncate">
+                      Q: {c.mealTitle ?? "—"}
+                    </div>
+                    <div className="text-xs text-charcoal/70 truncate">
+                      A: {c.reply}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-[10px] font-mono text-charcoal/50">{c.date}</div>
-                  <div className="text-xs truncate">Q: {c.gemma}</div>
-                  <div className="text-xs text-charcoal/70 truncate">A: {c.user}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-auto pt-4 border-t border-charcoal/10">
@@ -185,7 +213,7 @@ export default function ChatPage() {
             </div>
             <div className="flex items-baseline gap-1 mt-1">
               <div className="text-2xl font-bold font-mono">
-                {PAST_CHECKINS.filter((c) => c.adherence).length}/{PAST_CHECKINS.length}
+                {adherenceRate.cooked}/{adherenceRate.total || 7}
               </div>
               <div className="text-xs text-charcoal/50">days</div>
             </div>
@@ -228,4 +256,20 @@ function renderMd(s: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+}
+
+function lastGemmaMeal(
+  turns: ChatTurn[],
+  script: ChatTurn[],
+): string | undefined {
+  // Best-effort: pull the bolded dish out of the last gemma question the user is answering
+  const recent = [...turns].reverse().find((t) => t.role === "gemma");
+  const source = recent ?? script.find((t) => t.role === "gemma");
+  if (!source) return undefined;
+  const m = source.text.match(/\*\*(.+?)\*\*/);
+  return m?.[1];
+}
+
+function todayDow(): string {
+  return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][new Date().getDay()];
 }
