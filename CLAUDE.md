@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project context
 
-HackPrinceton Spring 2026 **Knot track** submission. Product name is **"Flanner"** (domain **flanner.health**). UI tagline: "a mirror on your delivery habits". Repo/codename is still `ande` (not renamed); Python backend package lives at `api/flanner/`. The app takes ~6 months of delivery-food records → auto-derives ingredients → assembles a grocery cart → proposes a weekly meal plan with healthier home-cooked swaps.
+HackPrinceton Spring 2026 **Healthcare track** submission. Product name is **"Flanner"** (domain **flanner.health**). UI tagline: "a mirror on your delivery habits". Repo/codename is still `ande` (not renamed); Python backend package lives at `api/flanner/`. The app takes ~6 months of delivery-food records → auto-derives ingredients → assembles a grocery cart → proposes a weekly meal plan with healthier home-cooked swaps.
 
 **Mock-only contract.** The entire demo is a fully-mocked frontend — no real Knot / SMS / DoorDash / Amazon Fresh / Google Calendar integrations exist. Anything touching `web/` stays mocked unless the user explicitly asks otherwise. Extend existing routes/sections rather than adding real API wiring.
 

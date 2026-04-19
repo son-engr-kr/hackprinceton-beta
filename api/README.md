@@ -1,6 +1,6 @@
 # api
 
-Backend + iMessage orchestrator for **Flanner** (flanner.health · HackPrinceton S26 Knot track).
+Backend + iMessage orchestrator for **Flanner** (flanner.health · HackPrinceton S26 Healthcare track).
 
 ## Layout
 
