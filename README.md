@@ -10,7 +10,7 @@ exact ingredients you need, one tap from done.
 
 [![Watch the demo](https://img.shields.io/badge/▶_Watch_2--min_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/gfLijC1apBo)
 [![Live app](https://img.shields.io/badge/🌐_Live-flanner.health-B5E48C?style=for-the-badge)](https://flanner.health)
-[![Backend](https://img.shields.io/badge/🔧_API-Cloud_Run-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://flanner-api-318799600047.us-central1.run.app/api/health)
+[![Backend](https://img.shields.io/badge/🔧_API-api.flanner.health-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://api.flanner.health/api/health)
 
 **HackPrinceton Spring 2026** · **Healthcare** track
 
@@ -62,7 +62,7 @@ Seven-screen guided experience, all driven by a real backend:
 | 🌐 Frontend (apex) | https://flanner.health |
 | 🌐 Frontend (www) | https://www.flanner.health |
 | 🔧 Backend (direct) | https://flanner-api-318799600047.us-central1.run.app |
-| 🔧 Backend (vanity) | https://api.flanner.health *(SSL provisioning)* |
+| 🔧 Backend (vanity) | https://api.flanner.health |
 | 🪝 Knot webhook | `{api}/knot` |
 
 ### DNS (Porkbun)
