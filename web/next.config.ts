@@ -3,10 +3,10 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Single-source .env lives at repo root (shared with leftoverlogic/flanner
-// and leftoverlogic/imessage/spectrum_loop.mjs). Lift the ande-app-relevant
+// Single-source .env lives at repo root (shared with api/flanner
+// and api/imessage/spectrum_loop.mjs). Lift the web-relevant
 // keys into Next's build-time env so server routes like /api/k2-plan read them
-// without a duplicate ande-app/.env.local.
+// without a duplicate web/.env.local.
 function loadRepoEnv(): Record<string, string> {
   const here = dirname(fileURLToPath(import.meta.url));
   const path = join(here, "..", ".env");

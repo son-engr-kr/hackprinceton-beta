@@ -15,7 +15,7 @@ Responsibilities:
       ACCOUNT_LOGIN_REQUIRED   → users.linked_merchants[].status = login_required
       CREDENTIALS_FAILED       → users.linked_merchants[].status = credentials_failed
       NEW_TRANSACTIONS_AVAILABLE → enqueue a sync task (not implemented yet)
-  - Flat-file mirror to leftoverlogic/webhooks.jsonl (disaster-recovery audit)
+  - Flat-file mirror to api/webhooks.jsonl (disaster-recovery audit)
 
 Mount:
     from .webhook import router as webhook_router

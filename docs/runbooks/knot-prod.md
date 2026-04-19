@@ -17,9 +17,9 @@ Live probes logged with prod creds (`a390e79d-...`) against `production.knotapi.
 | `subscription_manager` | 10        | **2**      | prod restricted — only Netflix + YouTube Premium visible |
 | `shopping`             | 1         | **2**      | `+ Amazon Web (2330)` |
 
-Response shape note: dev `/merchant/list` returns `{merchants: [...]}`; prod returns a flat `[...]`. Knot wrapper in `mirrormeal/knot.py` has to accept either.
+Response shape note: dev `/merchant/list` returns `{merchants: [...]}`; prod returns a flat `[...]`. Knot wrapper in `flanner/knot.py` has to accept either.
 
-Raw prod responses saved at `leftoverlogic/data/merchants/prod_merchants_*.json`.
+Raw prod responses saved at `api/data/merchants/prod_merchants_*.json`.
 
 ## 2. What Knot does NOT offer (myth-busting)
 
@@ -114,7 +114,7 @@ Production extension (for judges):
 | Test data in prod cart | Visible on next honest Amazon login — cleanup needed |
 | Knot rate limit on prod | Unknown. Dev already hit 429 today |
 
-Mitigation in code: `mirrormeal/knot.py:checkout_simulated()` hard-codes `simulate=failed`. A new `knot.checkout_real()` is intentionally NOT added. Any real-checkout work happens outside our codebase, by hand.
+Mitigation in code: `flanner/knot.py:checkout_simulated()` hard-codes `simulate=failed`. A new `knot.checkout_real()` is intentionally NOT added. Any real-checkout work happens outside our codebase, by hand.
 
 ## 6. Minimum code changes to support the dual mode
 
@@ -126,7 +126,7 @@ KNOT_MODE=dev                    # or "prod" — chooses which keys to load
 ```
 (Existing `KNOT_PROD_CLIENT_ID` / `KNOT_PROD_SECRET` / `KNOT_PROD_BASE_URL` stay.)
 
-### 6.2 `mirrormeal/config.py`
+### 6.2 `flanner/config.py`
 ```py
 KNOT_MODE = os.environ.get("KNOT_MODE", "dev").lower()
 
@@ -140,10 +140,10 @@ else:
 ```
 
 ### 6.3 `/session/create` helper (new)
-`mirrormeal/knot.py :: create_session(type)` — returns `session_id` for the Knot Link web SDK. Used by a small static `knot_link.html` page (already in `sandbox/`) to start the OAuth flow.
+`flanner/knot.py :: create_session(type)` — returns `session_id` for the Knot Link web SDK. Used by a small static `knot_link.html` page (already in `sandbox/`) to start the OAuth flow.
 
 ### 6.4 Webhook server
-`sandbox/webhook_server.py` already exists. On `AUTHENTICATED` → persist `users.linked_merchants[]`. On `SYNC_CART_SUCCEEDED` → mark `cart_operations.status=succeeded` with real Amazon cart payload. Promote to `mirrormeal/webhook.py` if we go live.
+`sandbox/webhook_server.py` already exists. On `AUTHENTICATED` → persist `users.linked_merchants[]`. On `SYNC_CART_SUCCEEDED` → mark `cart_operations.status=succeeded` with real Amazon cart payload. Promote to `flanner/webhook.py` if we go live.
 
 ### 6.5 NOT changed
 - Plan generation (LLM layer — same)

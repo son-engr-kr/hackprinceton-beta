@@ -1,4 +1,4 @@
-# ande-image-gen prompts
+# image-gen prompts
 #
 # Structure:
 #   negative   — shared negative prompt across all items + styles

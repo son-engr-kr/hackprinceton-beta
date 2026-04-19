@@ -1,17 +1,17 @@
-# ande-image-gen
+# image-gen
 
-SDXL-based image generator for the **ande-app** mock. Runs on **Apple Silicon (MPS)**,
+SDXL-based image generator for the **web** mock. Runs on **Apple Silicon (MPS)**,
 CUDA, or CPU — no TRELLIS / CUDA extensions required.
 
 Produces 2D PNGs (with transparent background via `rembg` by default) under
-`images/<category>/<key>.png`. Copy or symlink into `ande-app/public/images/`.
+`images/<category>/<key>.png`. Copy or symlink into `web/public/images/`.
 
 ---
 
 ## Quickstart
 
 ```bash
-cd ande-image-gen
+cd image-gen
 uv venv --python 3.11 .venv
 uv pip install -r requirements.txt
 
@@ -103,15 +103,15 @@ images/
 └── meal/           chicken_salad.png, salmon_bowl.png, ...
 ```
 
-To use them in `ande-app`:
+To use them in `web`:
 
 ```bash
 # Option A: symlink (recommended — regenerating updates the app immediately)
-ln -s ../../ande-image-gen/images ../ande-app/public/images
+ln -s ../../image-gen/images ../web/public/images
 
 # Option B: copy
-mkdir -p ../ande-app/public/images
-cp -R images/* ../ande-app/public/images/
+mkdir -p ../web/public/images
+cp -R images/* ../web/public/images/
 ```
 
 ---

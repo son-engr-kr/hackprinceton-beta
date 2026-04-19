@@ -1,5 +1,5 @@
 """
-ande-image-gen/compress_images.py
+image-gen/compress_images.py
 
 Compress PNGs recursively into WebP (default) or optimized PNG, mirroring the
 source layout into --out. WebP with alpha is the recommended format for the

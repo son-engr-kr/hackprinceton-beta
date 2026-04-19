@@ -1,5 +1,5 @@
 """
-ande-image-gen/normalize_images.py
+image-gen/normalize_images.py
 
 Post-process already-generated transparent-background PNGs in a target
 directory so every image is a square canvas with consistent padding around

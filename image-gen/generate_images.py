@@ -1,13 +1,13 @@
 """
-ande-image-gen/generate_images.py
+image-gen/generate_images.py
 
-Generate 2D reference images for the ande-app mock using Stable Diffusion XL.
+Generate 2D reference images for the web mock using Stable Diffusion XL.
 Runs on Apple Silicon (MPS), CUDA, or CPU — device auto-detected.
 
 Output: images/<category>/<key>.png
 
 Usage:
-    cd ande-image-gen
+    cd image-gen
     uv venv --python 3.11 .venv
     uv pip install -r requirements.txt
 
@@ -315,7 +315,7 @@ def generate_one(
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="SDXL image generator for ande-app (Apple Silicon / CUDA / CPU)."
+        description="SDXL image generator for web (Apple Silicon / CUDA / CPU)."
     )
     target = p.add_mutually_exclusive_group(required=True)
     target.add_argument("--all", action="store_true")

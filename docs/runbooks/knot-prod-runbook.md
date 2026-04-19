@@ -21,7 +21,7 @@ step-by-step you run when judges walk over. Everything here is verified:
 - [ ] Optional: set `KNOT_WEBHOOK_SECRET` if Knot dashboard has a signing secret
       configured. Otherwise signature verification is skipped; events still log.
 - [ ] (Optional) Curate Amazon Fresh food ASINs into
-      `leftoverlogic/data/amazon_fresh_catalog_prod.json` and rerun
+      `api/data/amazon_fresh_catalog_prod.json` and rerun
       `scripts/seed_catalog_prod.py`. Skip this and we fall back to the 59
       validated household ASINs from sync_amazon.json — every single one is
       a real Amazon product that will pass /cart.
@@ -29,7 +29,7 @@ step-by-step you run when judges walk over. Everything here is verified:
 ## 1. Start services (order matters)
 
 ```bash
-cd leftoverlogic
+cd api
 
 # 1a. Mongo indexes (idempotent, fast)
 .venv/bin/python scripts/ensure_indexes.py
@@ -39,7 +39,7 @@ cd leftoverlogic
 .venv/bin/python scripts/seed_catalog_prod.py
 
 # 1c. Start FastAPI in PROD mode
-KNOT_MODE=prod .venv/bin/python -m uvicorn mirrormeal.api:app \
+KNOT_MODE=prod .venv/bin/python -m uvicorn flanner.api:app \
   --host 0.0.0.0 --port 8000 --log-level info
 ```
 
@@ -82,7 +82,7 @@ http://127.0.0.1:8000/static/knot_link.html
 The page chips the current mode (PROD should glow red/pink).
 
 Steps inside the page:
-1. "External user id" field — keep default (`leftoverlogic-dev-user-001`) OR
+1. "External user id" field — keep default (`api-dev-user-001`) OR
    switch to a fresh one like `presenter-demo-001` (easier to clean up after).
 2. Click **Link Amazon**.
 3. Knot Link modal opens → sign in with presenter's real amazon.com
@@ -91,7 +91,7 @@ Steps inside the page:
    log line in the uvicorn terminal. Confirm:
 
 ```bash
-curl -s "http://127.0.0.1:8000/api/knot/linked?user_id=leftoverlogic-dev-user-001" | jq
+curl -s "http://127.0.0.1:8000/api/knot/linked?user_id=api-dev-user-001" | jq
 # → { "count": 1, "merchants": [ { "merchant_id": 44, "name":"Amazon", "status":"active", ... } ] }
 ```
 
@@ -101,11 +101,11 @@ URL matches exactly; no trailing slash mismatch.
 ## 4. (Optional) Start the iMessage listener
 
 ```bash
-cd leftoverlogic/imessage
+cd api/imessage
 node spectrum_loop.mjs
 ```
 
-Stays the same — `spectrum_loop.mjs` calls `mirrormeal.cli` which respects
+Stays the same — `spectrum_loop.mjs` calls `flanner.cli` which respects
 `KNOT_MODE`. So from iMessage, a `yes` reply now goes to prod Knot.
 
 ## 5. Demo script
@@ -133,10 +133,10 @@ Stays the same — `spectrum_loop.mjs` calls `mirrormeal.cli` which respects
 
 | Guard | Where | Behavior |
 |---|---|---|
-| `KNOT_MODE=prod` required for prod creds | `mirrormeal/config.py` | Dev keys unless explicit opt-in |
-| `is_user_linked()` check before /cart in prod | `mirrormeal/knot.py:add_to_cart` | Returns HTTP 0 + PRECONDITION error if no AUTHENTICATED event on record. The network request is never sent. |
-| Only `checkout_simulated()` function exists | `mirrormeal/knot.py` | Always `simulate=failed`. There is NO `checkout_real()` function — you'd have to add one to make a real charge. |
-| Signed webhooks | `mirrormeal/webhook.py` | If `KNOT_WEBHOOK_SECRET` set, HMAC-SHA256 verified. If not set, signature_valid=false but event still persists for audit. |
+| `KNOT_MODE=prod` required for prod creds | `flanner/config.py` | Dev keys unless explicit opt-in |
+| `is_user_linked()` check before /cart in prod | `flanner/knot.py:add_to_cart` | Returns HTTP 0 + PRECONDITION error if no AUTHENTICATED event on record. The network request is never sent. |
+| Only `checkout_simulated()` function exists | `flanner/knot.py` | Always `simulate=failed`. There is NO `checkout_real()` function — you'd have to add one to make a real charge. |
+| Signed webhooks | `flanner/webhook.py` | If `KNOT_WEBHOOK_SECRET` set, HMAC-SHA256 verified. If not set, signature_valid=false but event still persists for audit. |
 | All prod calls double-logged | flat `webhooks.jsonl` + Mongo `webhook_events` | Disaster recovery if Atlas blips mid-demo |
 
 ## 7. Rollback (if anything goes sideways)
@@ -144,7 +144,7 @@ Stays the same — `spectrum_loop.mjs` calls `mirrormeal.cli` which respects
 Flip back to dev in the middle of demo:
 ```bash
 # Ctrl-C uvicorn, then
-KNOT_MODE=dev .venv/bin/python -m uvicorn mirrormeal.api:app --host 0.0.0.0 --port 8000
+KNOT_MODE=dev .venv/bin/python -m uvicorn flanner.api:app --host 0.0.0.0 --port 8000
 ```
 
 Everything else keeps working. iMessage loop doesn't need to restart (it
@@ -157,13 +157,13 @@ respects whatever mode is live in the API).
 curl -s -X POST https://production.knotapi.com/accounts/unlink \
   -H "Authorization: Basic $(echo -n $KNOT_PROD_CLIENT_ID:$KNOT_PROD_SECRET | base64)" \
   -H "Content-Type: application/json" \
-  -d '{"external_user_id":"leftoverlogic-dev-user-001","merchant_id":44}'
+  -d '{"external_user_id":"api-dev-user-001","merchant_id":44}'
 
 # Clear presenter's Amazon cart manually from amazon.com — we can't
 # remove items via Knot (no /cart DELETE endpoint exists).
 
 # Wipe Mongo test data (optional)
-.venv/bin/python -c "from mirrormeal import db; db.users().update_many({}, {'\$set': {'linked_merchants': []}})"
+.venv/bin/python -c "from flanner import db; db.users().update_many({}, {'\$set': {'linked_merchants': []}})"
 ```
 
 ## 9. What was verified locally (without real linking)

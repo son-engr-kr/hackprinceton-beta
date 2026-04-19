@@ -73,7 +73,7 @@ All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart
 
    ┌────────────────────────────────────────────────────────┐
    │  NOT deployed — runs on presenter's Mac for demo       │
-   │  leftoverlogic/imessage/spectrum_loop.mjs  (Node.js)   │
+   │  api/imessage/spectrum_loop.mjs  (Node.js)   │
    │    ↓  spectrum-ts framework · @photon-ai/imessage-kit  │
    │  Bridges real iMessage ↔ flanner.cli (Python stdin/out)│
    │  Photon ($400/$100 prize track)                        │
@@ -104,7 +104,7 @@ All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart
 
 ```
 .
-├── ande-app/                ← Next.js frontend (deployed to Vercel)
+├── web/                ← Next.js frontend (deployed to Vercel)
 │   ├── app/
 │   │   ├── (app)/           ← authenticated screens (page shell + route group)
 │   │   │   ├── page.tsx         dashboard / experience
@@ -127,7 +127,7 @@ All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart
 │       ├── store.ts             Zustand persist store
 │       └── mock/                static metadata (FOODS, RECIPES, INGREDIENTS, …)
 │
-├── leftoverlogic/           ← Python backend (deployed to Cloud Run)
+├── api/           ← Python backend (deployed to Cloud Run)
 │   ├── flanner/                 FastAPI package
 │   │   ├── api.py               HTTP endpoints — thin layer over Mongo
 │   │   ├── plan.py              K2 plan generation + Knot cart push
@@ -148,7 +148,7 @@ All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart
 │   ├── Dockerfile               → Artifact Registry → Cloud Run
 │   └── requirements.txt
 │
-├── ande-image-gen/          ← SDXL image pipeline (local, Apple Silicon)
+├── image-gen/          ← SDXL image pipeline (local, Apple Silicon)
 │   ├── prompts.yaml             food / ingredient / mascot / meal prompts
 │   ├── generate_images.py       SDXL / Playground / Turbo / Dreamshaper
 │   └── images/                  generated PNGs (gitignored)
@@ -228,7 +228,7 @@ RAINFOREST_API_KEY=...
 ### 2. Backend (FastAPI)
 
 ```bash
-cd leftoverlogic
+cd api
 uv venv --python 3.11 .venv
 uv pip install -r requirements.txt
 uv run uvicorn flanner.api:app --reload --port 8000
@@ -238,7 +238,7 @@ uv run uvicorn flanner.api:app --reload --port 8000
 ### 3. Frontend (Next.js)
 
 ```bash
-cd ande-app
+cd web
 npm install
 NEXT_PUBLIC_API_BASE=http://localhost:8000 npm run dev
 # → http://localhost:3000
@@ -249,7 +249,7 @@ The frontend calls backend endpoints via `lib/api.ts` (`API_BASE = process.env.N
 ### 4. iMessage orchestrator (optional, macOS only)
 
 ```bash
-cd leftoverlogic/imessage
+cd api/imessage
 npm install
 node spectrum_loop.mjs
 ```
@@ -259,13 +259,13 @@ Requires macOS (Photon reads from the local iMessage SQLite DB). Not containeriz
 ### 5. Regenerating product images (optional, Apple Silicon)
 
 ```bash
-cd ande-image-gen
+cd image-gen
 uv venv --python 3.11 .venv
 uv pip install -r requirements.txt
 uv run python generate_images.py --all --skip-existing
 ```
 
-First run downloads SDXL (~6.5 GB) + rembg U²-Net (~170 MB). See the original `ande-image-gen/README.md` for model presets, seed comparison, and the full flag matrix.
+First run downloads SDXL (~6.5 GB) + rembg U²-Net (~170 MB). See the original `image-gen/README.md` for model presets, seed comparison, and the full flag matrix.
 
 ---
 
@@ -274,7 +274,7 @@ First run downloads SDXL (~6.5 GB) + rembg U²-Net (~170 MB). See the original `
 ### Backend → Cloud Run
 
 ```bash
-cd leftoverlogic
+cd api
 # Build + push image
 gcloud builds submit \
   --tag us-central1-docker.pkg.dev/theta-bliss-486220-s1/flanner/api:latest \
@@ -305,7 +305,7 @@ gcloud beta run domain-mappings create \
 ### Frontend → Vercel
 
 ```bash
-cd ande-app
+cd web
 vercel link --yes --project flanner-web
 # Inject env
 printf "$K2_API_KEY"      | vercel env add K2_API_KEY      production
@@ -313,7 +313,7 @@ printf "$K2_BASE_URL"     | vercel env add K2_BASE_URL     production
 printf "$K2_MODEL"        | vercel env add K2_MODEL        production
 printf "$GEMINI_API_KEY"  | vercel env add GEMINI_API_KEY  production
 printf "https://flanner-api-318799600047.us-central1.run.app" | vercel env add NEXT_PUBLIC_API_BASE production
-printf "leftoverlogic-dev-user-001" | vercel env add NEXT_PUBLIC_DEMO_USER_ID production
+printf "api-dev-user-001" | vercel env add NEXT_PUBLIC_DEMO_USER_ID production
 # Deploy
 vercel --prod --yes
 ```
@@ -338,7 +338,7 @@ KNOT_MODE=dev    # sandbox data, fake users (default)
 KNOT_MODE=prod   # real merchant accounts, real Amazon cart
 ```
 
-The `mirrormeal/knot.py` wrapper normalizes dev vs. prod response shape (`{merchants: [...]}` vs. flat `[...]`).
+The `flanner/knot.py` wrapper normalizes dev vs. prod response shape (`{merchants: [...]}` vs. flat `[...]`).
 
 See **`knot-prod.md`** for the full feasibility report (what changes between dev and prod, what Knot does *not* offer, and the safe demo runbook).
 
@@ -425,4 +425,4 @@ body: { reply, meal_title?, day?, space_id? }
 - **MongoDB** — Atlas cluster (HackPrinceton promo)
 - **Rainforest API** — Amazon product search
 
-Product codename is `ande` in some internal paths; the shipping name is **Flanner**. The Python backend package is `leftoverlogic/flanner/`. Repo name (`hackprinceton-beta`) is organizational.
+Product codename is `ande` in some internal paths; the shipping name is **Flanner**. The Python backend package is `api/flanner/`. Repo name (`hackprinceton-beta`) is organizational.

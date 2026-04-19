@@ -1,6 +1,6 @@
 {
   "_note": "Curated Amazon Fresh grocery catalog for Flanner weekly meal planning. external_id format = real-shape ASIN (B0 + 8 chars). Used by 10_meal_plan_loop.py: Gemini picks shopping_list[].external_id ONLY from this pool so the YES dispatch can hand Knot /cart valid ASIN-shaped ids.",
-  "_generated_for": "leftoverlogic dev sandbox (merchant_id=44 Amazon)",
+  "_generated_for": "flanner dev sandbox (merchant_id=44 Amazon)",
   "items": [
     {"external_id": "B0CHCKNBRST", "name": "Organic Boneless Chicken Breast, 1 lb",            "category": "protein",   "tags": ["chicken", "poultry"],             "price_usd": 7.99},
     {"external_id": "B0TRKYGRND1", "name": "Ground Turkey 93% Lean, 1 lb",                     "category": "protein",   "tags": ["turkey", "poultry"],              "price_usd": 6.79},

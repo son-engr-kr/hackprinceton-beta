@@ -12,9 +12,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Repo layout:  leftoverlogic/flanner/config.py
-#   PACKAGE_DIR = leftoverlogic/flanner
-#   ROOT        = leftoverlogic/            (data, assets, imessage live here)
+# Repo layout:  api/flanner/config.py
+#   PACKAGE_DIR = api/flanner
+#   ROOT        = api/            (data, assets, imessage live here)
 #   REPO_ROOT   = repo top level            (single .env lives here — shared with Node)
 PACKAGE_DIR = Path(__file__).resolve().parent
 ROOT = PACKAGE_DIR.parent

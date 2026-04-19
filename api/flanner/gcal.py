@@ -12,7 +12,7 @@ Flow:
      K2 prompt as a constraint block
 
 Credentials file:
-  leftoverlogic/gcal_client.json  — download from GCP Console,
+  api/gcal_client.json  — download from GCP Console,
   OAuth 2.0 Client ID (Web application). See README section below.
 
 Scopes:

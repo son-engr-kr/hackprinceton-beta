@@ -1,5 +1,5 @@
 """
-ande-image-gen/prune_canonical.py
+image-gen/prune_canonical.py
 
 Prune variant-tagged PNGs down to one canonical {key}.png per item.
 

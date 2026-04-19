@@ -1,4 +1,4 @@
-# ande-image-gen prompts — v2 expansion
+# image-gen prompts — v2 expansion
 #
 # Additional food/ingredient/meal items to generate alongside the original
 # prompts.yaml set. Keeping this in a separate file + routing output to a

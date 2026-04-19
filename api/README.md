@@ -1,11 +1,11 @@
-# leftoverlogic
+# api
 
 Backend + iMessage orchestrator for **Flanner** (flanner.health · HackPrinceton S26 Knot track).
 
 ## Layout
 
 ```
-leftoverlogic/
+api/
 ├── flanner/                 ← Python package (importable: `from flanner import plan`)
 │   ├── config.py              env-driven constants, paths
 │   ├── knot.py                Knot API wrappers (/cart, /cart/checkout)
@@ -49,7 +49,7 @@ leftoverlogic/
 # One shared .env at the repo root (Python + Node both read it)
 cp ../.env.example ../.env   # then fill in Knot, K2, MONGO_URI creds
 
-cd leftoverlogic
+cd api
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 

@@ -4,25 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project context
 
-HackPrinceton Spring 2026 **Knot track** submission. Product name is **"Flanner"** (domain **flanner.health**). UI tagline: "a mirror on your delivery habits". Repo/codename is still `ande` (not renamed); Python backend package lives at `leftoverlogic/flanner/`. The app takes ~6 months of delivery-food records → auto-derives ingredients → assembles a grocery cart → proposes a weekly meal plan with healthier home-cooked swaps.
+HackPrinceton Spring 2026 **Knot track** submission. Product name is **"Flanner"** (domain **flanner.health**). UI tagline: "a mirror on your delivery habits". Repo/codename is still `ande` (not renamed); Python backend package lives at `api/flanner/`. The app takes ~6 months of delivery-food records → auto-derives ingredients → assembles a grocery cart → proposes a weekly meal plan with healthier home-cooked swaps.
 
-**Mock-only contract.** The entire demo is a fully-mocked frontend — no real Knot / SMS / DoorDash / Amazon Fresh / Google Calendar integrations exist. Anything touching `ande-app/` stays mocked unless the user explicitly asks otherwise. Extend existing routes/sections rather than adding real API wiring.
+**Mock-only contract.** The entire demo is a fully-mocked frontend — no real Knot / SMS / DoorDash / Amazon Fresh / Google Calendar integrations exist. Anything touching `web/` stays mocked unless the user explicitly asks otherwise. Extend existing routes/sections rather than adding real API wiring.
 
 ## Repository layout
 
 Two independent sub-projects with different toolchains:
 
-- **`ande-app/`** — Next.js 15 + React 19 + Tailwind 3 + Framer Motion 11 + Zustand 5 (with `persist`). Demo UI.
-- **`ande-image-gen/`** — Python 3.11 SDXL pipeline. Produces `images/<category>/<key>.png` assets consumed by `ande-app`.
+- **`web/`** — Next.js 15 + React 19 + Tailwind 3 + Framer Motion 11 + Zustand 5 (with `persist`). Demo UI.
+- **`image-gen/`** — Python 3.11 SDXL pipeline. Produces `images/<category>/<key>.png` assets consumed by `web`.
 - `ande/` — initial idea docs (Korean).
 - `brainstorming/` — hackathon packet, sponsor strategy notes (read-only reference).
 - `memory/` — Claude Code persistent memory (see also the user's global memory loader).
 
-`ande-app/public/images` is a **symlink** to `../../ande-image-gen/images`. Regenerating an asset updates the app immediately. If an image is missing, `AssetImage` falls back to an emoji glyph — the app stays demoable without any images present.
+`web/public/images` is a **symlink** to `../../image-gen/images`. Regenerating an asset updates the app immediately. If an image is missing, `AssetImage` falls back to an emoji glyph — the app stays demoable without any images present.
 
 ## Commands
 
-### ande-app (from `ande-app/`)
+### web (from `web/`)
 
 ```bash
 npm install
@@ -35,7 +35,7 @@ npm run typecheck   # tsc --noEmit
 
 There is no test suite.
 
-### ande-image-gen (from `ande-image-gen/`)
+### image-gen (from `image-gen/`)
 
 **Use `uv` exclusively.** Never `source .venv/bin/activate`, never system `pip`, never `pipx`/`conda`. `uv run` auto-resolves the venv.
 
@@ -49,13 +49,13 @@ uv run python generate_images.py --item burger --seeds 3     # one item, 3 varia
 uv run python generate_images.py --all --model playground    # alt model preset
 ```
 
-See `ande-image-gen/README.md` for the full flag matrix and model presets.
+See `image-gen/README.md` for the full flag matrix and model presets.
 
 **Filename policy**: canonical path the app reads is `images/<category>/<key>.png` (default model, single seed, realistic style). Non-default models or multi-seed runs get tagged suffixes like `{key}__{model}_seed{N}.png` or `{key}__cartoon.png` — promote a winner by `mv`ing it to the canonical path.
 
 **MPS fp16 caveat**: the script auto-downgrades `--dtype fp16` → `fp32` on Apple Silicon. SDXL UNet attention produces NaN in fp16 on MPS regardless of VAE precision — that's the all-black/all-white failure mode. Don't override it on Mac.
 
-## Architecture — ande-app
+## Architecture — web
 
 **App-router route group.** `app/(app)/` contains every authenticated screen (`/`, `/plan`, `/cart`, `/chat`, `/history`, `/impact`, `/settings`), all wrapped by `app/(app)/layout.tsx` which mounts `<Sidebar>` + `<OnboardingGate>`. `app/onboarding/page.tsx` lives outside the group so the gate can redirect to it without recursing.
 
@@ -73,9 +73,9 @@ See `ande-image-gen/README.md` for the full flag matrix and model presets.
 - Korean UI copy throughout. Font is **Pretendard Variable** loaded from a CDN `<link>` in `app/layout.tsx`.
 - Motion: spring transitions (stiffness 140–220, damping 12–18) with 40–80ms stagger. Avoid fade-only — entrances should have a spring-y `y` or `scale` component.
 
-**Path alias**: `@/*` → repo root of `ande-app/` (see `tsconfig.json`).
+**Path alias**: `@/*` → repo root of `web/` (see `tsconfig.json`).
 
-## Architecture — ande-image-gen
+## Architecture — image-gen
 
 Single script `generate_images.py` driven by `prompts.yaml`. `prompts.yaml` has three top-level keys: `negative` (shared negative prompt), `styles` (style suffixes, applied to food/ingredient/meal; mascot bypasses and uses its own chibi prompt), and `categories` (item prompts, style-agnostic). Adding a new item = adding a key under the right `categories.<cat>.items` block; the generator picks it up automatically.
 
@@ -85,6 +85,6 @@ Single script `generate_images.py` driven by `prompts.yaml`. `prompts.yaml` has 
 
 - **Language**: Korean for conversational replies and UI copy; English for code, identifiers, file paths, tool output. The user writes in Korean and expects Korean back.
 - **Structured config → YAML, not markdown tables.** YAML handles nesting and folded multi-line strings; markdown tables are brittle.
-- **Mock-only**: do not add real third-party API calls to `ande-app/` unless explicitly requested.
-- **Symlink, don't copy** images between `ande-image-gen/` and `ande-app/public/`.
+- **Mock-only**: do not add real third-party API calls to `web/` unless explicitly requested.
+- **Symlink, don't copy** images between `image-gen/` and `web/public/`.
 - The `plan*.md` files at the repo root are gitignored (user scratchpads) — leave them alone.

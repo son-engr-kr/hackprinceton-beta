@@ -1,7 +1,7 @@
 """
 FastAPI server that exposes the Flanner pipeline to the Next.js frontend.
 
-Run (from leftoverlogic/):
+Run (from api/):
     .venv/bin/uvicorn flanner.api:app --reload --port 8000
 
 Design
