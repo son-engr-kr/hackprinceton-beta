@@ -1,0 +1,14 @@
+{
+  "name": "flanner-imessage",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "send": "node send.js"
+  },
+  "dependencies": {
+    "@photon-ai/imessage-kit": "^2.1.2",
+    "better-sqlite3": "^12.9.0",
+    "dotenv": "^17.4.2",
+    "spectrum-ts": "^0.4.0"
+  }
+}

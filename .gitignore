@@ -29,55 +29,55 @@ Thumbs.db
 # PDFs (hackathon packets etc — too large / not source)
 *.pdf
 
-# ---- ande-app (Next.js) ----
-ande-app/node_modules/
-ande-app/.next/
-ande-app/out/
-ande-app/build/
-ande-app/coverage/
-ande-app/.vercel/
-ande-app/*.tsbuildinfo
-ande-app/next-env.d.ts
-ande-app/.env*
-ande-app/*.pem
+# ---- web/ (Next.js frontend — Vercel) ----
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+web/coverage/
+web/.vercel/
+web/*.tsbuildinfo
+web/next-env.d.ts
+web/.env*
+web/*.pem
 
-# ---- ande-image-gen (Python) ----
-ande-image-gen/.venv/
-ande-image-gen/venv/
-ande-image-gen/env/
+# ---- api/ (FastAPI backend — Cloud Run) ----
+# .env lives at repo root (shared between Python config.py and Node spectrum_loop.mjs)
+api/.venv/
+api/__pycache__/
+api/**/__pycache__/
+api/webhooks.jsonl
+api/adherence.jsonl
+api/analyzed_*.json
+api/*.log
+# iMessage photo cache (receipts / food pics forwarded from Messages.app)
+api/assets/incoming/
+# Node orchestrator deps (spectrum-ts, @photon-ai/imessage-kit) — installed locally
+api/imessage/node_modules/
+# Google OAuth client secret (download per environment, never commit)
+api/gcal_client.json
+
+# ---- image-gen/ (SDXL pipeline) ----
+image-gen/.venv/
+image-gen/venv/
+image-gen/env/
 **/__pycache__/
 *.py[cod]
 *.so
 *.egg-info/
-ande-image-gen/.python-version
-ande-image-gen/build/
-ande-image-gen/dist/
-ande-image-gen/.pytest_cache/
-ande-image-gen/.coverage
-ande-image-gen/htmlcov/
-ande-image-gen/.env
-ande-image-gen/.env.*
-!ande-image-gen/.env.example
+image-gen/.python-version
+image-gen/build/
+image-gen/dist/
+image-gen/.pytest_cache/
+image-gen/.coverage
+image-gen/htmlcov/
+image-gen/.env
+image-gen/.env.*
+!image-gen/.env.example
 
-# Generated images are large; uncomment if you want them out of git
-# ande-image-gen/images/
-# ande-image-gen/images-old/
-# ande-image-gen/images-old2/
-
-# ---- leftoverlogic (Python + Node) ----
-# .env lives at repo root (shared between Python config.py and Node spectrum_loop.mjs)
-leftoverlogic/.venv/
-leftoverlogic/node_modules/
-leftoverlogic/imessage/
-leftoverlogic/sandbox/
-leftoverlogic/__pycache__/
-leftoverlogic/**/__pycache__/
-leftoverlogic/webhooks.jsonl
-leftoverlogic/adherence.jsonl
-leftoverlogic/analyzed_*.json
-leftoverlogic/*.log
-# iMessage photo cache (receipts / food pics forwarded from Messages.app)
-leftoverlogic/assets/incoming/
+# Generated images are large; uncomment to keep them out of git
+# image-gen/images/
+# image-gen/images-old/
 
 # Secrets (defense in depth)
 *.pem
