@@ -1,221 +1,428 @@
-# ande (Knot track)
+# Flanner
 
-HackPrinceton Spring 2026 — **Knot** sponsor track submission.
+> **"A mirror on your delivery habits."**
+> HackPrinceton Spring 2026 — **Knot** sponsor track.
 
-Mock demo app: take 30 days of delivery-food records → auto-derive ingredients →
-assemble a grocery cart → propose a weekly meal plan with healthier home-cooked
-swaps → show calorie/macro delta + money saved.
+Flanner takes ~6 months of a user's real delivery-food history (via **Knot TransactionLink**), auto-derives the ingredients that would go into those meals, assembles a grocery cart, and proposes a **weekly home-cooked meal plan** with healthier swaps. When the user approves, we push the cart into their real **Amazon Fresh** account via **Knot AgenticShopping** — stopping one tap before checkout so no charge is ever made without their consent.
 
-**Current state**: fully-mocked frontend (no real Knot / SMS / grocery
-integrations). Six-scene button-driven experience with element-flying
-animations. Image assets generated locally via SDXL on Apple Silicon.
+- 🌐 **Live**: https://flanner.health
+- 🔧 **Backend**: https://flanner-api-318799600047.us-central1.run.app (`api.flanner.health` once SSL finishes provisioning)
+- 📅 **Event**: HackPrinceton Spring 2026 · Princeton University · Apr 17–19, 2026
+- 🎯 **Target track**: Knot ($500, delivery heatmap fit)
 
-## Structure
+---
+
+## What the demo shows
+
+1. **Delivery review** — pulls transactions from MongoDB (seeded from ~6 months of DoorDash / Uber Eats / Grubhub orders via Knot); ranks top foods, restaurants, monthly spend, sodium intake.
+2. **Ingredient burst** — for every past order, automatically decomposes the dish into ingredients using **K2 Think V2** (MBZUAI) with a pantry-aware prompt.
+3. **Grocery cart** — aggregates all ingredients, looks up real **Amazon ASINs** (curated real Amazon Fresh items + Rainforest API-sourced ASINs), shows estimated price.
+4. **Weekly plan** — K2 proposes 7 home-cooked recipes that use only pantry + cart items, respecting user's dietary constraints, Google Calendar events, and adherence history.
+5. **Cart push** — "Order it" button calls Knot `/cart` in **production mode** — items land in the presenter's real Amazon Fresh cart within seconds. Checkout is intentionally *not* automated (safety: `simulate=failed` baked into the code; no real-checkout function exists).
+6. **Impact** — before/after comparison: sodium reduced, calories trimmed, protein improved, money saved.
+7. **Daily check-in** — `/chat` page: typewriter-style Gemma conversation that asks "Did you eat today?" every evening. User replies (free text or choices) are saved to Mongo `adherence`; adherence summary feeds back into next week's plan.
+
+All dynamic data (transactions, plans, pantry, adherence, linked merchants, cart ops) is read/written through the FastAPI backend against MongoDB Atlas. Static metadata (food catalog, recipe definitions, mascot assets) still ships as frontend code for determinism during demos.
+
+---
+
+## Architecture
+
+```
+┌───────────────────────────────────────────────────────────────────────┐
+│                              flanner.health                           │
+│                               (Vercel CDN)                            │
+│         ┌────────────────────────────────────────────────┐            │
+│         │ Next.js 15 · React 19 · Tailwind 3 · Zustand   │            │
+│         │  · Framer Motion · Lucide icons                │            │
+│         │                                                │            │
+│         │  /app/api/k2-plan       → K2 streaming         │            │
+│         │  /app/api/gemma-recognize → Gemini 2.5 Flash   │            │
+│         │  /app/api/k2-redteam    → K2 adversarial check │            │
+│         └────────────────────────────────────────────────┘            │
+└──────────────────────────────────┬────────────────────────────────────┘
+                                   │ HTTPS (NEXT_PUBLIC_API_BASE)
+                                   ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│                     api.flanner.health (Cloud Run)                    │
+│                     us-central1 · FastAPI · Python 3.11               │
+│                                                                       │
+│     ┌──────────────┬──────────────┬─────────────┬────────────────┐    │
+│     │  /api/plans  │  /api/photo  │ /api/knot/* │ /api/calendar/*│    │
+│     │  /api/cart   │  /api/pantry │ /knot       │  (Google OAuth)│    │
+│     │  /api/check  │ /api/intent  │  (webhook)  │                │    │
+│     └──────┬───────┴──────┬───────┴──────┬──────┴────────┬───────┘    │
+│            │              │              │               │            │
+│            ▼              ▼              ▼               ▼            │
+└────────────┼──────────────┼──────────────┼───────────────┼────────────┘
+             │              │              │               │
+             ▼              ▼              ▼               ▼
+   ┌──────────────────┐ ┌─────────┐ ┌──────────────┐ ┌────────────────┐
+   │ MongoDB Atlas    │ │ Gemini  │ │ Knot API     │ │ Google Calendar│
+   │ (mirrormeal DB)  │ │ (vision │ │ production   │ │  OAuth 2.0     │
+   │  - users         │ │  OCR +  │ │ .knotapi.com │ │  (readonly)    │
+   │  - transactions  │ │  food   │ │  - /cart     │ │                │
+   │  - plans         │ │  recog) │ │  - /session  │ │                │
+   │  - pantry        │ └─────────┘ │  - /merchant │ └────────────────┘
+   │  - adherence     │             └──────────────┘
+   │  - catalog_items │                    │
+   │  - cart_ops      │                    │ webhook
+   │  - webhook_evts  │ ◄──────────────────┘ (AUTHENTICATED,
+   │  - photo_logs    │                      SYNC_CART_SUCCEEDED,
+   └──────────────────┘                      etc.)
+
+   ┌────────────────────────────────────────────────────────┐
+   │  NOT deployed — runs on presenter's Mac for demo       │
+   │  leftoverlogic/imessage/spectrum_loop.mjs  (Node.js)   │
+   │    ↓  spectrum-ts framework · @photon-ai/imessage-kit  │
+   │  Bridges real iMessage ↔ flanner.cli (Python stdin/out)│
+   │  Photon ($400/$100 prize track)                        │
+   └────────────────────────────────────────────────────────┘
+```
+
+### Tech stack
+
+| Layer | Technology |
+|-------|------------|
+| Frontend | Next.js 15 (app router) · React 19 · Tailwind 3 · Framer Motion 11 · Zustand 5 (`persist`) |
+| Frontend hosting | Vercel (auto HTTPS, custom domain `flanner.health`) |
+| Backend | FastAPI · Python 3.11 · Pydantic · `uvicorn[standard]` |
+| Backend hosting | Google Cloud Run (us-central1, 1 CPU / 1 GiB, autoscale 0–3) |
+| DB | MongoDB Atlas (`mirrormeal`, cluster0, SRV) |
+| LLM — plan / reasoning | **K2 Think V2** via `api.k2think.ai/v1` (MBZUAI-IFM/K2-Think-v2) |
+| LLM — vision / recognition | **Gemini 2.5 Flash** (`google-genai` SDK) |
+| LLM — local check-in | Gemma 4 (`gemma4:e4b-it-q4_K_M` on Ollama, local only) |
+| Delivery / cart | **Knot API** — `TransactionLink` + `AgenticShopping` (prod) |
+| iMessage | Photon `spectrum-ts` + `@photon-ai/imessage-kit` (Mac-only, not Cloud Run) |
+| Product search | Rainforest API (Amazon ASIN discovery) |
+| Image generation | SDXL / Playground / Dreamshaper via Diffusers (Apple Silicon MPS) |
+| DNS / Domain | Porkbun (registrar + DNS) · Vercel A records · Cloud Run domain mapping |
+
+---
+
+## Repository layout
 
 ```
 .
-├── ande/                ← initial idea (Korean)
-├── ande-app/            ← frontend (Next.js 15 + React 19 + Framer Motion)
-├── ande-image-gen/      ← SDXL / Playground image pipeline (Apple Silicon)
-├── brainstorming/       ← hackathon packet, sponsor strategy, cheatsheets
-└── memory/              ← Claude Code project memory
+├── ande-app/                ← Next.js frontend (deployed to Vercel)
+│   ├── app/
+│   │   ├── (app)/           ← authenticated screens (page shell + route group)
+│   │   │   ├── page.tsx         dashboard / experience
+│   │   │   ├── plan/            weekly plan composer
+│   │   │   ├── cart/            grocery cart + Knot push
+│   │   │   ├── chat/            daily Gemma check-in (typable)
+│   │   │   ├── history/         6-month delivery timeline
+│   │   │   ├── impact/          before/after macros + sodium
+│   │   │   └── settings/        goals, dietary, connections
+│   │   ├── api/                 Next.js server routes (K2 / Gemma)
+│   │   └── onboarding/          first-run flow (outside route group)
+│   ├── components/
+│   │   ├── AssetImage.tsx       PNG with emoji fallback
+│   │   ├── OnboardingGate.tsx   Zustand hydration + redirect
+│   │   └── reasoning/           K2 trace visualizers
+│   └── lib/
+│       ├── api.ts               backend API client (typed)
+│       ├── adapters.ts          backend → frontend shape mapping
+│       ├── hooks.ts             useUser, useDeliveryStats, useLinkedMerchants, …
+│       ├── store.ts             Zustand persist store
+│       └── mock/                static metadata (FOODS, RECIPES, INGREDIENTS, …)
+│
+├── leftoverlogic/           ← Python backend (deployed to Cloud Run)
+│   ├── flanner/                 FastAPI package
+│   │   ├── api.py               HTTP endpoints — thin layer over Mongo
+│   │   ├── plan.py              K2 plan generation + Knot cart push
+│   │   ├── knot.py              Knot API wrapper (dev/prod mode switching)
+│   │   ├── webhook.py           /knot/* webhook dispatcher
+│   │   ├── checkin.py           adherence logging
+│   │   ├── pantry.py            ingredient bookkeeping
+│   │   ├── vision.py            Gemini photo recognition
+│   │   ├── gcal.py              Google Calendar OAuth + event fetch
+│   │   ├── llm.py               K2 / Gemini clients
+│   │   ├── catalog.py           Amazon Fresh ASIN catalog loader
+│   │   ├── config.py            env + paths (single source of truth)
+│   │   └── db.py                Mongo connection + collection accessors
+│   ├── imessage/                Mac-only (NOT deployed)
+│   │   └── spectrum_loop.mjs    Photon spectrum-ts orchestrator
+│   ├── scripts/                 seed/fetch utilities
+│   ├── data/                    shipped JSON catalogs
+│   ├── Dockerfile               → Artifact Registry → Cloud Run
+│   └── requirements.txt
+│
+├── ande-image-gen/          ← SDXL image pipeline (local, Apple Silicon)
+│   ├── prompts.yaml             food / ingredient / mascot / meal prompts
+│   ├── generate_images.py       SDXL / Playground / Turbo / Dreamshaper
+│   └── images/                  generated PNGs (gitignored)
+│
+├── brainstorming/           ← hackathon packet, sponsor strategy (read-only)
+├── figma-design/            ← visual design explorations
+├── knot-prod.md             ← prod-mode feasibility + demo runbook
+├── knot-prod-runbook.md     ← step-by-step demo script
+└── README.md                ← this file
 ```
 
-```
-ande-app/
-├── app/                             ← Next.js app router
-│   ├── page.tsx                     ← experience shell (scene state machine)
-│   ├── layout.tsx
-│   └── globals.css                  ← tailwind + palette
-├── components/
-│   ├── Mascot.tsx                   ← "Motji" — scene-aware fixed mascot
-│   ├── AssetImage.tsx               ← generated PNG with emoji fallback
-│   └── experience/
-│       ├── NextButton.tsx
-│       ├── Scene0Intro.tsx          ← hero
-│       ├── Scene1Review.tsx         ← monthly delivery review
-│       ├── Scene2Breakdown.tsx      ← CORE: auto-cascading ingredient burst
-│       ├── Scene3Cart.tsx           ← grocery cart morph
-│       ├── Scene4Plan.tsx           ← weekly meal plan
-│       └── Scene5Stats.tsx          ← health + savings finale
-├── lib/
-│   ├── store.ts                     ← zustand: mascot pose, scene, eaten meals
-│   ├── utils.ts
-│   └── mock/
-│       ├── delivery-history.ts      ← 30 delivery records (2026-03-19→04-18)
-│       ├── foods.ts                 ← delivery-food catalog + macros
-│       ├── ingredients.ts           ← 37 ingredients (pricing)
-│       └── recipes.ts               ← 7 weekly-plan recipes
-└── public/images → ../../ande-image-gen/images   (symlink)
+---
 
-ande-image-gen/
-├── prompts.yaml                     ← food, ingredient, mascot, meal prompts
-├── generate_images.py               ← SDXL/Playground/Turbo/Dreamshaper
-├── requirements.txt
-└── images/                          ← generated PNGs (gitignored)
+## Live deployment map
+
+| Surface | URL | Hosted on |
+|---------|-----|-----------|
+| Marketing + app (apex) | https://flanner.health | Vercel |
+| Marketing + app (www) | https://www.flanner.health | Vercel |
+| API (pending SSL) | https://api.flanner.health | Cloud Run via domain mapping |
+| API (direct) | https://flanner-api-318799600047.us-central1.run.app | Cloud Run |
+| Knot webhook receiver | `{api}/knot` | Cloud Run |
+
+DNS records (Porkbun):
+```
+A      @     216.198.79.1                             (Vercel apex)
+A      @     64.29.17.1                               (Vercel apex)
+CNAME  www   5ef2cfc2ce3fab27.vercel-dns-017.com      (Vercel)
+CNAME  api   ghs.googlehosted.com                     (Cloud Run)
+TXT    @     google-site-verification=...             (domain ownership)
 ```
 
-## Prerequisites
+---
 
-- **Node.js 20+** (for ande-app). `brew install node`
-- **Python 3.11** + **uv** (for ande-image-gen). `brew install uv`
+## Local development
 
-## Quickstart: ande-app
+### Prerequisites
+
+- **Node.js 20+** — frontend (`brew install node`)
+- **Python 3.11** + **uv** — backend + image-gen (`brew install uv`)
+- **MongoDB Atlas connection string** — ask repo owner
+- **gcloud CLI** + auth — only if deploying backend (`brew install --cask google-cloud-sdk`)
+- **vercel CLI** + auth — only if deploying frontend (`npm i -g vercel`)
+
+### 1. Environment
+
+Single `.env` at repo root (shared by Python backend and Node frontend via `next.config.ts` loader):
+
+```bash
+# Knot — dev sandbox (default) OR prod (demo day)
+KNOT_MODE=dev
+KNOT_CLIENT_ID=...
+KNOT_SECRET=...
+KNOT_BASE_URL=https://development.knotapi.com
+KNOT_PROD_CLIENT_ID=...
+KNOT_PROD_SECRET=...
+KNOT_PROD_BASE_URL=https://production.knotapi.com
+
+# LLM
+K2_API_KEY=IFM-...
+K2_BASE_URL=https://api.k2think.ai/v1
+K2_MODEL=MBZUAI-IFM/K2-Think-v2
+GEMINI_API_KEY=AIza...
+
+# DB
+MONGO_URI=mongodb+srv://USER:PASS@cluster0.xxxxx.mongodb.net/mirrormeal?retryWrites=true&w=majority
+MONGO_DB=mirrormeal
+
+# Photon (iMessage, optional — local Mac only)
+PHOTON_PROJECT_ID=...
+PHOTON_PROJECT_SECRET=...
+
+# Optional
+RAINFOREST_API_KEY=...
+```
+
+### 2. Backend (FastAPI)
+
+```bash
+cd leftoverlogic
+uv venv --python 3.11 .venv
+uv pip install -r requirements.txt
+uv run uvicorn flanner.api:app --reload --port 8000
+# → http://localhost:8000/api/health
+```
+
+### 3. Frontend (Next.js)
 
 ```bash
 cd ande-app
 npm install
-npm run dev     # → http://localhost:3000
+NEXT_PUBLIC_API_BASE=http://localhost:8000 npm run dev
+# → http://localhost:3000
 ```
 
-Navigate with **`Next` button** (bottom-right) or **`Space` / `→`** key.
-`←` goes back. Scene progress dots sit at the top.
+The frontend calls backend endpoints via `lib/api.ts` (`API_BASE = process.env.NEXT_PUBLIC_API_BASE`). In production this points at the Cloud Run URL.
 
-If images haven't been generated yet the app falls back to emoji — still demoable.
+### 4. iMessage orchestrator (optional, macOS only)
 
-## Quickstart: ande-image-gen
+```bash
+cd leftoverlogic/imessage
+npm install
+node spectrum_loop.mjs
+```
+
+Requires macOS (Photon reads from the local iMessage SQLite DB). Not containerizable; runs on the presenter's laptop during demo.
+
+### 5. Regenerating product images (optional, Apple Silicon)
 
 ```bash
 cd ande-image-gen
 uv venv --python 3.11 .venv
 uv pip install -r requirements.txt
-
 uv run python generate_images.py --all --skip-existing
 ```
 
-First run downloads SDXL (~6.5 GB) + rembg U²-Net (~170 MB) into
-`~/.cache/huggingface/` and `~/.u2net/`. Subsequent runs are cached.
+First run downloads SDXL (~6.5 GB) + rembg U²-Net (~170 MB). See the original `ande-image-gen/README.md` for model presets, seed comparison, and the full flag matrix.
 
-Once generated, symlink into the app:
+---
 
-```bash
-cd ../ande-app
-ln -sfn ../ande-image-gen/images public/images
-```
+## Deployment
 
-## Model presets
-
-Pass `--model <name>` to switch. All presets use `StableDiffusionXLPipeline`
-(drop-in). Your `--steps`, `--guidance`, `--width`, `--height` override the
-preset defaults.
-
-| `--model`      | HuggingFace repo                                         | Steps · CFG · size | Notes                                        |
-|----------------|----------------------------------------------------------|--------------------|----------------------------------------------|
-| `sdxl` (def.)  | `stabilityai/stable-diffusion-xl-base-1.0`               | 25 · 7.5 · 768     | Balanced default                             |
-| `playground`   | `playgroundai/playground-v2.5-1024px-aesthetic`          | 30 · 3.0 · 1024    | Aesthetic tune — best for stylized illus.    |
-| `sdxl-turbo`   | `stabilityai/sdxl-turbo`                                 | 4 · 0.0 · 512      | 1–4 step inference, very fast                |
-| `dreamshaper`  | `Lykon/dreamshaper-xl-v2-turbo`                          | 6 · 2.0 · 1024     | Cartoon / illustration fine-tune             |
-
-**Filename policy** (avoids collision when comparing models):
-
-- Default model + single seed → `{key}.png` (canonical path the app reads)
-- Non-default model OR `--seeds N>1` → `{key}__{model}_seed{N}.png` (for compare)
-
-## Styles
-
-Food, ingredient, and meal items render in both **realistic** (product photograph,
-45° angle, studio lighting) and **cartoon** (vector illustration, 45° angle, flat
-shading) by default. Mascot items ignore the style and use their own chibi prompt.
-
-| `--style`   | Filename                          | Description                       |
-|-------------|-----------------------------------|-----------------------------------|
-| `both` (def.) | writes both files per item       | realistic + cartoon in one run    |
-| `realistic` | `{key}.png`                       | canonical app path                |
-| `cartoon`   | `{key}__cartoon.png`              | tagged; mv to canonical if preferred |
-
-## Common commands
+### Backend → Cloud Run
 
 ```bash
-# Everything, both styles (realistic + cartoon), default sdxl
-uv run python generate_images.py --all --skip-existing
+cd leftoverlogic
+# Build + push image
+gcloud builds submit \
+  --tag us-central1-docker.pkg.dev/theta-bliss-486220-s1/flanner/api:latest \
+  --project=theta-bliss-486220-s1
 
-# Realistic only (canonical filenames, faster — half the work)
-uv run python generate_images.py --all --style realistic
-
-# Cartoon only (writes to burger__cartoon.png etc)
-uv run python generate_images.py --all --style cartoon
-
-# Single category only
-uv run python generate_images.py --all --category food
-uv run python generate_images.py --all --category ingredient
-uv run python generate_images.py --all --category mascot
-uv run python generate_images.py --all --category meal
-
-# Single item, multiple seeds for comparison (both styles each seed)
-uv run python generate_images.py --item burger --seeds 5 --seed-start 500
-
-# Switch model — great for problem items
-uv run python generate_images.py --item cilantro --model playground
-uv run python generate_images.py --item fried_chicken --model dreamshaper
-
-# Full sweep: every item × every model × both styles × 2 seeds
-#   4 models × 66 items × 2 styles × 2 seeds = ~1000 images (ouch)
-#   on M5 Pro fp32: plan ~12 hours — run overnight, or narrow it down
-for m in sdxl playground sdxl-turbo dreamshaper; do
-  uv run python generate_images.py --all --model $m --seeds 2 --seed-start 500
-done
-
-# Quick compare: every item × every model × realistic only × 1 seed (264 images)
-for m in sdxl playground sdxl-turbo dreamshaper; do
-  uv run python generate_images.py --all --model $m --style realistic --seeds 1 --seed-start 500
-done
-
-# Turbo preview to scout prompts fast (both styles, 1 seed, ~13 min)
-uv run python generate_images.py --all --model sdxl-turbo --seeds 1
-
-# Promote a winner to the canonical app path
-mv images/food/burger__cartoon.png images/food/burger.png               # swap cartoon to canonical
-mv images/food/burger__playground_seed502.png images/food/burger.png    # swap seed+model winner
+# Deploy (first time — after that `gcloud run services update` is enough for env changes)
+gcloud run deploy flanner-api \
+  --image=us-central1-docker.pkg.dev/theta-bliss-486220-s1/flanner/api:latest \
+  --region=us-central1 \
+  --allow-unauthenticated \
+  --env-vars-file=/path/to/env.yaml \
+  --memory=1Gi --cpu=1 --timeout=300 \
+  --min-instances=0 --max-instances=3 \
+  --project=theta-bliss-486220-s1
 ```
 
-## Performance (M5 Pro, Apple Silicon)
+Custom domain mapping (one-time):
+```bash
+gcloud beta run domain-mappings create \
+  --service=flanner-api \
+  --domain=api.flanner.health \
+  --region=us-central1 \
+  --project=theta-bliss-486220-s1
+# Requires api.flanner.health CNAME → ghs.googlehosted.com in DNS,
+# plus Google Search Console ownership verification.
+```
 
-| Model        | dtype | Time / image |
-|--------------|-------|--------------|
-| sdxl         | fp32  | ~25 s        |
-| playground   | fp32  | ~50 s (1024) |
-| sdxl-turbo   | fp32  | ~6 s  (512)  |
-| dreamshaper  | fp32  | ~15 s (1024) |
+### Frontend → Vercel
 
-**MPS forces fp32.** The SDXL UNet's attention layers produce NaN in fp16 on
-MPS regardless of VAE precision — that's the all-black / all-white output.
-The script auto-downgrades `--dtype fp16` → `fp32` with a warning on MPS.
-fp16 still works on CUDA where it's ~2–3× faster.
+```bash
+cd ande-app
+vercel link --yes --project flanner-web
+# Inject env
+printf "$K2_API_KEY"      | vercel env add K2_API_KEY      production
+printf "$K2_BASE_URL"     | vercel env add K2_BASE_URL     production
+printf "$K2_MODEL"        | vercel env add K2_MODEL        production
+printf "$GEMINI_API_KEY"  | vercel env add GEMINI_API_KEY  production
+printf "https://flanner-api-318799600047.us-central1.run.app" | vercel env add NEXT_PUBLIC_API_BASE production
+printf "leftoverlogic-dev-user-001" | vercel env add NEXT_PUBLIC_DEMO_USER_ID production
+# Deploy
+vercel --prod --yes
+```
 
-## Flags
+Custom domain:
+- `flanner.health` + `www.flanner.health` added to the project, proven by Vercel's recommended A / CNAME records.
 
-| Flag               | Default       | Notes                                       |
-|--------------------|---------------|---------------------------------------------|
-| `--all`            | —             | Every item in `prompts.yaml`                |
-| `--item KEY`       | —             | Single item (mutually exclusive with `--all`) |
-| `--category X`     | —             | Limit to food / ingredient / mascot / meal  |
-| `--model NAME`     | `sdxl`        | See presets table above                     |
-| `--seeds N`        | 1             | Variations per item                         |
-| `--seed-start S`   | 42            | First seed (seeds are S, S+1, …)            |
-| `--steps N`        | preset        | Sampler steps                               |
-| `--guidance X`     | preset        | CFG scale                                   |
-| `--width / --height` | preset      | Output resolution                           |
-| `--skip-existing`  | —             | Skip items whose `{key}.png` exists         |
-| `--no-rembg`       | —             | Keep white background (useful when rembg over-strips greens) |
-| `--device`         | auto          | `mps` / `cuda` / `cpu`                      |
-| `--dtype`          | auto          | `fp16` / `bf16` / `fp32`                    |
+---
 
-## Troubleshooting
+## Knot integration (production mode)
 
-| Symptom | Cause / fix |
-|---------|-------------|
-| All-white output on MPS | fp16 NaN — already patched via `sdxl-vae-fp16-fix`. If it still happens, drop `--dtype fp16` to use fp32. |
-| Image is nearly empty after rembg (file <100 KB) | rembg U²-Net mis-stripped. Re-run with `--no-rembg` to see the raw SDXL output, or pick a different seed. Green herbs especially prone. |
-| `OSError: variant=fp16 not found` | Model doesn't publish fp16 weights (e.g. `dreamshaper` preset has `fp16_variant=False`). Use `--dtype fp32` for that preset. |
-| First run hangs on "Fetching 19 files" | HF download from an unauthenticated client is rate-limited. Set `HF_TOKEN` or just wait. |
+| Flow | Endpoint | Purpose |
+|------|----------|---------|
+| **TransactionLink** (dev) | `POST /session/create` → Web SDK | OAuth into DoorDash / Uber Eats / Grubhub to pull 6-mo delivery history |
+| **AgenticShopping** (prod) | `POST /cart` → merchant 44 (Amazon) | Add curated ASINs into real Amazon Fresh cart |
+| **Checkout** (stubbed) | `POST /cart/checkout` with `simulate=failed` | ⚠️ intentionally stubbed — NO real checkout function in codebase |
+| **Webhooks** | `POST /knot` (Cloud Run) | Receive `AUTHENTICATED`, `SYNC_CART_SUCCEEDED`, `CHECKOUT_*`, `ACCOUNT_LOGIN_REQUIRED`, … |
+
+Mode switching is driven by a single env var:
+```bash
+KNOT_MODE=dev    # sandbox data, fake users (default)
+KNOT_MODE=prod   # real merchant accounts, real Amazon cart
+```
+
+The `mirrormeal/knot.py` wrapper normalizes dev vs. prod response shape (`{merchants: [...]}` vs. flat `[...]`).
+
+See **`knot-prod.md`** for the full feasibility report (what changes between dev and prod, what Knot does *not* offer, and the safe demo runbook).
+
+---
+
+## Core flows
+
+### Plan generation (K2 primary, Gemini fallback)
+
+```
+POST /api/plans/generate
+body: { feedback_history: string[], space_id?: string }
+
+→ flanner.plan.generate(feedback_history, space_id):
+    1. Load user's transactions (last 30 days)
+    2. Load pantry + catalog
+    3. Load upcoming Google Calendar events (if linked)
+    4. Load adherence rollup (last 7 days)
+    5. Build K2 prompt with all context + dietary constraints
+    6. Stream K2 response → parse JSON → validate schema
+    7. Persist to plans collection, return plan_id
+```
+
+### Cart push (prod)
+
+```
+POST /api/plans/{plan_id}/order
+
+→ flanner.plan.place_order(plan):
+    1. Pick top-N items from plan.shopping_list
+    2. Verify merchant 44 (Amazon) is OAuth-linked for this user
+    3. POST /cart (prod) — items land in real Amazon Fresh cart
+    4. POST /cart/checkout with simulate=failed (HARD-CODED)
+    5. Log to cart_operations collection
+    6. Return ordered_items, skipped_items, total_cost
+```
+
+### Photo recognition
+
+```
+POST /api/photo
+body: { image_base64, mime_type?, space_id? }
+
+→ flanner.vision.analyze(image_bytes):
+    1. Call Gemini 2.5 Flash with system prompt:
+       "Classify: food | receipt | unclear"
+    2. If food:  extract dish_name, portions, estimated_kcal → log to adherence
+    3. If receipt: parse line items → pantry_deltas
+    4. Persist to photo_logs
+```
+
+### Daily check-in
+
+```
+POST /api/checkin
+body: { reply, meal_title?, day?, space_id? }
+
+→ flanner.checkin.record_reply(...):
+    classify reply as: cooked | delivery | skipped | unclear
+    persist to adherence collection with plan_id + day
+    feed into next plan's feedback_history
+```
 
 ---
 
 ## Hackathon reference
 
 - **Event**: HackPrinceton Spring 2026 (April 17–19, 2026, Princeton University)
-- **Submission**: 2026-04-19 8 AM
+- **Submission deadline**: 2026-04-19 8 AM
 - **Judging**: 9:30 AM – 2 PM on 4/19
-- **Target track**: Knot ($500, delivery heatmap fit)
+- **Target tracks**:
+  - **Knot** ($500) — main target; production-grade delivery + cart integration
+  - **Photon** ($400 + $400 credits) — real iMessage orchestration via spectrum-ts
+- See `brainstorming/S26_Sponsor_Strategy.md` for full track strategy.
 
-See `brainstorming/S26_Sponsor_Strategy.md` for full track strategy.
+---
+
+## Credits
+
+- **K2 Think V2** — MBZUAI Institute of Foundation Models
+- **Knot** — transaction / shopping API (HackPrinceton sponsor)
+- **Photon** — spectrum-ts + imessage-kit (HackPrinceton sponsor)
+- **Google** — Gemini 2.5 Flash (AI Studio) + Cloud Run + Calendar API
+- **MongoDB** — Atlas cluster (HackPrinceton promo)
+- **Rainforest API** — Amazon product search
+
+Product codename is `ande` in some internal paths; the shipping name is **Flanner**. The Python backend package is `leftoverlogic/flanner/`. Repo name (`hackprinceton-beta`) is organizational.

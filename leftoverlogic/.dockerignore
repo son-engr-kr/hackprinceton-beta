@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+.venv
+.env
+*.jsonl
+sandbox
+imessage
+scripts
+README.md
+.pytest_cache
+.mypy_cache
