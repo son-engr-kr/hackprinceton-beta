@@ -1,0 +1,144 @@
+# ande-image-gen prompts
+#
+# Structure:
+#   negative   — shared negative prompt across all items + styles
+#   styles     — style suffixes appended to each item prompt (except mascot)
+#                Food / ingredient / meal items render in both styles.
+#   categories — item base prompts (pure subject, no style adjectives)
+#
+# Style is orthogonal to content, so item prompts stay style-agnostic. The
+# generator combines: "<prefix><item>, <style suffix>".
+# Mascot category is self-styled (chibi/kawaii illustration) and bypasses
+# the style suffix.
+
+negative: "shadow, dark shadow, drop shadow, cast shadow, blurry, text, watermark, low quality, multiple items, clutter, distracting background, hands, plate rim, cropped, out of frame, close-up, extreme close-up, macro, zoomed in, subject touching edges, cut off"
+
+styles:
+  realistic: >
+    product photograph, wide shot, subject fills 50 percent of frame,
+    ample white margin on all sides, 45-degree angle from above,
+    studio lighting, sharp focus, clean white background, centered, photorealistic, 4k
+  cartoon: >
+    cartoon illustration, wide shot, subject fills 50 percent of frame,
+    ample white margin on all sides, 45-degree angle from above,
+    bright saturated colors, thick clean outlines, flat cel shading, white background, centered
+
+categories:
+
+  # ─ Food icons (delivery foods tracked in monthly review) ─────────────────
+  food:
+    description: Delivery food single-item shots at 45-degree angle
+    items:
+      burger: hamburger with sesame seed bun, beef patty, cheese slice, lettuce, tomato
+      pizza: one slice of pepperoni pizza, wedge shape, bright red pepperoni on yellow cheese, crisp crust edge
+      sushi: one piece of nigiri sushi, pink salmon slice on white rice
+      ramen: one bowl of ramen with curly noodles, soft-boiled egg half, green onion, chashu pork slice, clear broth
+      cafe: one white teacup filled with black coffee, resting on a small saucer
+      mexican: one beef taco with shredded lettuce and cheese, hard shell, meat visible
+      italian: one bowl of penne pasta with rich red tomato sauce and fresh basil leaves
+      chinese: one Chinese dumpling, puffy round shape with pleated folds
+      thai: one white bowl of yellow thai curry with shrimp and green herbs
+      steakhouse: one thick grilled steak with cross-hatch grill marks
+      seafood: one bright red cooked shrimp, curved shape
+      bakery: one cupcake with swirl pink frosting and rainbow sprinkles, paper liner
+      fried_chicken: one golden crispy fried chicken drumstick
+      korean_bbq: one piece of glossy marinated Korean bbq beef strip with sesame seeds
+      donut: one pink glazed donut with rainbow sprinkles
+      bubble_tea: one milk tea in a clear plastic cup with a straw, dark tapioca pearls at the bottom
+
+  # ─ Ingredient icons ─────────────────────────────────────────────────────
+  ingredient:
+    description: Single ingredient product shots
+    items:
+      tomato: one glossy red tomato with small green stem
+      onion: one whole yellow onion with papery skin
+      garlic: one white garlic bulb
+      bell_pepper: one glossy red bell pepper
+      carrot: one orange carrot with green leafy top
+      potato: one russet potato
+      lettuce: one head of curly green romaine lettuce
+      cucumber: one fresh green cucumber
+      broccoli: one bright green broccoli floret
+      mushroom: one brown button mushroom
+      spinach: one small bunch of fresh spinach leaves
+      corn: one yellow corn on the cob with green husk partially peeled
+      avocado: one halved avocado showing the brown pit inside
+      lemon: one bright yellow lemon
+      lime: one green lime
+      egg: one single white chicken egg
+      milk: one small white and blue milk carton
+      cheese: one yellow swiss cheese wedge with holes
+      butter: one stick of butter on wax paper wrapper
+      yogurt: one small yogurt cup with pink lid
+      beef: one raw red beef steak cut
+      chicken_breast: one raw pink chicken breast
+      pork: one raw pink pork cut
+      bacon: one strip of pink and white bacon
+      shrimp: one raw pink curved shrimp
+      salmon: one pink salmon fillet with darker pink stripes
+      tofu: one white tofu cube
+      rice: one small white bowl of cooked white rice
+      pasta: one bundle of dry spaghetti noodles tied with string
+      bread: one loaf of crusty sourdough bread
+      olive_oil: one small green glass bottle of olive oil
+      soy_sauce: one small dark glass soy sauce bottle with red cap
+      ginger: one knobbly tan-brown ginger root rhizome with branching fingers
+      green_onion: one bunch of green onions with white roots
+      basil: one sprig of fresh basil leaves
+      cilantro: one cluster of fresh bright green flat-leaf cilantro coriander bunch with delicate feathery leaves
+
+  # ─ Mascot "Motji" poses — self-styled, no style suffix applied ─────────
+  # Chibi kawaii character portraits. Keep visual coherence across poses.
+  mascot:
+    description: "Motji mascot poses (chibi dumpling character)"
+    apply_style: false
+    items:
+      mascot_wave: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, big sparkly eyes with highlights,
+        soft peach and cream pastel palette, kawaii chibi style,
+        rubber hose limbs, thick clean outlines, soft cel shading,
+        waving one hand raised, warm smile, full body centered, white background
+      mascot_jump: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, big sparkly eyes,
+        soft peach and cream pastel palette, kawaii chibi style,
+        mid-jump with both arms raised, motion lines, excited expression,
+        full body centered, white background
+      mascot_thinking: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, big sparkly eyes,
+        soft peach and cream pastel palette, kawaii chibi style,
+        thinking pose with one hand on chin, curious expression,
+        full body centered, white background
+      mascot_shopping: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, big sparkly eyes,
+        soft peach and cream pastel palette, kawaii chibi style,
+        holding a small brown paper grocery bag, happy smile,
+        full body centered, white background
+      mascot_cooking: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, big sparkly eyes,
+        soft peach and cream pastel palette, kawaii chibi style,
+        cooking with a tiny pan and spatula, little steam rising,
+        full body centered, white background
+      mascot_sleeping: >
+        chubby dumpling mascot character, round pillowy body,
+        tiny chef apron, small spoon hairpin, closed sleepy eyes,
+        soft peach and cream pastel palette, kawaii chibi style,
+        curled up sleeping pose with tiny zzz symbols,
+        full body centered, white background
+
+  # ─ Home-cooked meal cards for weekly plan ──────────────────────────────
+  meal:
+    description: Home-cooked meal single-bowl shots at 45-degree angle
+    items:
+      chicken_salad: one bowl of grilled chicken salad with mixed greens, cherry tomatoes, cucumber slices
+      salmon_bowl: one bowl of grilled salmon with quinoa and roasted vegetables
+      veggie_stir_fry: one bowl of colorful vegetable stir fry with tofu cubes, broccoli florets, carrot slices
+      pasta_primavera: one bowl of penne pasta primavera with seasonal vegetables in light sauce
+      bulgogi_bowl: one bowl of Korean bulgogi beef over white rice, topped with sesame seeds and green onion
+      shrimp_tacos: two soft shrimp tacos with shredded cabbage and a lime wedge
+      oatmeal_bowl: one bowl of warm oatmeal topped with blueberries and banana slices
+      avocado_toast: one slice of toasted bread topped with mashed avocado and a sunny-side-up egg

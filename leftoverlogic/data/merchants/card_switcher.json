@@ -1,0 +1,308 @@
+[
+  {
+    "id": 4,
+    "name": "HBO Max",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/PhMFQEWTML45phZih0Vh9u83EOK9POsFrr5IkLot.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 7,
+    "name": "Best Buy",
+    "category": "Retail",
+    "logo": "https://knot.imgix.net/merchants/S3nQgvkiqTVAFN1rEPr0J8Fr4rPKPQu3pj6i8dYt.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 8,
+    "name": "Disney+",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/Up4Ixydaj8y6v0B4JZrMkBdLS7hxca6xo8fQbBvI.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 10,
+    "name": "Uber",
+    "category": "Transportation",
+    "logo": "https://knot.imgix.net/merchants/vAUzKgPbYRMk3180qW8ncAiizrNjxrvW61LBA23n.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 13,
+    "name": "Spotify",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/HjxD3XOnTsfuvJoU3XE7Y5jQYZEvV2VzLyTUiaEl.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 16,
+    "name": "Netflix",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/cp2NX8p4BcXtODNpRiZ2wdKU5SgYnZw6YOe8eXG7.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 18,
+    "name": "Hulu",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/2oMao7tR0b22v6xwz9El4roh4S2mcBSAvGOw9V15.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 19,
+    "name": "DoorDash",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/EG6vOBYTaFY3RrjwIYjjO3j7oEYFCdPb4N48wL31.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 20,
+    "name": "Domino's",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/nKvR4g94xHf5arjppKFNCZnl9JT9j78OAvOsMk2C.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 23,
+    "name": "Peacock",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/hfDdmZ9jXiOIolgecvkcfTaaYRQXJ0Qpw9iiDZAI.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 25,
+    "name": "YouTubeTV",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/kmeRa37zDMWyQpqMpLW6uwzy7tzbFjwcD9hXXe0H.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 27,
+    "name": "Audible",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/0uf2oFPPhSX9Nx3Sa4UvVGYUa9l5oZKzGLOPA6ln.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 29,
+    "name": "DIRECTV",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/xv07GVPhbhNmyfq2tz7Fuc8vu8jp3V5jGHytG2W7.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 30,
+    "name": "Prime Video",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/H3Odxr0v5SDcGBZ7O5yEYOnWNXExzvITMI7k2phz.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 31,
+    "name": "Crunchyroll",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/VB231JP4VsMApFUQZL7uv0cdWkrbC3O6mpq4iYJG.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 32,
+    "name": "Amazon Music",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/Pv77W33lFrpCIGxGO2SvafpRojVc6TQhHYRh2wF6.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 35,
+    "name": "SiriusXM",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/2PFeopOga1V8BZPe4Ay1GkkbunxlKGf5Av5Ky92g.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 36,
+    "name": "Uber Eats",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/HeqRo15rwskrixyeTWi49PnKVLD2lTx87cRDzpiX.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 37,
+    "name": "Postmates",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/hycNw6HCIUmDidRYMnF05962PU80W2e3KlhFvZBf.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 38,
+    "name": "Grubhub",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/EOCHRhtkNfyKG9qXLLVfnXo25ngXAQTsRfSfn591.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 39,
+    "name": "Seamless",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/GMBLYgM0F7x7opleMoC5tVFaetR5sr14DQ6RvO2r.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 42,
+    "name": "Lyft",
+    "category": "Transportation",
+    "logo": "https://knot.imgix.net/merchants/SXqx5NFSSvgY4vUgD74ltXkm1cxeZ9ei3i9meKbb.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 44,
+    "name": "Amazon",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/EewWDOj0Z4mOtBat04PKu9M2evb6CsvQ574KmjZ6.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 48,
+    "name": "Macy's",
+    "category": "Retail",
+    "logo": "https://knot.imgix.net/merchants/a7ZvwURa1hgniiD5jBYLZ4PLudpNfDpottQasisi.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 58,
+    "name": "Chewy",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/M9q3ypkg4O4YqtAXDL13yiPzWsf07xMOEjpgkfMf.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 59,
+    "name": "eBay",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/glg7xrQxl6ST9eJGA1Doqe5qa8jEotlCJjVgz7yp.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 60,
+    "name": "Apple",
+    "category": "Big Box Retailers",
+    "logo": "https://knot.imgix.net/merchants/fLodpSqxl0HJx02NrZvZjbuiDstt53Hdrn4ShtVp.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 63,
+    "name": "Sephora",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/xnOqOOfwLC6iiqpW84u5tvsvm9e0dy1omT1Fc6L9.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 64,
+    "name": "Progressive",
+    "category": "Insurance",
+    "logo": "https://knot.imgix.net/merchants/JSVP1XDM3SV4lMoJE9ilfaOoSXfHFeyzyV6vReIC.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 66,
+    "name": "Geico",
+    "category": "Insurance",
+    "logo": "https://knot.imgix.net/merchants/wjTCgmrRrJZ70olnfDFTEOv1aTeqxSHN23eOmzmJ.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 124,
+    "name": "Starbucks",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/HaBKKsRUBjrqjtBnInjvTOIo0zS0IvaVFlgeKhpU.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 129,
+    "name": "Google",
+    "category": "Big Box Retailers",
+    "logo": "https://knot.imgix.net/merchants/kEeORzijmO7vYrvMoOkb7WoQFSMtoSr9qfCg9lnW.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 386,
+    "name": "Burger King",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/BQFsywUyRHs1swq9PC1V59mmEgLrFVIZEEtdm5RG.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 615,
+    "name": "Dell",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/FjT42RVuh19f1Bkug1R7yOZb2xcYUlnRrc3Cjz2Y.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 625,
+    "name": "Dollar General",
+    "category": "Retail",
+    "logo": "https://knot.imgix.net/merchants/h5edymALjxIa2QHZix6f3IA7vYGb6wBW3upeuzy4.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 640,
+    "name": "PG&E",
+    "category": "Utilities",
+    "logo": "https://knot.imgix.net/merchants/LDtCRQVa2gE1XBMKlqPbr9wCVv2t6fxXsEoixg0u.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 853,
+    "name": "Subway",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/qnAIQKHZgodImlBwrJCXAaFLrsu0R99Be7DFqv3i.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 898,
+    "name": "Caviar",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/xg2ioeVmS5papPDTe88kVqq6xukPcIM2pQq2IcB3.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 976,
+    "name": "The New York Times",
+    "category": "News",
+    "logo": "https://knot.imgix.net/merchants/hErlntSo4mNrhtv8pcyZoVr23CRmV0TLQKg0UfVO.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 987,
+    "name": "YouTube Premium",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/IqlRKARSkWZ6nqZojR87BRtsmj1ENatSahX6i3BV.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 991,
+    "name": "Apple TV+",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/0BcAv7rJxDLTJJ5yM3maCFwdYswePDBPNYPHZOnG.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 2125,
+    "name": "Shop Pay",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/BvPhl6TeOYKnMHjRQjfOIKS4gCsP8FOEjYRWwU3S.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2126,
+    "name": "Prime",
+    "category": "Subscriptions",
+    "logo": "https://knot.imgix.net/merchants/IqRqXwLjJ6EcZYCA7xPdAVwgQSCNf8MYtVOBombB.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2131,
+    "name": "Starz",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/OajjhgmXZxCAOrYNuFDgHehInhyQXU5EEcPef1SH.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2140,
+    "name": "Cox",
+    "category": "Phone & Internet",
+    "logo": "https://knot.imgix.net/merchants/XM3SScEM9Fc2skaFS0p2kl5kMPdfFVVL3eoDJLKy.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2153,
+    "name": "Con Edison",
+    "category": "Utilities",
+    "logo": "https://knot.imgix.net/merchants/MYqSamitCCfwy7ghTUsdVxyxqPQGZmVME3CWGz1r.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2183,
+    "name": "CenturyLink",
+    "category": "Phone & Internet",
+    "logo": "https://knot.imgix.net/merchants/GZs7iTZ2gGxnMdZwp4UZG8a0oKOczPe6tkej5IlU.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2264,
+    "name": "Bloomingdale's",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/AnG1RcAeYcnXKv0Z1jUNLdN6Y3qt7Y2YOoYvX8wu.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2322,
+    "name": "YouTube",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/VBdeeb4f9mwLuQArHupETSBJNxzun2RekdA5bYeg.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2333,
+    "name": "AppFolio",
+    "category": "Rent",
+    "logo": "https://knot.imgix.net/merchants/p7eOfBAPbDe22v8A8eIbvRkqC2y5zGWL0iz21MtM.jpg?auto=format,compress&w=240"
+  },
+  {
+    "id": 2334,
+    "name": "ChatGPT",
+    "category": "Subscriptions",
+    "logo": "https://knot.imgix.net/merchants/dxaKWjtV6UNPMdRgtRxp4aNptRYlu6eMiFAWual3.png?auto=format,compress&w=240"
+  }
+]

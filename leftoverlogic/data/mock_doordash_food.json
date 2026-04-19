@@ -1,0 +1,42 @@
+{
+  "_note": "Mock restaurant delivery order — DoorDash sandbox doesn't seed actual food orders so we approximate one for the food-to-home-meal demo path",
+  "id": "mock-restaurant-001",
+  "datetime": "2026-04-15T19:32:00+00:00",
+  "url": "https://www.doordash.com/order/mock",
+  "order_status": "BILLED",
+  "restaurant": "Bella Notte Italian",
+  "price": {
+    "sub_total": "46.97",
+    "adjustments": [
+      { "type": "FEE", "label": "Delivery Fee", "amount": "5.99" },
+      { "type": "FEE", "label": "Service Fee", "amount": "3.50" },
+      { "type": "TIP", "label": "Tip", "amount": "8.00" },
+      { "type": "TAX", "label": "Sales Tax", "amount": "3.85" }
+    ],
+    "total": "68.31",
+    "currency": "USD"
+  },
+  "products": [
+    {
+      "external_id": "menu-shrimp-pasta",
+      "name": "Garlic Butter Shrimp Linguine",
+      "description": "Sautéed shrimp tossed in garlic-herb butter sauce over linguine pasta with parmesan",
+      "quantity": 1,
+      "price": { "unit_price": "24.99", "total": "24.99" }
+    },
+    {
+      "external_id": "menu-caesar",
+      "name": "Caesar Salad",
+      "description": "Romaine lettuce, croutons, parmesan, classic caesar dressing",
+      "quantity": 1,
+      "price": { "unit_price": "12.99", "total": "12.99" }
+    },
+    {
+      "external_id": "menu-tiramisu",
+      "name": "House Tiramisu",
+      "description": "Layered mascarpone cream and espresso-soaked ladyfingers",
+      "quantity": 1,
+      "price": { "unit_price": "8.99", "total": "8.99" }
+    }
+  ]
+}

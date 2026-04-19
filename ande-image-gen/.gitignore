@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated images and archives — can be regenerated; don't commit
+images*/
+image-old/
+*.zip
+
+# Common HF cache if someone sets HF_HOME here
+.cache/

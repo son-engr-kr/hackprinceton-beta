@@ -1,0 +1,1045 @@
+{
+  "merchant": {
+    "id": 19,
+    "name": "DoorDash"
+  },
+  "transactions": [
+    {
+      "id": "b0938166-17ff-4905-9246-73a24734d118",
+      "external_id": "9201b7da-2d01-4553-a848-6f9a598b05c2",
+      "datetime": "2024-01-28T09:41:35+00:00",
+      "url": "https://www.doordash.com/order/9446311",
+      "order_status": "BILLED",
+      "shipping": null,
+      "payment_methods": [
+        {
+          "external_id": "4724a1e6-11ba-4075-b109-227dbaf4948f",
+          "type": "CARD",
+          "brand": "VISA",
+          "last_four": "3569",
+          "name": null,
+          "transaction_amount": "300.20"
+        }
+      ],
+      "price": {
+        "sub_total": "280.56",
+        "adjustments": [
+          {
+            "type": "TAX",
+            "label": "Sales Tax",
+            "amount": "19.64"
+          }
+        ],
+        "total": "300.20",
+        "currency": "USD"
+      },
+      "products": [
+        {
+          "external_id": "10736257063",
+          "name": "Pedialyte Electrolyte Solution, Strawberry, 1 Liter",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257063",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.99",
+            "total": "5.99",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064189.jpg"
+        },
+        {
+          "external_id": "10736257086",
+          "name": "Charmin Ultra Soft Toilet Paper, 18 Mega Rolls",
+          "description": "Charmin Ultra Soft Toilet Paper, 18 Mega Rolls - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257086",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "57.98",
+            "total": "57.98",
+            "unit_price": "28.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257071",
+          "name": "Neosporin Original Antibiotic Ointment, 0.5 oz",
+          "description": "Neosporin Original Antibiotic Ointment, 0.5 oz - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257071",
+          "quantity": 1,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "6.99",
+            "total": "6.99",
+            "unit_price": "6.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257082",
+          "name": "Colgate Optic White Advanced Whitening Toothpaste, 2 Count",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257082",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "11.99",
+            "total": "11.99",
+            "unit_price": "11.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257027",
+          "name": "LaCroix Sparkling Water, Lime (12-pack)",
+          "description": "LaCroix Sparkling Water, Lime (12-pack) - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257027",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "9.98",
+            "total": "9.98",
+            "unit_price": "4.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257080",
+          "name": "Garden of Life Dr. Formulated Probiotics for Women, 30 capsules",
+          "description": "Shop garden of life dr. formulated probiotics for women, 30 capsules - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257080",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "29.99",
+            "total": "29.99",
+            "unit_price": "29.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064189.jpg"
+        },
+        {
+          "external_id": "10736257069",
+          "name": "Old Spice Classic Cologne For Men, 4.25 Oz, Original Scent",
+          "description": "Old Spice Classic Cologne For Men, 4.25 Oz, Original Scent - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257069",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10073099336.jpg"
+        },
+        {
+          "external_id": "10736257046",
+          "name": "Huggies Simple Clean Unscented Baby Wipes, 3 Refill Packs",
+          "description": "Premium huggies simple clean unscented baby wipes, 3 refill packs with excellent reviews.",
+          "url": "https://www.doordash.com/product/10736257046",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.99",
+            "total": "5.99",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257056",
+          "name": "Pringles Potato Crisps Chips Original Flavored 5.5 oz",
+          "description": "Shop pringles potato crisps chips original flavored 5.5 oz - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257056",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.69",
+            "total": "1.69",
+            "unit_price": "1.69"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10017722889.jpeg"
+        },
+        {
+          "external_id": "10736257068",
+          "name": "Kimberly-Clark Cold & Flu Non-Medical Face Masks, 50 ct",
+          "description": "Kimberly-Clark Cold & Flu Non-Medical Face Masks, 50 ct - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257068",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "31.98",
+            "total": "31.98",
+            "unit_price": "15.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069271217.jpg"
+        },
+        {
+          "external_id": "10736257079",
+          "name": "Elmer's Liquid School Glue, Washable, 4 oz",
+          "description": "Elmer's Liquid School Glue, Washable, 4 oz - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257079",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.49",
+            "total": "1.49",
+            "unit_price": "1.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069271217.jpg"
+        },
+        {
+          "external_id": "10736257052",
+          "name": "Aveeno Daily Moisturizing Lotion with Oatmeal to Soothe Dry Skin",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257052",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10017720307.png"
+        },
+        {
+          "external_id": "10736257040",
+          "name": "Burt's Bees 100% Natural Origin Moisturizing Lip Balm, Beeswax",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257040",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.29",
+            "total": "3.29",
+            "unit_price": "3.29"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257065",
+          "name": "Gatorade Thirst Quencher, Lemon Lime, 20 Ounce Bottles (Pack of 8)",
+          "description": "Gatorade Thirst Quencher, Lemon Lime, 20 Ounce Bottles (Pack of 8) - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257065",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.99",
+            "total": "5.99",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257042",
+          "name": "Tropicana Pure Premium Orange Juice, 52 fl oz",
+          "description": "Shop tropicana pure premium orange juice, 52 fl oz - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257042",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "4.49",
+            "total": "4.49",
+            "unit_price": "4.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10016291004"
+        },
+        {
+          "external_id": "10736257033",
+          "name": "Blue Buffalo Life Protection Formula Adult Chicken & Brown Rice Recipe Dog Food (5 lb)",
+          "description": "Blue Buffalo Life Protection Formula Adult Chicken & Brown Rice Recipe Dog Food (5 lb). Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257033",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "21.99",
+            "total": "21.99",
+            "unit_price": "21.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069570001.jpg"
+        },
+        {
+          "external_id": "10736257036",
+          "name": "Thermometer for Adults, Touchless Digital Infrared",
+          "description": "Thermometer for Adults, Touchless Digital Infrared. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257036",
+          "quantity": 2,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "49.98",
+            "total": "49.98",
+            "unit_price": "24.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257043",
+          "name": "Quaker Chewy Granola Bars, Chocolate Chip, 8 ct",
+          "description": "Quaker Chewy Granola Bars, Chocolate Chip, 8 ct. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257043",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.29",
+            "total": "3.29",
+            "unit_price": "3.29"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10052235235.png"
+        },
+        {
+          "external_id": "10736257070",
+          "name": "Purell Advanced Hand Sanitizer Refreshing Gel, 1 fl oz",
+          "description": "Shop purell advanced hand sanitizer refreshing gel, 1 fl oz - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257070",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.49",
+            "total": "1.49",
+            "unit_price": "1.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10052235235.png"
+        },
+        {
+          "external_id": "10736257085",
+          "name": "Lysol Disinfectant Spray Early Morning Breeze, 19 oz",
+          "description": "Premium lysol disinfectant spray early morning breeze, 19 oz with excellent reviews.",
+          "url": "https://www.doordash.com/product/10736257085",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "7.99",
+            "total": "7.99",
+            "unit_price": "7.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064189.jpg"
+        }
+      ]
+    },
+    {
+      "id": "4cdcb557-6dd6-4369-92be-daffb8fe6ba1",
+      "external_id": "a4e20ab8-9c71-4769-8e20-4854c911e52b",
+      "datetime": "2025-03-25T20:01:16+00:00",
+      "url": "https://www.doordash.com/order/2150124",
+      "order_status": "FAILED",
+      "shipping": null,
+      "payment_methods": [
+        {
+          "external_id": "f7baffcb-e671-4a2b-91fc-7e364e338a49",
+          "type": "CARD",
+          "brand": "MASTERCARD",
+          "last_four": "7799",
+          "name": null,
+          "transaction_amount": "6.92"
+        },
+        {
+          "external_id": "43f233a8-e68f-49ea-8d19-2cc4e080873d",
+          "type": "CARD",
+          "brand": "AMEX",
+          "last_four": "3283",
+          "name": null,
+          "transaction_amount": "6.93"
+        }
+      ],
+      "price": {
+        "sub_total": "15.96",
+        "adjustments": [
+          {
+            "type": "DISCOUNT",
+            "label": "Promo Code",
+            "amount": "-3.23"
+          },
+          {
+            "type": "TAX",
+            "label": "Sales Tax",
+            "amount": "1.12"
+          }
+        ],
+        "total": "13.85",
+        "currency": "USD"
+      },
+      "products": [
+        {
+          "external_id": "10736257030",
+          "name": "Haagen-Dazs Coffee Ice Cream (14 fl oz)",
+          "description": "Shop haagen-dazs coffee ice cream (14 fl oz) - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257030",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "4.99",
+            "total": "4.99",
+            "unit_price": "4.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10193837205.jpg"
+        },
+        {
+          "external_id": "10736257076",
+          "name": "Tostitos Chunky Salsa, Medium, 15.5 oz Jar",
+          "description": "Tostitos Chunky Salsa, Medium, 15.5 oz Jar - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257076",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "6.98",
+            "total": "6.98",
+            "unit_price": "3.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069271217.jpg"
+        },
+        {
+          "external_id": "10736257064",
+          "name": "Crest 3D White Toothpaste Radiant Mint, 4.8 oz",
+          "description": "Shop crest 3d white toothpaste radiant mint, 4.8 oz - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257064",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.99",
+            "total": "3.99",
+            "unit_price": "3.99"
+          },
+          "seller": null,
+          "image_url": null
+        }
+      ]
+    },
+    {
+      "id": "6bdb9027-0f34-42ed-ba71-24808c8e8ac6",
+      "external_id": "b860a3f2-7398-4b7e-8128-93604e8568bd",
+      "datetime": "2024-02-03T03:23:39+00:00",
+      "url": "https://www.doordash.com/order/9302856",
+      "order_status": "COMPLETED",
+      "shipping": null,
+      "payment_methods": [
+        {
+          "external_id": "80142192-079c-40b7-904e-412674041e30",
+          "type": "CARD",
+          "brand": "DISCOVER",
+          "last_four": "7115",
+          "name": null,
+          "transaction_amount": "21.89"
+        }
+      ],
+      "price": {
+        "sub_total": "20.46",
+        "adjustments": [
+          {
+            "type": "TAX",
+            "label": "Sales Tax",
+            "amount": "1.43"
+          }
+        ],
+        "total": "21.89",
+        "currency": "USD"
+      },
+      "products": [
+        {
+          "external_id": "10736257066",
+          "name": "Trident Spearmint Sugar-Free Gum, 12 packs",
+          "description": "Trident Spearmint Sugar-Free Gum, 12 packs - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257066",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.49",
+            "total": "8.49",
+            "unit_price": "8.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/1003239957.jpg"
+        },
+        {
+          "external_id": "10736257064-a750",
+          "name": "Crest 3D White Toothpaste Radiant Mint, 4.8 oz",
+          "description": "Shop crest 3d white toothpaste radiant mint, 4.8 oz - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257064-a750",
+          "quantity": 3,
+          "eligibility": [],
+          "price": {
+            "sub_total": "11.97",
+            "total": "11.97",
+            "unit_price": "3.99"
+          },
+          "seller": null,
+          "image_url": null
+        }
+      ]
+    },
+    {
+      "id": "e2e95e28-8ddb-482d-beec-241cf6dd9af9",
+      "external_id": "3a2ac89c-7a5a-4168-bddd-8804f9942a78",
+      "datetime": "2024-02-04T15:31:11+00:00",
+      "url": "https://www.doordash.com/order/8061183",
+      "order_status": "SHIPPED",
+      "shipping": null,
+      "payment_methods": [
+        {
+          "external_id": "c08b1394-5be2-43d6-a0ed-b1bb32c6aae0",
+          "type": "CARD",
+          "brand": "EBTSNAP",
+          "last_four": "5428",
+          "name": null,
+          "transaction_amount": "162.57"
+        }
+      ],
+      "price": {
+        "sub_total": "146.33",
+        "adjustments": [
+          {
+            "type": "FEE",
+            "label": "Service Fee",
+            "amount": "3.77"
+          },
+          {
+            "type": "TIP",
+            "label": "Tip",
+            "amount": "2.23"
+          },
+          {
+            "type": "TAX",
+            "label": "Sales Tax",
+            "amount": "10.24"
+          }
+        ],
+        "total": "162.57",
+        "currency": "USD"
+      },
+      "products": [
+        {
+          "external_id": "10736257070-b722",
+          "name": "Purell Advanced Hand Sanitizer Refreshing Gel, 1 fl oz",
+          "description": "Purell Advanced Hand Sanitizer Refreshing Gel, 1 fl oz - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257070-b722",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.49",
+            "total": "1.49",
+            "unit_price": "1.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10016291004"
+        },
+        {
+          "external_id": "10736257040-4383",
+          "name": "Burt's Bees 100% Natural Origin Moisturizing Lip Balm, Beeswax",
+          "description": "Burt's Bees 100% Natural Origin Moisturizing Lip Balm, Beeswax - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257040-4383",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.29",
+            "total": "3.29",
+            "unit_price": "3.29"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10056721986.jpg"
+        },
+        {
+          "external_id": "10736257077",
+          "name": "Metamucil Daily Fiber Supplement, Orange Smooth, 72 Doses",
+          "description": "Premium metamucil daily fiber supplement, orange smooth, 72 doses with excellent reviews.",
+          "url": "https://www.doordash.com/product/10736257077",
+          "quantity": 1,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "24.99",
+            "total": "24.99",
+            "unit_price": "24.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257041",
+          "name": "Panera Bread Four Cheese Souffle",
+          "description": "Panera Bread Four Cheese Souffle - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257041",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "10.58",
+            "total": "10.58",
+            "unit_price": "5.29"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257082-146e",
+          "name": "Colgate Optic White Advanced Whitening Toothpaste, 2 Count",
+          "description": "Colgate Optic White Advanced Whitening Toothpaste, 2 Count - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257082-146e",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "11.99",
+            "total": "11.99",
+            "unit_price": "11.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/1003239957.jpg"
+        },
+        {
+          "external_id": "10736257089",
+          "name": "One A Day Men's Multivitamin Tablets, 100 Count",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257089",
+          "quantity": 1,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10052235235.png"
+        },
+        {
+          "external_id": "10736257063-0d41",
+          "name": "Pedialyte Electrolyte Solution, Strawberry, 1 Liter",
+          "description": "Pedialyte Electrolyte Solution, Strawberry, 1 Liter. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257063-0d41",
+          "quantity": 3,
+          "eligibility": [],
+          "price": {
+            "sub_total": "17.97",
+            "total": "17.97",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257047",
+          "name": "Arm & Hammer Advance White Extreme Whitening Toothpaste, 6 oz",
+          "description": "Arm & Hammer Advance White Extreme Whitening Toothpaste, 6 oz - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257047",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.59",
+            "total": "3.59",
+            "unit_price": "3.59"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257039",
+          "name": "Starbucks Doubleshot Espresso Drink, 6.5 fl oz",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257039",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "2.99",
+            "total": "2.99",
+            "unit_price": "2.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064177.jpg"
+        },
+        {
+          "external_id": "10736257066-0311",
+          "name": "Trident Spearmint Sugar-Free Gum, 12 packs",
+          "description": "Trident Spearmint Sugar-Free Gum, 12 packs. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257066-0311",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.49",
+            "total": "8.49",
+            "unit_price": "8.49"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257027-923b",
+          "name": "LaCroix Sparkling Water, Lime (12-pack)",
+          "description": "LaCroix Sparkling Water, Lime (12-pack) - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257027-923b",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "4.99",
+            "total": "4.99",
+            "unit_price": "4.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10017720307.png"
+        },
+        {
+          "external_id": "10736257048",
+          "name": "Rainbow Light Women\u2019s One Multivitamin, 150 Tablets",
+          "description": "Rainbow Light Women\u2019s One Multivitamin, 150 Tablets - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257048",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "32.99",
+            "total": "32.99",
+            "unit_price": "32.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069570001.jpg"
+        },
+        {
+          "external_id": "10736257069-088c",
+          "name": "Old Spice Classic Cologne For Men, 4.25 Oz, Original Scent",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257069-088c",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064177.jpg"
+        },
+        {
+          "external_id": "10736257030-f0e5",
+          "name": "Haagen-Dazs Coffee Ice Cream (14 fl oz)",
+          "description": "Haagen-Dazs Coffee Ice Cream (14 fl oz). Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257030-f0e5",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "4.99",
+            "total": "4.99",
+            "unit_price": "4.99"
+          },
+          "seller": null,
+          "image_url": null
+        }
+      ]
+    },
+    {
+      "id": "37bc3987-698c-4cc4-82bc-f2cf91444b37",
+      "external_id": "ad502b85-677b-42f8-b2d1-c9078dd5c4cf",
+      "datetime": "2024-02-07T23:41:26+00:00",
+      "url": "https://www.doordash.com/order/6641236",
+      "order_status": "SHIPPED",
+      "shipping": null,
+      "payment_methods": [
+        {
+          "external_id": "b0568d1d-5f23-4e25-964f-ca0ec24e1333",
+          "type": "PAYPAL",
+          "brand": null,
+          "last_four": null,
+          "name": null,
+          "transaction_amount": "527.47"
+        }
+      ],
+      "price": {
+        "sub_total": "492.96",
+        "adjustments": [
+          {
+            "type": "TAX",
+            "label": "Sales Tax",
+            "amount": "34.51"
+          }
+        ],
+        "total": "527.47",
+        "currency": "USD"
+      },
+      "products": [
+        {
+          "external_id": "10736257028",
+          "name": "PEPPADEW Sweet Piquante Peppers (14 oz jar)",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257028",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.49",
+            "total": "5.49",
+            "unit_price": "5.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10070958284.png"
+        },
+        {
+          "external_id": "10736257076-b825",
+          "name": "Tostitos Chunky Salsa, Medium, 15.5 oz Jar",
+          "description": "Shop tostitos chunky salsa, medium, 15.5 oz jar - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257076-b825",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "3.49",
+            "total": "3.49",
+            "unit_price": "3.49"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257036-c208",
+          "name": "Thermometer for Adults, Touchless Digital Infrared",
+          "description": "Premium thermometer for adults, touchless digital infrared with excellent reviews.",
+          "url": "https://www.doordash.com/product/10736257036-c208",
+          "quantity": 2,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "49.98",
+            "total": "49.98",
+            "unit_price": "24.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257051",
+          "name": "Clorox Disinfecting Wipes, Bleach Free Cleaning Wipes 75 Count",
+          "description": "Shop clorox disinfecting wipes, bleach free cleaning wipes 75 count - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257051",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.99",
+            "total": "5.99",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257080-0795",
+          "name": "Garden of Life Dr. Formulated Probiotics for Women, 30 capsules",
+          "description": "Premium garden of life dr. formulated probiotics for women, 30 capsules with excellent reviews.",
+          "url": "https://www.doordash.com/product/10736257080-0795",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "59.98",
+            "total": "59.98",
+            "unit_price": "29.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10073099336.jpg"
+        },
+        {
+          "external_id": "10736257063-7bcf",
+          "name": "Pedialyte Electrolyte Solution, Strawberry, 1 Liter",
+          "description": "Pedialyte Electrolyte Solution, Strawberry, 1 Liter - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257063-7bcf",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "5.99",
+            "total": "5.99",
+            "unit_price": "5.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257079-ad01",
+          "name": "Elmer's Liquid School Glue, Washable, 4 oz",
+          "description": "Elmer's Liquid School Glue, Washable, 4 oz - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257079-ad01",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.49",
+            "total": "1.49",
+            "unit_price": "1.49"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10016291004"
+        },
+        {
+          "external_id": "10736257069-deee",
+          "name": "Old Spice Classic Cologne For Men, 4.25 Oz, Original Scent",
+          "description": "Old Spice Classic Cologne For Men, 4.25 Oz, Original Scent - Customer favorite with top ratings.",
+          "url": "https://www.doordash.com/product/10736257069-deee",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10073099336.jpg"
+        },
+        {
+          "external_id": "10736257049",
+          "name": "Pampers Baby Dry Diapers Size 3, 104 ct",
+          "description": null,
+          "url": "https://www.doordash.com/product/10736257049",
+          "quantity": 3,
+          "eligibility": [],
+          "price": {
+            "sub_total": "119.97",
+            "total": "119.97",
+            "unit_price": "39.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10052235235.png"
+        },
+        {
+          "external_id": "10736257052-57ee",
+          "name": "Aveeno Daily Moisturizing Lotion with Oatmeal to Soothe Dry Skin",
+          "description": "Aveeno Daily Moisturizing Lotion with Oatmeal to Soothe Dry Skin. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257052-57ee",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "8.99",
+            "total": "8.99",
+            "unit_price": "8.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257048-efbb",
+          "name": "Rainbow Light Women\u2019s One Multivitamin, 150 Tablets",
+          "description": "Shop rainbow light women\u2019s one multivitamin, 150 tablets - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257048-efbb",
+          "quantity": 2,
+          "eligibility": [],
+          "price": {
+            "sub_total": "65.98",
+            "total": "65.98",
+            "unit_price": "32.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069570001.jpg"
+        },
+        {
+          "external_id": "10736257074",
+          "name": "Mucinex Fast-Max DM Max Liquid Gels 16 count",
+          "description": "Mucinex Fast-Max DM Max Liquid Gels 16 count - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257074",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "9.99",
+            "total": "9.99",
+            "unit_price": "9.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10012064189.jpg"
+        },
+        {
+          "external_id": "10736257059",
+          "name": "Similasan Aging Eye Relief Drops, 10 ml",
+          "description": "Similasan Aging Eye Relief Drops, 10 ml. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257059",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "9.99",
+            "total": "9.99",
+            "unit_price": "9.99"
+          },
+          "seller": null,
+          "image_url": null
+        },
+        {
+          "external_id": "10736257056-c27b",
+          "name": "Pringles Potato Crisps Chips Original Flavored 5.5 oz",
+          "description": "Pringles Potato Crisps Chips Original Flavored 5.5 oz. Satisfaction guaranteed.",
+          "url": "https://www.doordash.com/product/10736257056-c27b",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "1.69",
+            "total": "1.69",
+            "unit_price": "1.69"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069570001.jpg"
+        },
+        {
+          "external_id": "10736257058",
+          "name": "Cascade Complete Dishwasher Pods, Fresh Scent, 78 Count",
+          "description": "Cascade Complete Dishwasher Pods, Fresh Scent, 78 Count - High quality product for everyday use.",
+          "url": "https://www.doordash.com/product/10736257058",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "18.99",
+            "total": "18.99",
+            "unit_price": "18.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10069570001.jpg"
+        },
+        {
+          "external_id": "10736257038",
+          "name": "Nature Made Prenatal Vitamins with DHA, 150 ct Softgels",
+          "description": "Shop nature made prenatal vitamins with dha, 150 ct softgels - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257038",
+          "quantity": 3,
+          "eligibility": [
+            "FSA/HSA"
+          ],
+          "price": {
+            "sub_total": "110.97",
+            "total": "110.97",
+            "unit_price": "36.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10193837205.jpg"
+        },
+        {
+          "external_id": "10736257073",
+          "name": "Nature Valley Crunchy Granola Bars, Oats 'n Honey (12 Count)",
+          "description": "Shop nature valley crunchy granola bars, oats 'n honey (12 count) - great value and fast delivery.",
+          "url": "https://www.doordash.com/product/10736257073",
+          "quantity": 1,
+          "eligibility": [],
+          "price": {
+            "sub_total": "4.99",
+            "total": "4.99",
+            "unit_price": "4.99"
+          },
+          "seller": null,
+          "image_url": "https://storage.googleapis.com/knot-staging-txn-link-product-images/doordash/10193837205.jpg"
+        }
+      ]
+    }
+  ],
+  "next_cursor": "eyJpZCI6MTY1NjAwLCJfcG9pbnRzVG9OZXh0SXRlbXMiOnRydWV9",
+  "limit": 5
+}

@@ -1,0 +1,163 @@
+# ande-image-gen prompts — v2 expansion
+#
+# Additional food/ingredient/meal items to generate alongside the original
+# prompts.yaml set. Keeping this in a separate file + routing output to a
+# separate --images-dir (e.g. images-v2/) avoids mixing newly-generated
+# candidates with the previously curated images-chose/ selection.
+#
+# Run:
+#   uv run python generate_images.py --all --model juggernaut --seeds 2 \
+#     --prompts-file prompts-v2.yaml --images-dir images-v2
+#
+# Shares the same negative + styles as prompts.yaml so generator output is
+# consistent; downstream normalize/prune/compress scripts stay unchanged
+# (point them at images-v2 instead of images).
+
+negative: "shadow, dark shadow, drop shadow, cast shadow, blurry, text, watermark, low quality, multiple items, clutter, distracting background, hands, plate rim, cropped, out of frame, close-up, extreme close-up, macro, zoomed in, subject touching edges, cut off"
+
+styles:
+  realistic: >
+    product photograph, wide shot, subject fills 50 percent of frame,
+    ample white margin on all sides, 45-degree angle from above,
+    studio lighting, sharp focus, clean white background, centered, photorealistic, 4k
+  cartoon: >
+    cartoon illustration, wide shot, subject fills 50 percent of frame,
+    ample white margin on all sides, 45-degree angle from above,
+    bright saturated colors, thick clean outlines, flat cel shading, white background, centered
+
+categories:
+
+  # ─ Food icons (additional delivery items) ──────────────────────────────
+  food:
+    description: Additional delivery food single-item shots at 45-degree angle
+    items:
+      tonkatsu: one golden crispy pork cutlet slice, panko breading
+      tempura: one golden battered shrimp tempura piece with tail visible
+      udon: one bowl of thick white udon noodles in clear broth with green onion
+      katsu_curry: one plate of Japanese curry sauce over rice with a breaded pork cutlet on top
+      onigiri: one triangular Japanese rice ball wrapped with a nori seaweed strip
+      takoyaki: one round octopus ball topped with bonito flakes and mayo drizzle
+      kimbap: one slice of Korean kimbap roll with colorful fillings, cross-section view
+      tteokbokki: one bowl of spicy red Korean rice cakes in glossy sauce
+      bibimbap: one Korean stone bowl with colorful vegetables, rice, and a runny egg yolk
+      japchae: one bowl of Korean glass noodles stir-fried with beef and vegetables
+      kimchi_stew: one bubbling bowl of red kimchi stew with tofu cubes and pork
+      korean_fried_chicken: one piece of Korean-style fried chicken wing with glossy red sauce glaze
+      fried_rice: one plate of yellow fried rice with green peas and small egg pieces
+      kung_pao: one plate of kung pao chicken with peanuts and dried red chilies
+      lo_mein: one bowl of chow mein lo mein noodles with vegetables
+      peking_duck: one folded thin pancake with sliced peking duck, scallion, and hoisin sauce
+      mapo_tofu: one small bowl of mapo tofu with red sauce and ground pork
+      burrito: one flour tortilla burrito cut in half showing rice, beans, meat filling
+      quesadilla: one grilled cheese quesadilla wedge with stretchy melted cheese
+      nachos: one plate of tortilla chips topped with melted cheese, jalapenos, and guacamole
+      enchilada: one rolled corn tortilla enchilada covered in red sauce and melted cheese
+      hot_dog: one hot dog in a bun with ketchup and mustard stripes
+      sandwich: one turkey club sandwich cut diagonal with tomato, lettuce, toothpick
+      fries: one paper cup of crispy golden french fries
+      chicken_wings: one buffalo chicken wing glazed in orange hot sauce
+      mac_cheese: one small bowl of creamy macaroni and cheese
+      wrap: one chicken wrap cut in half showing lettuce and grilled chicken
+      pad_thai: one plate of pad thai stir-fried rice noodles with peanuts, bean sprouts, lime wedge
+      dim_sum: one steamed bamboo basket holding three shumai dumplings
+      gyro: one pita gyro sandwich with sliced meat, tomato, tzatziki sauce
+      falafel: one small plate of three round golden falafel balls
+      pancakes: one stack of three fluffy pancakes with a butter pat and maple syrup drizzle
+
+  # ─ Ingredient icons (additional pantry / fresh items) ─────────────────
+  ingredient:
+    description: Additional single-ingredient product shots
+    items:
+      asparagus: one bundle of fresh green asparagus spears tied with string
+      eggplant: one glossy deep purple eggplant with green stem
+      zucchini: one fresh green zucchini
+      sweet_potato: one orange sweet potato with tapered ends
+      cabbage: one whole head of green cabbage
+      kale: one bunch of curly green kale leaves
+      celery: one stalk of green celery with leafy top
+      parsley: one small bunch of fresh flat-leaf parsley
+      radish: one bunch of round red radishes with green tops
+      beet: one red beet root with leafy green tops
+      pumpkin: one small orange pumpkin with a curled stem
+      cauliflower: one head of white cauliflower with a few green leaves
+      peas: one small white bowl of bright green shelled peas
+      green_beans: one bundle of fresh green string beans
+      chickpeas: one small bowl of cooked beige chickpeas
+      lentils: one small bowl of red lentils
+      jalapeno: one glossy green jalapeno pepper
+      chili_pepper: one dried red chili pepper with stem
+      dill: one sprig of fresh feathery dill fronds
+      mint: one sprig of fresh green mint leaves
+      rosemary: one sprig of fresh rosemary with needle leaves
+      thyme: one sprig of fresh thyme with tiny leaves
+      bok_choy: one head of baby bok choy with dark green leaves and white stems
+      brussels_sprouts: one small pile of fresh green brussels sprouts
+      apple: one shiny red apple with a short stem and single green leaf
+      banana: one ripe yellow banana
+      orange: one whole bright orange fruit
+      strawberry: one red strawberry with green leafy top
+      blueberry: one small pile of round blue blueberries
+      raspberry: one small pile of bright red raspberries
+      grape: one small bunch of purple grapes on a stem
+      pineapple: one whole pineapple with spiky green crown
+      mango: one ripe yellow-orange mango
+      watermelon: one triangular slice of watermelon wedge with red flesh and green rind
+      peach: one fuzzy pink peach with a short stem
+      pear: one green pear with a short stem
+      kiwi: one halved kiwi fruit showing bright green flesh and black seeds
+      cherry: one pair of glossy red cherries sharing a stem
+      pomegranate: one halved pomegranate showing glossy red seeds
+      ground_beef: one small mound of raw ground beef
+      ground_turkey: one small mound of raw ground turkey
+      sausage: one plump pink raw sausage link
+      ham: one round slice of pink deli ham
+      turkey_breast: one thin slice of pale turkey breast cold cut
+      duck: one raw duck breast fillet with skin on top
+      tuna: one pink raw tuna steak cube
+      cod: one white raw cod fillet
+      crab: one whole cooked red crab viewed from above
+      lobster: one cooked red lobster tail
+      scallop: one raw white scallop
+      squid: one whole raw white squid with tentacles
+      heavy_cream: one small glass pitcher of heavy cream
+      sour_cream: one small white tub of sour cream
+      parmesan: one wedge of hard parmesan cheese
+      mozzarella: one ball of fresh white mozzarella cheese on a small plate
+      feta: one white block of crumbly feta cheese
+      cream_cheese: one rectangular block of white cream cheese on wax paper
+      ricotta: one small bowl of white ricotta cheese
+      cottage_cheese: one small bowl of white cottage cheese curds
+      quinoa: one small bowl of cooked white quinoa
+      oats: one small bowl of dry rolled oats
+      flour: one small pile of white flour
+      tortilla: one round flour tortilla
+      bagel: one sesame bagel sliced in half
+      croissant: one golden flaky croissant
+      ketchup: one small red plastic bottle of ketchup
+      mustard: one small yellow plastic bottle of mustard
+      mayo: one small glass jar of white mayonnaise
+      honey: one small glass jar of golden honey with a wooden dipper
+      maple_syrup: one small glass bottle of amber maple syrup
+      sriracha: one red plastic bottle of sriracha hot sauce with green cap
+      gochujang: one small red tub of gochujang Korean chili paste
+
+  # ─ Home-cooked meal cards (additional entrees) ────────────────────────
+  meal:
+    description: Additional home-cooked meal single-bowl shots at 45-degree angle
+    items:
+      lentil_soup: one bowl of brown lentil soup with vegetables
+      chicken_soup: one bowl of chicken noodle soup with carrots and celery
+      quinoa_bowl: one bowl of quinoa with roasted vegetables and chickpeas
+      grain_bowl: one bowl of brown rice with grilled vegetables and avocado slices
+      turkey_wrap: one turkey wrap cut in half showing sliced turkey, lettuce, tomato
+      greek_salad: one bowl of Greek salad with feta cubes, olives, tomato, cucumber
+      cobb_salad: one plate of cobb salad with bacon, sliced boiled egg, avocado, chicken, blue cheese
+      caesar_salad: one bowl of caesar salad with romaine, shaved parmesan, and croutons
+      baked_chicken: one plate with a baked chicken breast, steamed vegetables, and mashed potato
+      baked_salmon: one plate with a baked salmon fillet, lemon wedge, and asparagus spears
+      stuffed_pepper: one halved red bell pepper stuffed with seasoned ground meat and rice
+      egg_scramble: one plate of scrambled eggs with wilted spinach and tomato on the side
+      breakfast_burrito: one breakfast burrito cut in half showing scrambled egg, cheese, bacon
+      tofu_stir_fry: one bowl of stir-fried tofu cubes with broccoli florets and red bell pepper strips
+      bean_chili: one bowl of red bean chili with kidney beans, ground meat, and a small sprinkle of cheese on top
+      buddha_bowl: one bowl of brown rice with roasted sweet potato, chickpeas, spinach, and a tahini drizzle

@@ -1,0 +1,2205 @@
+{
+  "_note": "Mock 1-month food delivery history matching Knot /transactions/sync schema. Drop-in replacement for real sandbox data (which is 2024 dated and non-food). Each `sync_responses[i]` mimics one real Knot /transactions/sync call result. For MongoDB storage, flatten merchants[i].transactions with merchant field injected. Source schema: samples/sync_doordash.json · Source patterns: ande/refined-flow.md",
+  "_generated_at": "2026-04-18T00:00:00+00:00",
+  "_user_id": "leftoverlogic-dev-user-001",
+  "_window": {
+    "from": "2026-03-19",
+    "to": "2026-04-18",
+    "days": 30
+  },
+  "_stats": {
+    "total_orders": 30,
+    "doordash_orders": 18,
+    "uber_eats_orders": 12,
+    "total_spend_usd": 781.19,
+    "avg_order_usd": 26.04
+  },
+  "sync_responses": [
+    {
+      "merchant": {
+        "id": 19,
+        "name": "DoorDash"
+      },
+      "transactions": [
+        {
+          "id": "7394c435-7c1c-f82b-a34b-d83d58d0b15b",
+          "external_id": "ef2e8a18-248b-8bb6-0405-9c5a28417c51",
+          "datetime": "2026-03-19T12:42:40+00:00",
+          "url": "https://www.chipotle.com/order/9000000",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "26.32"
+            }
+          ],
+          "price": {
+            "sub_total": "17.70",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.55"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.42"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "3.54"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.11"
+              }
+            ],
+            "total": "26.32",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-burrito-bowl-chicken",
+              "name": "Chicken Burrito Bowl",
+              "description": "Brown rice, black beans, grilled chicken, fajita vegetables, fresh tomato salsa, guacamole",
+              "url": "https://www.chipotle.com/item/menu-burrito-bowl-chicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "12.45",
+                "total": "12.45",
+                "unit_price": "12.45"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-chips-guac",
+              "name": "Chips & Guacamole",
+              "description": "House-made tortilla chips with guacamole",
+              "url": "https://www.chipotle.com/item/menu-chips-guac",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.25",
+                "total": "5.25",
+                "unit_price": "5.25"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "f761782b-eacb-e6d9-580a-10613e049ccf",
+          "external_id": "827377be-970e-97bd-df44-2510440ee266",
+          "datetime": "2026-03-20T13:10:15+00:00",
+          "url": "https://order.sweetgreen.com/order/9000137",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "23.18"
+            }
+          ],
+          "price": {
+            "sub_total": "14.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.11"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.20"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.99"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.93"
+              }
+            ],
+            "total": "23.18",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-harvest-bowl",
+              "name": "Harvest Bowl",
+              "description": "Wild rice, roasted chicken, roasted sweet potato, apples, goat cheese, toasted almonds, balsamic vinaigrette",
+              "url": "https://order.sweetgreen.com/item/menu-harvest-bowl",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "14.95",
+                "total": "14.95",
+                "unit_price": "14.95"
+              },
+              "seller": {
+                "name": "Sweetgreen",
+                "url": "https://order.sweetgreen.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "c740ae95-2a5a-ae5b-8314-650ce7827410",
+          "external_id": "1646c53a-2076-be71-47d3-8e76cc3af63c",
+          "datetime": "2026-03-22T20:15:37+00:00",
+          "url": "https://www.chipotle.com/order/9000411",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "20.20"
+            }
+          ],
+          "price": {
+            "sub_total": "12.45",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.10"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.00"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.87"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.78"
+              }
+            ],
+            "total": "20.20",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-burrito-bowl-chicken",
+              "name": "Chicken Burrito Bowl",
+              "description": "Brown rice, black beans, grilled chicken, fajita vegetables, fresh tomato salsa, guacamole",
+              "url": "https://www.chipotle.com/item/menu-burrito-bowl-chicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "12.45",
+                "total": "12.45",
+                "unit_price": "12.45"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "5c819545-a07b-2007-bbe3-1a4bb9fc32f8",
+          "external_id": "5c9abf6d-e0d7-1f2f-abfc-3612dddaa461",
+          "datetime": "2026-03-24T18:45:35+00:00",
+          "url": "https://www.pho75.com/order/9000685",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "30.77"
+            }
+          ],
+          "price": {
+            "sub_total": "20.70",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.98"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.66"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.14"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.29"
+              }
+            ],
+            "total": "30.77",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-pho-tai",
+              "name": "Pho Tai (Large)",
+              "description": "Rare-beef pho with rice noodles, onion, scallion, bean sprouts, basil, lime",
+              "url": "https://www.pho75.com/item/menu-pho-tai",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "13.75",
+                "total": "13.75",
+                "unit_price": "13.75"
+              },
+              "seller": {
+                "name": "Pho 75",
+                "url": "https://www.pho75.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-spring-rolls",
+              "name": "Fresh Spring Rolls (2 pc)",
+              "description": "Rice paper, shrimp, pork, rice vermicelli, lettuce, mint, peanut sauce",
+              "url": "https://www.pho75.com/item/menu-spring-rolls",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "6.95",
+                "total": "6.95",
+                "unit_price": "6.95"
+              },
+              "seller": {
+                "name": "Pho 75",
+                "url": "https://www.pho75.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "243a6a32-2a94-5ba6-571e-8cd6bcb92f5e",
+          "external_id": "03cf46dd-c367-c851-daf9-bc6ddfdf34f0",
+          "datetime": "2026-03-25T19:20:14+00:00",
+          "url": "https://www.genkisushiusa.com/order/9000822",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "34.00"
+            }
+          ],
+          "price": {
+            "sub_total": "22.50",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.24"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.80"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.05"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.41"
+              }
+            ],
+            "total": "34.00",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-chirashi-bowl",
+              "name": "Chirashi Bowl",
+              "description": "Sushi rice topped with assorted sashimi (tuna, salmon, yellowtail, shrimp)",
+              "url": "https://www.genkisushiusa.com/item/menu-chirashi-bowl",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "22.50",
+                "total": "22.50",
+                "unit_price": "22.50"
+              },
+              "seller": {
+                "name": "Genki Sushi",
+                "url": "https://www.genkisushiusa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "7dc9cd5a-1d59-53cd-0431-29321e289969",
+          "external_id": "c5c51d45-25e4-19c9-0c11-bda117f2ff15",
+          "datetime": "2026-03-26T23:05:48+00:00",
+          "url": "https://www.mcdonalds.com/order/9000959",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "28.15"
+            }
+          ],
+          "price": {
+            "sub_total": "16.48",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "6.02"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.32"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "3.30"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.03"
+              }
+            ],
+            "total": "28.15",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-big-mac-meal",
+              "name": "Big Mac Meal (Large)",
+              "description": "Big Mac, large fries, large Coke",
+              "url": "https://www.mcdonalds.com/item/menu-big-mac-meal",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "12.99",
+                "total": "12.99",
+                "unit_price": "12.99"
+              },
+              "seller": {
+                "name": "McDonald's",
+                "url": "https://www.mcdonalds.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-mcchicken",
+              "name": "McChicken",
+              "description": "Classic crispy chicken sandwich",
+              "url": "https://www.mcdonalds.com/item/menu-mcchicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "3.49",
+                "total": "3.49",
+                "unit_price": "3.49"
+              },
+              "seller": {
+                "name": "McDonald's",
+                "url": "https://www.mcdonalds.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "75a8be9a-824b-755a-b429-ee6ea429395f",
+          "external_id": "4a2cc2c7-9f82-7537-f42e-9d1fbf31ada2",
+          "datetime": "2026-03-27T12:55:21+00:00",
+          "url": "https://www.chipotle.com/order/9001096",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "28.72"
+            }
+          ],
+          "price": {
+            "sub_total": "19.60",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.38"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.57"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.94"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.23"
+              }
+            ],
+            "total": "28.72",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-burrito-steak",
+              "name": "Steak Burrito",
+              "description": "Flour tortilla, white rice, pinto beans, steak, cheese, sour cream, corn salsa",
+              "url": "https://www.chipotle.com/item/menu-burrito-steak",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "13.75",
+                "total": "13.75",
+                "unit_price": "13.75"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-queso-blanco",
+              "name": "Large Queso Blanco",
+              "description": "Warm aged white cheddar dip",
+              "url": "https://www.chipotle.com/item/menu-queso-blanco",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.85",
+                "total": "5.85",
+                "unit_price": "5.85"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "1c0e6b9a-e3d3-dd4c-a4de-454e073ec2f6",
+          "external_id": "d30c10ae-c97d-fb66-b801-80026b743f58",
+          "datetime": "2026-03-28T13:25:06+00:00",
+          "url": "https://order.sweetgreen.com/order/9001233",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "20.48"
+            }
+          ],
+          "price": {
+            "sub_total": "13.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.45"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.12"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.09"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.87"
+              }
+            ],
+            "total": "20.48",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-fig-goat-cheese",
+              "name": "Fig & Goat Cheese Bowl",
+              "description": "Kale, quinoa, figs, goat cheese, walnuts, tomato balsamic",
+              "url": "https://order.sweetgreen.com/item/menu-fig-goat-cheese",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "13.95",
+                "total": "13.95",
+                "unit_price": "13.95"
+              },
+              "seller": {
+                "name": "Sweetgreen",
+                "url": "https://order.sweetgreen.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "230b30f5-7975-a55c-6b0a-cd75980156bc",
+          "external_id": "ef66e62d-da27-3b4e-fa25-64cd656c8b4a",
+          "datetime": "2026-04-01T13:05:36+00:00",
+          "url": "https://www.chipotle.com/order/9001781",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "25.83"
+            }
+          ],
+          "price": {
+            "sub_total": "17.70",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.95"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.42"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.65"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.11"
+              }
+            ],
+            "total": "25.83",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-burrito-bowl-chicken",
+              "name": "Chicken Burrito Bowl",
+              "description": "Brown rice, black beans, grilled chicken, fajita vegetables, fresh tomato salsa, guacamole",
+              "url": "https://www.chipotle.com/item/menu-burrito-bowl-chicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "12.45",
+                "total": "12.45",
+                "unit_price": "12.45"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-chips-guac",
+              "name": "Chips & Guacamole",
+              "description": "House-made tortilla chips with guacamole",
+              "url": "https://www.chipotle.com/item/menu-chips-guac",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.25",
+                "total": "5.25",
+                "unit_price": "5.25"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "5d5791b1-4fb9-da25-1b14-ed87166d8661",
+          "external_id": "7f155fbc-94e7-e71f-6a1e-d28ecf740b5f",
+          "datetime": "2026-04-04T13:40:17+00:00",
+          "url": "https://order.sweetgreen.com/order/9002192",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "23.44"
+            }
+          ],
+          "price": {
+            "sub_total": "14.50",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.26"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.16"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.61"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.91"
+              }
+            ],
+            "total": "23.44",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-crispy-rice-bowl",
+              "name": "Crispy Rice Bowl",
+              "description": "Shredded cabbage, crispy rice, blackened chicken, cucumber, cilantro, lime squeeze",
+              "url": "https://order.sweetgreen.com/item/menu-crispy-rice-bowl",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "14.50",
+                "total": "14.50",
+                "unit_price": "14.50"
+              },
+              "seller": {
+                "name": "Sweetgreen",
+                "url": "https://order.sweetgreen.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "84691e71-037f-73ab-9755-aff58b34e154",
+          "external_id": "f725ed11-5cc0-06e6-611c-50caf3cd616d",
+          "datetime": "2026-04-05T20:00:23+00:00",
+          "url": "https://www.genkisushiusa.com/order/9002329",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "39.28"
+            }
+          ],
+          "price": {
+            "sub_total": "26.45",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.77"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.12"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "5.29"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.65"
+              }
+            ],
+            "total": "39.28",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-salmon-avocado-roll",
+              "name": "Salmon Avocado Roll (8 pc)",
+              "description": "Salmon, avocado, cucumber, sushi rice, nori",
+              "url": "https://www.genkisushiusa.com/item/menu-salmon-avocado-roll",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "11.50",
+                "total": "11.50",
+                "unit_price": "11.50"
+              },
+              "seller": {
+                "name": "Genki Sushi",
+                "url": "https://www.genkisushiusa.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-dragon-roll",
+              "name": "Dragon Roll (8 pc)",
+              "description": "Shrimp tempura, avocado, eel sauce",
+              "url": "https://www.genkisushiusa.com/item/menu-dragon-roll",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "14.95",
+                "total": "14.95",
+                "unit_price": "14.95"
+              },
+              "seller": {
+                "name": "Genki Sushi",
+                "url": "https://www.genkisushiusa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "003ecfed-b0d3-84fd-eb00-86ea17e470d8",
+          "external_id": "bfecd59e-1b87-a9b4-21c5-5246f8f6c023",
+          "datetime": "2026-04-07T12:30:38+00:00",
+          "url": "https://www.chipotle.com/order/9002603",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "20.54"
+            }
+          ],
+          "price": {
+            "sub_total": "11.45",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "5.16"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.92"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.29"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.72"
+              }
+            ],
+            "total": "20.54",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-quesadilla-chicken",
+              "name": "Chicken Quesadilla",
+              "description": "Flour tortilla with chicken and cheese",
+              "url": "https://www.chipotle.com/item/menu-quesadilla-chicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "11.45",
+                "total": "11.45",
+                "unit_price": "11.45"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "c2db244d-234a-0fa7-b4f0-8f8bd90b247f",
+          "external_id": "df98a35b-e49f-4eb9-8744-5d03d6a3c018",
+          "datetime": "2026-04-08T19:25:10+00:00",
+          "url": "https://www.mumbaispicenyc.com/order/9002740",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "40.01"
+            }
+          ],
+          "price": {
+            "sub_total": "27.00",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.30"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.16"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.86"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.69"
+              }
+            ],
+            "total": "40.01",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-chicken-tikka-masala",
+              "name": "Chicken Tikka Masala",
+              "description": "Tandoori-grilled chicken simmered in creamy tomato-butter sauce with basmati rice",
+              "url": "https://www.mumbaispicenyc.com/item/menu-chicken-tikka-masala",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "18.50",
+                "total": "18.50",
+                "unit_price": "18.50"
+              },
+              "seller": {
+                "name": "Mumbai Spice",
+                "url": "https://www.mumbaispicenyc.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-garlic-naan",
+              "name": "Garlic Naan",
+              "description": "Tandoor-baked flatbread with garlic and cilantro",
+              "url": "https://www.mumbaispicenyc.com/item/menu-garlic-naan",
+              "quantity": 2,
+              "eligibility": [],
+              "price": {
+                "sub_total": "8.50",
+                "total": "8.50",
+                "unit_price": "4.25"
+              },
+              "seller": {
+                "name": "Mumbai Spice",
+                "url": "https://www.mumbaispicenyc.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "ab8d9ea7-50da-308f-2517-ad75cec593eb",
+          "external_id": "2789c782-b650-a733-58d9-1156619673f4",
+          "datetime": "2026-04-09T13:15:43+00:00",
+          "url": "https://order.sweetgreen.com/order/9002877",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "22.93"
+            }
+          ],
+          "price": {
+            "sub_total": "14.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.61"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.20"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.24"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.93"
+              }
+            ],
+            "total": "22.93",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-harvest-bowl",
+              "name": "Harvest Bowl",
+              "description": "Wild rice, roasted chicken, roasted sweet potato, apples, goat cheese, toasted almonds, balsamic vinaigrette",
+              "url": "https://order.sweetgreen.com/item/menu-harvest-bowl",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "14.95",
+                "total": "14.95",
+                "unit_price": "14.95"
+              },
+              "seller": {
+                "name": "Sweetgreen",
+                "url": "https://order.sweetgreen.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "34c74b7a-f84f-1c9e-5629-83c17ad0823b",
+          "external_id": "4dd046e8-3696-9502-e1c3-2fc7b4d6d683",
+          "datetime": "2026-04-10T22:50:52+00:00",
+          "url": "https://www.mcdonalds.com/order/9003014",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "14.70"
+            }
+          ],
+          "price": {
+            "sub_total": "9.49",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.15"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.76"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.71"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.59"
+              }
+            ],
+            "total": "14.70",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-20pc-nugget",
+              "name": "20-pc Chicken McNuggets",
+              "description": "Share box, with 3 dipping sauces",
+              "url": "https://www.mcdonalds.com/item/menu-20pc-nugget",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "9.49",
+                "total": "9.49",
+                "unit_price": "9.49"
+              },
+              "seller": {
+                "name": "McDonald's",
+                "url": "https://www.mcdonalds.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "e8fc2e5e-a0a1-f787-7421-59bb13685dca",
+          "external_id": "67f081aa-84de-7d68-e78d-1a3b75c50a65",
+          "datetime": "2026-04-13T12:45:09+00:00",
+          "url": "https://www.chipotle.com/order/9003425",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "19.41"
+            }
+          ],
+          "price": {
+            "sub_total": "12.45",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.31"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.00"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.87"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.78"
+              }
+            ],
+            "total": "19.41",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-burrito-bowl-chicken",
+              "name": "Chicken Burrito Bowl",
+              "description": "Brown rice, black beans, grilled chicken, fajita vegetables, fresh tomato salsa, guacamole",
+              "url": "https://www.chipotle.com/item/menu-burrito-bowl-chicken",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "12.45",
+                "total": "12.45",
+                "unit_price": "12.45"
+              },
+              "seller": {
+                "name": "Chipotle Mexican Grill",
+                "url": "https://www.chipotle.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "4660101f-0b31-201c-4330-057948c5c0fb",
+          "external_id": "c25b6ddb-ce79-9c59-6656-4b72cae823bb",
+          "datetime": "2026-04-16T19:40:05+00:00",
+          "url": "https://www.mumbaispicenyc.com/order/9003836",
+          "order_status": "BILLED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "37.38"
+            }
+          ],
+          "price": {
+            "sub_total": "24.45",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "5.77"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.96"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "3.67"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.53"
+              }
+            ],
+            "total": "37.38",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-chicken-tikka-masala",
+              "name": "Chicken Tikka Masala",
+              "description": "Tandoori-grilled chicken simmered in creamy tomato-butter sauce with basmati rice",
+              "url": "https://www.mumbaispicenyc.com/item/menu-chicken-tikka-masala",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "18.50",
+                "total": "18.50",
+                "unit_price": "18.50"
+              },
+              "seller": {
+                "name": "Mumbai Spice",
+                "url": "https://www.mumbaispicenyc.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-vegetable-samosa",
+              "name": "Vegetable Samosa (2 pc)",
+              "description": "Crispy pastry stuffed with spiced potatoes and peas, tamarind chutney",
+              "url": "https://www.mumbaispicenyc.com/item/menu-vegetable-samosa",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.95",
+                "total": "5.95",
+                "unit_price": "5.95"
+              },
+              "seller": {
+                "name": "Mumbai Spice",
+                "url": "https://www.mumbaispicenyc.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "fc7cb55a-0b67-33ee-d297-b6cb0e4840d7",
+          "external_id": "4a23e4e4-a7cf-8566-28a5-b6f09b89341a",
+          "datetime": "2026-04-17T12:50:40+00:00",
+          "url": "https://order.sweetgreen.com/order/9003973",
+          "order_status": "BILLED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "21.92"
+            }
+          ],
+          "price": {
+            "sub_total": "14.25",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.79"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.14"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.85"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.89"
+              }
+            ],
+            "total": "21.92",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-guacamole-greens",
+              "name": "Guacamole Greens",
+              "description": "Romaine, organic mesclun, grilled chicken, avocado, roasted sweet potato, tortilla chips, lime cilantro jalapeño vinaigrette",
+              "url": "https://order.sweetgreen.com/item/menu-guacamole-greens",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "14.25",
+                "total": "14.25",
+                "unit_price": "14.25"
+              },
+              "seller": {
+                "name": "Sweetgreen",
+                "url": "https://order.sweetgreen.com"
+              },
+              "image_url": null
+            }
+          ]
+        }
+      ],
+      "next_cursor": null,
+      "limit": 50
+    },
+    {
+      "merchant": {
+        "id": 36,
+        "name": "Uber Eats"
+      },
+      "transactions": [
+        {
+          "id": "f3c378c8-5ffc-d171-7b5a-a36197ce3c56",
+          "external_id": "50471b94-61c4-a515-562e-2b88c257e15c",
+          "datetime": "2026-03-21T19:55:43+00:00",
+          "url": "https://www.ubereats.com/order/9000274",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "35.90"
+            }
+          ],
+          "price": {
+            "sub_total": "22.50",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "5.69"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.80"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.50"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.41"
+              }
+            ],
+            "total": "35.90",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-shackburger",
+              "name": "ShackBurger (Double)",
+              "description": "Cheeseburger topped with lettuce, tomato, ShackSauce on a potato bun",
+              "url": "https://www.shakeshack.com/item/menu-shackburger",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "10.25",
+                "total": "10.25",
+                "unit_price": "10.25"
+              },
+              "seller": {
+                "name": "Shake Shack",
+                "url": "https://www.shakeshack.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-cheese-fries",
+              "name": "Cheese Fries",
+              "description": "Crinkle-cut fries topped with ShackSauce cheese blend",
+              "url": "https://www.shakeshack.com/item/menu-cheese-fries",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.75",
+                "total": "5.75",
+                "unit_price": "5.75"
+              },
+              "seller": {
+                "name": "Shake Shack",
+                "url": "https://www.shakeshack.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-chocolate-shake",
+              "name": "Chocolate Shake",
+              "description": "Hand-spun with real chocolate custard",
+              "url": "https://www.shakeshack.com/item/menu-chocolate-shake",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "6.50",
+                "total": "6.50",
+                "unit_price": "6.50"
+              },
+              "seller": {
+                "name": "Shake Shack",
+                "url": "https://www.shakeshack.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "9dfec4ae-ef8e-9fd2-bd81-9633f542ea08",
+          "external_id": "2e09cb92-5133-3e04-2473-c233f460dc49",
+          "datetime": "2026-03-23T15:30:13+00:00",
+          "url": "https://www.ubereats.com/order/9000548",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "12.88"
+            }
+          ],
+          "price": {
+            "sub_total": "7.25",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.15"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.58"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.45"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.45"
+              }
+            ],
+            "total": "12.88",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-brown-sugar-milk-tea",
+              "name": "Brown Sugar Milk Tea (Large)",
+              "description": "Organic black tea, whole milk, brown-sugar boba pearls, 70% sweet",
+              "url": "https://www.gongchausa.com/item/menu-brown-sugar-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "7.25",
+                "total": "7.25",
+                "unit_price": "7.25"
+              },
+              "seller": {
+                "name": "Gong Cha",
+                "url": "https://www.gongchausa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "54d04e99-04de-e23d-8804-f5867e3158de",
+          "external_id": "b459d358-a2be-c387-7e3d-c18cd601ab78",
+          "datetime": "2026-03-29T16:10:54+00:00",
+          "url": "https://www.ubereats.com/order/9001370",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "12.90"
+            }
+          ],
+          "price": {
+            "sub_total": "6.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.71"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.56"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.25"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.43"
+              }
+            ],
+            "total": "12.90",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-taro-milk-tea",
+              "name": "Taro Milk Tea (Large)",
+              "description": "Taro powder, whole milk, tapioca pearls, 50% sweet",
+              "url": "https://www.gongchausa.com/item/menu-taro-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "6.95",
+                "total": "6.95",
+                "unit_price": "6.95"
+              },
+              "seller": {
+                "name": "Gong Cha",
+                "url": "https://www.gongchausa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "96787fe8-c9e2-61bd-57b8-e961705f674a",
+          "external_id": "5e768452-7b1f-72b0-5872-6143cbccc0b3",
+          "datetime": "2026-03-30T20:30:46+00:00",
+          "url": "https://www.ubereats.com/order/9001507",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "39.05"
+            }
+          ],
+          "price": {
+            "sub_total": "26.90",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.29"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.15"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.03"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.68"
+              }
+            ],
+            "total": "39.05",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-shiromaru-ramen",
+              "name": "Shiromaru Motoaji Ramen",
+              "description": "Classic rich tonkotsu broth, pork chashu, kikurage mushrooms, scallions, thin noodles",
+              "url": "https://www.ippudony.com/item/menu-shiromaru-ramen",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "17.95",
+                "total": "17.95",
+                "unit_price": "17.95"
+              },
+              "seller": {
+                "name": "Ippudo",
+                "url": "https://www.ippudony.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-pork-buns",
+              "name": "Pork Buns (2 pc)",
+              "description": "Steamed bao with braised pork belly, cucumber, Ippudo sauce",
+              "url": "https://www.ippudony.com/item/menu-pork-buns",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "8.95",
+                "total": "8.95",
+                "unit_price": "8.95"
+              },
+              "seller": {
+                "name": "Ippudo",
+                "url": "https://www.ippudony.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "2aaecb9c-1e65-f42b-7b68-90a69c54a535",
+          "external_id": "6e7a0f71-2dba-9233-b530-b43daf52ba37",
+          "datetime": "2026-03-31T19:40:05+00:00",
+          "url": "https://www.ubereats.com/order/9001644",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "40.66"
+            }
+          ],
+          "price": {
+            "sub_total": "26.75",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.75"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.14"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "5.35"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.67"
+              }
+            ],
+            "total": "40.66",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-bulgogi-box",
+              "name": "Bulgogi Beef Set",
+              "description": "Marinated ribeye bulgogi, steamed rice, kimchi, pickled radish, gochujang, steamed egg",
+              "url": "https://www.kangnamnyc.com/item/menu-bulgogi-box",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "26.75",
+                "total": "26.75",
+                "unit_price": "26.75"
+              },
+              "seller": {
+                "name": "Kang Nam K-Town BBQ",
+                "url": "https://www.kangnamnyc.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "24f45b73-98f4-4798-edb4-0157fc2ae0e2",
+          "external_id": "66bb4c5d-d94f-cf05-834c-81a3c2c4daa9",
+          "datetime": "2026-04-02T15:45:42+00:00",
+          "url": "https://www.ubereats.com/order/9001918",
+          "order_status": "COMPLETED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "13.05"
+            }
+          ],
+          "price": {
+            "sub_total": "7.50",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.13"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.60"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.35"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.47"
+              }
+            ],
+            "total": "13.05",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-matcha-milk-tea",
+              "name": "Matcha Milk Tea (Large)",
+              "description": "Ceremonial matcha powder, oat milk, honey boba",
+              "url": "https://www.kungfutea.com/item/menu-matcha-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "7.50",
+                "total": "7.50",
+                "unit_price": "7.50"
+              },
+              "seller": {
+                "name": "Kung Fu Tea",
+                "url": "https://www.kungfutea.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "64308a33-cf7f-8092-dbe7-709a89a6d775",
+          "external_id": "d23f3acf-e203-b045-ca99-1f32eb40e7ad",
+          "datetime": "2026-04-03T19:15:54+00:00",
+          "url": "https://www.ubereats.com/order/9002055",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "23.83"
+            }
+          ],
+          "price": {
+            "sub_total": "16.00",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.15"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "1.28"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "2.40"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.00"
+              }
+            ],
+            "total": "23.83",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-shackburger",
+              "name": "ShackBurger (Double)",
+              "description": "Cheeseburger topped with lettuce, tomato, ShackSauce on a potato bun",
+              "url": "https://www.shakeshack.com/item/menu-shackburger",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "10.25",
+                "total": "10.25",
+                "unit_price": "10.25"
+              },
+              "seller": {
+                "name": "Shake Shack",
+                "url": "https://www.shakeshack.com"
+              },
+              "image_url": null
+            },
+            {
+              "external_id": "menu-cheese-fries",
+              "name": "Cheese Fries",
+              "description": "Crinkle-cut fries topped with ShackSauce cheese blend",
+              "url": "https://www.shakeshack.com/item/menu-cheese-fries",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "5.75",
+                "total": "5.75",
+                "unit_price": "5.75"
+              },
+              "seller": {
+                "name": "Shake Shack",
+                "url": "https://www.shakeshack.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "ead149d8-8503-e570-0dbe-342cfefc171c",
+          "external_id": "a7329149-34c9-44de-9658-0f9bfa4b28a4",
+          "datetime": "2026-04-06T14:50:44+00:00",
+          "url": "https://www.ubereats.com/order/9002466",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "621bd262-0253-44c9-bda4-6b70fbaee5a4",
+              "type": "CARD",
+              "brand": "VISA",
+              "last_four": "4404",
+              "name": null,
+              "transaction_amount": "16.40"
+            }
+          ],
+          "price": {
+            "sub_total": "7.25",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "6.67"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.58"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.45"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.45"
+              }
+            ],
+            "total": "16.40",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-brown-sugar-milk-tea",
+              "name": "Brown Sugar Milk Tea (Large)",
+              "description": "Organic black tea, whole milk, brown-sugar boba pearls, 70% sweet",
+              "url": "https://www.gongchausa.com/item/menu-brown-sugar-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "7.25",
+                "total": "7.25",
+                "unit_price": "7.25"
+              },
+              "seller": {
+                "name": "Gong Cha",
+                "url": "https://www.gongchausa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "73ff65f0-d842-24b6-dd92-df7e72380e38",
+          "external_id": "b2363a7c-3f36-ba25-cfc6-4b0f1580185f",
+          "datetime": "2026-04-11T19:10:17+00:00",
+          "url": "https://www.ubereats.com/order/9003151",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "45.22"
+            }
+          ],
+          "price": {
+            "sub_total": "31.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "2.32"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.56"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "6.39"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "2.00"
+              }
+            ],
+            "total": "45.22",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-galbi-set",
+              "name": "LA Galbi Set",
+              "description": "Sweet-soy marinated short ribs, rice, banchan (kimchi, bean sprouts, spinach)",
+              "url": "https://www.kangnamnyc.com/item/menu-galbi-set",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "31.95",
+                "total": "31.95",
+                "unit_price": "31.95"
+              },
+              "seller": {
+                "name": "Kang Nam K-Town BBQ",
+                "url": "https://www.kangnamnyc.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "db8db183-b5e0-3865-e843-1a14d05e70cf",
+          "external_id": "e30291d7-8d81-5b78-4d45-e19fdc249706",
+          "datetime": "2026-04-12T16:35:13+00:00",
+          "url": "https://www.ubereats.com/order/9003288",
+          "order_status": "DELIVERED",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "14.46"
+            }
+          ],
+          "price": {
+            "sub_total": "6.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "5.27"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.56"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "1.25"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.43"
+              }
+            ],
+            "total": "14.46",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-taro-milk-tea",
+              "name": "Taro Milk Tea (Large)",
+              "description": "Taro powder, whole milk, tapioca pearls, 50% sweet",
+              "url": "https://www.gongchausa.com/item/menu-taro-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "6.95",
+                "total": "6.95",
+                "unit_price": "6.95"
+              },
+              "seller": {
+                "name": "Gong Cha",
+                "url": "https://www.gongchausa.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "afbb468b-b500-fb6a-6d62-8e24a73eaf74",
+          "external_id": "4deaadf3-bbb9-1b0b-0b38-23c3c4c6f58b",
+          "datetime": "2026-04-14T20:05:47+00:00",
+          "url": "https://www.ubereats.com/order/9003562",
+          "order_status": "PICKED_UP",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "38.41"
+            }
+          ],
+          "price": {
+            "sub_total": "24.95",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "4.91"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "2.00"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "4.99"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "1.56"
+              }
+            ],
+            "total": "38.41",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-pepperoni-pie",
+              "name": "16\" Pepperoni Pie",
+              "description": "Whole pie, hand-stretched dough, tomato sauce, pepperoni, mozzarella",
+              "url": "https://www.joespizzanyc.com/item/menu-pepperoni-pie",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "24.95",
+                "total": "24.95",
+                "unit_price": "24.95"
+              },
+              "seller": {
+                "name": "Joe's Pizza",
+                "url": "https://www.joespizzanyc.com"
+              },
+              "image_url": null
+            }
+          ]
+        },
+        {
+          "id": "c82a3e24-f046-ea74-b7b9-88f6b4cf9e4a",
+          "external_id": "2cd90751-4ca9-a9cb-8217-486e0c00c88e",
+          "datetime": "2026-04-15T17:20:23+00:00",
+          "url": "https://www.ubereats.com/order/9003699",
+          "order_status": "PICKED_UP",
+          "shipping": null,
+          "payment_methods": [
+            {
+              "external_id": "71bb8817-42a1-4f9f-9c2f-4de8c62e2321",
+              "type": "CARD",
+              "brand": "MASTERCARD",
+              "last_four": "8821",
+              "name": null,
+              "transaction_amount": "11.17"
+            }
+          ],
+          "price": {
+            "sub_total": "6.25",
+            "adjustments": [
+              {
+                "type": "FEE",
+                "label": "Delivery Fee",
+                "amount": "3.09"
+              },
+              {
+                "type": "FEE",
+                "label": "Service Fee",
+                "amount": "0.50"
+              },
+              {
+                "type": "TIP",
+                "label": "Tip",
+                "amount": "0.94"
+              },
+              {
+                "type": "TAX",
+                "label": "Sales Tax",
+                "amount": "0.39"
+              }
+            ],
+            "total": "11.17",
+            "currency": "USD"
+          },
+          "products": [
+            {
+              "external_id": "menu-classic-milk-tea",
+              "name": "Classic Milk Tea (Large)",
+              "description": "House black tea, non-dairy creamer, tapioca, 100% sweet",
+              "url": "https://www.kungfutea.com/item/menu-classic-milk-tea",
+              "quantity": 1,
+              "eligibility": [],
+              "price": {
+                "sub_total": "6.25",
+                "total": "6.25",
+                "unit_price": "6.25"
+              },
+              "seller": {
+                "name": "Kung Fu Tea",
+                "url": "https://www.kungfutea.com"
+              },
+              "image_url": null
+            }
+          ]
+        }
+      ],
+      "next_cursor": null,
+      "limit": 50
+    }
+  ]
+}

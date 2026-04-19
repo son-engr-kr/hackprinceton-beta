@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+build/
+
+# TS incremental build cache
+*.tsbuildinfo
+
+.env*
+!.env.example
+
+.DS_Store
+*.log
+.vscode/
+.idea/

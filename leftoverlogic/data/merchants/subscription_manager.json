@@ -1,0 +1,62 @@
+[
+  {
+    "id": 4,
+    "name": "HBO Max",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/PhMFQEWTML45phZih0Vh9u83EOK9POsFrr5IkLot.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 8,
+    "name": "Disney+",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/Up4Ixydaj8y6v0B4JZrMkBdLS7hxca6xo8fQbBvI.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 13,
+    "name": "Spotify",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/HjxD3XOnTsfuvJoU3XE7Y5jQYZEvV2VzLyTUiaEl.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 16,
+    "name": "Netflix",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/cp2NX8p4BcXtODNpRiZ2wdKU5SgYnZw6YOe8eXG7.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 18,
+    "name": "Hulu",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/2oMao7tR0b22v6xwz9El4roh4S2mcBSAvGOw9V15.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 23,
+    "name": "Peacock",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/hfDdmZ9jXiOIolgecvkcfTaaYRQXJ0Qpw9iiDZAI.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 25,
+    "name": "YouTubeTV",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/kmeRa37zDMWyQpqMpLW6uwzy7tzbFjwcD9hXXe0H.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 44,
+    "name": "Amazon",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/EewWDOj0Z4mOtBat04PKu9M2evb6CsvQ574KmjZ6.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2126,
+    "name": "Prime",
+    "category": "Subscriptions",
+    "logo": "https://knot.imgix.net/merchants/IqRqXwLjJ6EcZYCA7xPdAVwgQSCNf8MYtVOBombB.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2131,
+    "name": "Starz",
+    "category": "Streaming",
+    "logo": "https://knot.imgix.net/merchants/OajjhgmXZxCAOrYNuFDgHehInhyQXU5EEcPef1SH.png?auto=format,compress&w=240"
+  }
+]

@@ -1,0 +1,83 @@
+# Root-level
+/plan*.md
+/graph-viz-plan.md
+/MIGRATION.md
+/.env
+/.env.*
+!/.env.example
+
+# Internal / non-public (Korean drafts, private planning, Claude memory)
+/memory/
+/brainstorming/
+/ande/
+/knot_api_data/
+/db.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# PDFs (hackathon packets etc — too large / not source)
+*.pdf
+
+# ---- ande-app (Next.js) ----
+ande-app/node_modules/
+ande-app/.next/
+ande-app/out/
+ande-app/build/
+ande-app/coverage/
+ande-app/.vercel/
+ande-app/*.tsbuildinfo
+ande-app/next-env.d.ts
+ande-app/.env*
+ande-app/*.pem
+
+# ---- ande-image-gen (Python) ----
+ande-image-gen/.venv/
+ande-image-gen/venv/
+ande-image-gen/env/
+**/__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+ande-image-gen/.python-version
+ande-image-gen/build/
+ande-image-gen/dist/
+ande-image-gen/.pytest_cache/
+ande-image-gen/.coverage
+ande-image-gen/htmlcov/
+ande-image-gen/.env
+ande-image-gen/.env.*
+!ande-image-gen/.env.example
+
+# Generated images are large; uncomment if you want them out of git
+# ande-image-gen/images/
+# ande-image-gen/images-old/
+# ande-image-gen/images-old2/
+
+# ---- leftoverlogic (Python + Node) ----
+# .env lives at repo root (shared between Python config.py and Node spectrum_loop.mjs)
+leftoverlogic/.venv/
+leftoverlogic/node_modules/
+leftoverlogic/imessage/
+leftoverlogic/sandbox/
+leftoverlogic/__pycache__/
+leftoverlogic/**/__pycache__/
+leftoverlogic/webhooks.jsonl
+leftoverlogic/adherence.jsonl
+leftoverlogic/analyzed_*.json
+leftoverlogic/*.log
+
+# Secrets (defense in depth)
+*.pem
+*.key
+id_rsa*

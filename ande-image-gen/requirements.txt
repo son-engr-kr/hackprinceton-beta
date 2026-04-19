@@ -1,0 +1,20 @@
+# Apple Silicon (MPS) / CUDA / CPU compatible.
+# Tested with Python 3.11.
+
+torch>=2.4.0
+torchvision>=0.19.0
+
+diffusers>=0.30.0
+transformers>=4.40.0
+accelerate>=0.30.0
+safetensors>=0.4.3
+
+# Prompt loading
+pyyaml>=6.0.1
+
+# Image I/O
+pillow>=10.0.0
+
+# Background removal (ONNX-based, runs on CPU)
+rembg>=2.0.58
+onnxruntime>=1.18.0

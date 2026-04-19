@@ -1,0 +1,26 @@
+[
+  {
+    "id": 19,
+    "name": "DoorDash",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/EG6vOBYTaFY3RrjwIYjjO3j7oEYFCdPb4N48wL31.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 36,
+    "name": "Uber Eats",
+    "category": "Food Delivery",
+    "logo": "https://knot.imgix.net/merchants/HeqRo15rwskrixyeTWi49PnKVLD2lTx87cRDzpiX.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 44,
+    "name": "Amazon",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/EewWDOj0Z4mOtBat04PKu9M2evb6CsvQ574KmjZ6.png?auto=format,compress&w=240"
+  },
+  {
+    "id": 2125,
+    "name": "Shop Pay",
+    "category": "Online Shopping",
+    "logo": "https://knot.imgix.net/merchants/BvPhl6TeOYKnMHjRQjfOIKS4gCsP8FOEjYRWwU3S.png?auto=format,compress&w=240"
+  }
+]
