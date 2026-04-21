@@ -1,5 +1,7 @@
 <div align="center">
 
+### 🏆 HackPrinceton Spring 2026 · Knot API sponsor track — 1st place
+
 # 🍽️ Flanner
 
 **A mirror on your delivery habits.**
@@ -8,6 +10,7 @@ Turn six months of real DoorDash / Uber Eats orders into a weekly
 home-cooked meal plan — and auto-fill your Amazon Fresh cart with the
 exact ingredients you need, one tap from done.
 
+[![Knot API track winner](https://img.shields.io/badge/🏆_Knot_API_track-1st_place-FFD166?style=for-the-badge)](#hackathon-context)
 [![Watch the demo](https://img.shields.io/badge/▶_Watch_2--min_demo-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/gfLijC1apBo)
 [![Live app](https://img.shields.io/badge/🌐_Live-flanner.health-B5E48C?style=for-the-badge)](https://flanner.health)
 [![Backend](https://img.shields.io/badge/🔧_API-api.flanner.health-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white)](https://api.flanner.health/api/health)
@@ -434,8 +437,8 @@ body: { reply, meal_title?, day?, space_id? }
 - **Submission**: 2026-04-19 08:00 ET
 - **Judging**: 2026-04-19 09:30–14:00 ET
 - **Primary track**: 🏥 **Healthcare** — delivery-driven diet → home-cooked swap for measurable sodium / calorie / protein impact
-- **Sponsor tracks targeted**:
-  - 🪢 **Knot** ($500) — production-grade delivery + cart integration
+- **Sponsor tracks**:
+  - 🏆 🪢 **Knot** ($500) — **1st place winner** · production-grade delivery + cart integration
   - 📨 **Photon** ($400 + $400 credits) — real iMessage orchestration via spectrum-ts
 
 ---
